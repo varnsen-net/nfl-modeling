@@ -3,6 +3,7 @@ RAW_WEATHER_PATH = './data/external/weather/weather.csv'
 CITY_COORDS_PATH = './data/ancillary/city-coordinates.csv'
 TRAVEL_FEAT_PATH = './data/features/travel'
 STATS_FEAT_PATH = './data/features/stats'
+WEATHER_FEAT_PATH = './data/features/weather'
 
 
 LOC_REPLACEMENTS = {'Arizona':'Glendale, AZ',

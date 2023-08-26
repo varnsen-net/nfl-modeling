@@ -6,6 +6,7 @@ from src.config import (RAW_GAMES_PATH,
                         CITY_COORDS_PATH)
 from src.features.travel import make_travel_features
 from src.features.stats import make_stats_features
+from src.features.weather import make_weather_features
 
 
 def preprocess_games_data(games):
@@ -29,6 +30,8 @@ if __name__ == '__main__':
     games = pd.read_csv(RAW_GAMES_PATH)
     games = preprocess_games_data(games)
     city_coords = pd.read_csv(CITY_COORDS_PATH)
+    weather = pd.read_csv(RAW_WEATHER_PATH)
 
     make_travel_features(games, city_coords)
     make_stats_features(games)
+    make_weather_features(games, weather)
