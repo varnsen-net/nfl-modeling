@@ -1,14 +1,8 @@
-import json
 import csv
 
 import numpy as np
 import pandas as pd
 import requests
-
-
-with open('config.json') as f:
-    config = json.load(f)
-    WEATHER_FEAT_PATH = config['paths']['weather_features']
 
 
 def fix_indoor_weather(games, weather):
@@ -35,9 +29,17 @@ def fix_indoor_weather(games, weather):
     return weather
 
 
-def make_weather_features(games, weather, path=WEATHER_FEAT_PATH):
-    """"""
+def make_weather_features(games, weather, weather_feat_path):
+    """Make weather features.
+    
+    :param pd.DataFrame games: raw games data
+    :param pd.DataFrame weather: raw weather data
+    :param str weather_feat_path: path to save weather features
+    :return: None
+    :rtype: None
+    """
     weather = fix_indoor_weather(games, weather)
-    weather.to_csv(f"{path}/weather.csv", index=False)
+    weather.to_csv(f"{weather_feat_path}/weather.csv", index=False)
+    return
 
 

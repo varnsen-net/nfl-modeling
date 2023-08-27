@@ -1,12 +1,5 @@
-import json
-
 import pandas as pd
 import numpy as np
-
-
-with open('config.json') as f:
-    config = json.load(f)
-    TRAVEL_FEAT_PATH = config['paths']['travel_features']
 
 
 def get_city_coordinates(teams, loc_replacements):
@@ -72,12 +65,12 @@ def get_away_travel_distances(games):
     return away_travel_distances
 
 
-def make_travel_features(games, city_coords, path=TRAVEL_FEAT_PATH):
+def make_travel_features(games, city_coords, travel_feat_path):
     """Build engineered features for team travel.
 
     :param pd.DataFrame games: raw games data
     :param pd.DataFrame city_coords: city coordinates
-    :param str path: path to save travel features
+    :param str travel_feat_path: path to save travel features
     :return: None
     :rtype: None
     """
@@ -90,5 +83,5 @@ def make_travel_features(games, city_coords, path=TRAVEL_FEAT_PATH):
                     suffixes=['_away', '_home'])
              .drop(columns=['name']))
     away_travel_distances = get_away_travel_distances(games)
-    away_travel_distances.to_csv(f"{path}/away_travel_distances.csv", index=False)
+    away_travel_distances.to_csv(f"{travel_feat_path}/away_travel_distances.csv", index=False)
     return

@@ -8,11 +8,6 @@ import requests
 from src.utils import fix_game_times, get_kickoff_hours
 
 
-with open('config.json') as f:
-    config = json.load(f)
-    WEATHER_FEAT_PATH = config['paths']['weather_features']
-
-
 def fetch_gameday_weather(latitude, longtiude, date):
     """Use the open meteo historical weather api to get weather data.
     
@@ -57,10 +52,11 @@ def aggregate_weather_response(response, kickoff_hour):
     return agg
 
 
-def fetch_missing_weather(weather, batch_size=500):
+def fetch_missing_weather(weather, raw_weather_path, batch_size=500):
     """Fetches weather data for each game in weather and appends to weather.csv.
 
     :param pd.DataFrame weather: weather dataframe
+    :param str raw_weather_path: path to raw data directory
     :param int batch_size: number of games to fetch weather for at a time
     :return: None
     :rtype: None
@@ -78,19 +74,22 @@ def fetch_missing_weather(weather, batch_size=500):
         print(f"Fetching weather for {latitude} by {longitude} on {date}...")
         response = fetch_gameday_weather(latitude, longitude, date)
         agg = aggregate_weather_response(response, kickoff_hour).to_list()
-        with open(RAW_WEATHER_PATH, 'a') as f:
+        with open(f"{raw_weather_path}/weather.csv", 'a') as f:
             writer = csv.writer(f)
             writer.writerow([index] + agg)
     return
 
 
-def refresh_weather_data(games, weather, city_coords):
+def refresh_weather_data(games, weather, city_coords, raw_weather_path):
     """Fetches weather data for each NFL game not found in weather.csv, then
     appends to file.
 
     :param pd.DataFrame games: raw games dataframe
     :param pd.DataFrame weather: raw weather dataframe
     :param pd.DataFrame city_coords: coordinates for each team's home city
+    :param str raw_weather_path: path to raw data directory
+    :return: None
+    :rtype: None
     """
     missing_weather = (games
                        .merge(weather, on='game_id', how='left')
@@ -101,7 +100,7 @@ def refresh_weather_data(games, weather, city_coords):
         print("Updating weather file...")
         start_times = fix_game_times(missing_weather)
         missing_weather['kickoff_hour'] = get_kickoff_hours(start_times)
-        fetch_missing_weather(missing_weather)
+        fetch_missing_weather(missing_weather, raw_weather_path)
     return
 
 

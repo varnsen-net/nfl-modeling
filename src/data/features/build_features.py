@@ -13,6 +13,9 @@ with open('config.json') as f:
     RAW_GAMES_PATH = config['paths']['raw_games']
     RAW_WEATHER_PATH = config['paths']['raw_weather']
     CITY_COORDS_PATH = config['paths']['city_coords']
+    STATS_FEAT_PATH = config['paths']['stats_features']
+    TRAVEL_FEAT_PATH = config['paths']['travel_features']
+    WEATHER_FEAT_PATH = config['paths']['weather_features']
 
 
 def preprocess_games_data(games):
@@ -38,6 +41,6 @@ if __name__ == '__main__':
     city_coords = pd.read_csv(f"{CITY_COORDS_PATH}/city-coordinates.csv")
     weather = pd.read_csv(f"{RAW_WEATHER_PATH}/weather.csv")
 
-    make_travel_features(games, city_coords)
-    make_stats_features(games)
-    make_weather_features(games, weather)
+    make_travel_features(games, city_coords, TRAVEL_FEAT_PATH)
+    make_stats_features(games, STATS_FEAT_PATH)
+    make_weather_features(games, weather, WEATHER_FEAT_PATH)

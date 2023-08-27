@@ -36,6 +36,6 @@ if __name__ == '__main__':
              .dropna(subset=['result']))
     weather = pd.read_csv(f"{RAW_WEATHER_PATH}/weather.csv")
     city_coords = pd.read_csv(f"{CITY_COORDS_PATH}/city-coordinates.csv")
-    refresh_weather_data(games, weather, city_coords)
+    refresh_weather_data(games, weather, city_coords, RAW_WEATHER_PATH)
              
 

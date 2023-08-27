@@ -1,12 +1,5 @@
-import json
-
 import pandas as pd
 import numpy as np
-
-
-with open('config.json') as f:
-    config = json.load(f)
-    STATS_FEAT_PATH = config['paths']['stats_features']
 
 
 def calculate_cumulative_points(games):
@@ -48,14 +41,15 @@ def calculate_pythag_exp(points):
     return pythag_exp
 
 
-def make_stats_features(games):
+def make_stats_features(games, stats_feat_path):
     """Build engineered features for team stats.
     
     :param pd.DataFrame games: raw games dataframe
+    :param str stats_feat_path: path to save stats features
     :return: None
     :rtype: None
     """
     cumulative_points = calculate_cumulative_points(games)
     pythag_exp = calculate_pythag_exp(cumulative_points)
-    pythag_exp.to_csv(f"{STATS_FEAT_PATH}/pythag_exp.csv")
+    pythag_exp.to_csv(f"{stats_feat_path}/pythag_exp.csv")
     return
