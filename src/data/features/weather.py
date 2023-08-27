@@ -39,7 +39,7 @@ def make_weather_features(games, weather, weather_feat_path):
     :rtype: None
     """
     weather = fix_indoor_weather(games, weather)
-    weather.to_csv(f"{weather_feat_path}/weather.csv", index=False)
+    weather.to_csv(weather_feat_path, index=False)
     return
 
 

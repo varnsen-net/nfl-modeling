@@ -51,5 +51,5 @@ def make_stats_features(games, stats_feat_path):
     """
     cumulative_points = calculate_cumulative_points(games)
     pythag_exp = calculate_pythag_exp(cumulative_points)
-    pythag_exp.to_csv(f"{stats_feat_path}/pythag_exp.csv")
+    pythag_exp.to_csv(stats_feat_path)
     return

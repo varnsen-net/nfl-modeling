@@ -74,7 +74,7 @@ def fetch_missing_weather(weather, raw_weather_path, batch_size=500):
         print(f"Fetching weather for {latitude} by {longitude} on {date}...")
         response = fetch_gameday_weather(latitude, longitude, date)
         agg = aggregate_weather_response(response, kickoff_hour).to_list()
-        with open(f"{raw_weather_path}/weather.csv", 'a') as f:
+        with open(raw_weather_path, 'a') as f:
             writer = csv.writer(f)
             writer.writerow([index] + agg)
     return

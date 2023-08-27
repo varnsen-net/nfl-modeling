@@ -83,5 +83,5 @@ def make_travel_features(games, city_coords, travel_feat_path):
                     suffixes=['_away', '_home'])
              .drop(columns=['name']))
     away_travel_distances = get_away_travel_distances(games)
-    away_travel_distances.to_csv(f"{travel_feat_path}/away_travel_distances.csv", index=False)
+    away_travel_distances.to_csv(travel_feat_path, index=False)
     return

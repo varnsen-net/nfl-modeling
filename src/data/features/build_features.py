@@ -36,10 +36,10 @@ def preprocess_games_data(games):
 
 
 if __name__ == '__main__':
-    games = pd.read_csv(f"{RAW_GAMES_PATH}/games.csv")
+    games = pd.read_csv(RAW_GAMES_PATH)
     games = preprocess_games_data(games)
-    city_coords = pd.read_csv(f"{CITY_COORDS_PATH}/city-coordinates.csv")
-    weather = pd.read_csv(f"{RAW_WEATHER_PATH}/weather.csv")
+    city_coords = pd.read_csv(CITY_COORDS_PATH)
+    weather = pd.read_csv(RAW_WEATHER_PATH)
 
     make_travel_features(games, city_coords, TRAVEL_FEAT_PATH)
     make_stats_features(games, STATS_FEAT_PATH)

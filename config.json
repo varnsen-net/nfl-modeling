@@ -1,10 +1,11 @@
 {
     "paths": {
-        "raw_games": "./data/raw/games",
-        "raw_weather": "./data/external/weather",
-        "city_coords": "./data/ancillary",
-        "travel_features": "./data/features/travel",
-        "stats_features": "./data/features/stats",
-        "weather_features": "./data/features/weather"
+        "raw_games": "./data/raw/games/games.csv",
+        "raw_weather": "./data/external/weather/weather.csv",
+        "city_coords": "./data/ancillary/city-coordinates.csv",
+        "travel_features": "./data/features/travel/away-travel-distances.csv",
+        "stats_features": "./data/features/stats/pythagorean-expectations.csv",
+        "weather_features": "./data/features/weather/weather.csv",
+        "training_data": "./data/training/train.csv"
     }
 }

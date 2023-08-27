@@ -24,7 +24,7 @@ def refresh_games_data(path=RAW_GAMES_PATH):
     """
     url = 'https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv'
     response = requests.get(url)
-    with open(f"{path}/games.csv", 'w') as f:
+    with open(path, 'w') as f:
         f.write(response.text)
     return
 
@@ -32,10 +32,10 @@ def refresh_games_data(path=RAW_GAMES_PATH):
 if __name__ == '__main__':
     refresh_games_data()
 
-    games = (pd.read_csv(f"{RAW_GAMES_PATH}/games.csv")
+    games = (pd.read_csv(RAW_GAMES_PATH)
              .dropna(subset=['result']))
-    weather = pd.read_csv(f"{RAW_WEATHER_PATH}/weather.csv")
-    city_coords = pd.read_csv(f"{CITY_COORDS_PATH}/city-coordinates.csv")
+    weather = pd.read_csv(RAW_WEATHER_PATH)
+    city_coords = pd.read_csv(CITY_COORDS_PATH)
     refresh_weather_data(games, weather, city_coords, RAW_WEATHER_PATH)
              
 

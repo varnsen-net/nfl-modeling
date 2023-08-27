@@ -24,9 +24,10 @@ fi
 
 # create data dirs if they do not exist
 for path in $(jq -r '.paths[]' config.json); do
-    if [ ! -d "$path" ]; then
-        mkdir -p $path
-        echo "Created $path"
+    dir=$(dirname $path)
+    if [ ! -d "$dir" ]; then
+        mkdir -p $dir
+        echo "Created $dir"
     fi
 done
 
@@ -37,5 +38,7 @@ echo "Fetching raw data..."
 python src/data/raw/fetch_raw_data.py
 echo "Building features..."
 python src/data/features/build_features.py
+echo "Building training data..."
+python src/data/training/build_training_data.py
 
 
