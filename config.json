@@ -1,0 +1,10 @@
+{
+    "paths": {
+        "raw_games": "./data/raw/games",
+        "raw_weather": "./data/external/weather",
+        "city_coords": "./data/ancillary",
+        "travel_features": "./data/features/travel",
+        "stats_features": "./data/features/stats",
+        "weather_features": "./data/features/weather"
+    }
+}

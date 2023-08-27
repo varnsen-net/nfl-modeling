@@ -1,21 +1,41 @@
-# set PYTHONPATH to current directory
-export PYTHONPATH=`pwd`
+#!/bin/bash
 
 
-# check to see if user has already created a python virtual environment.
-# if not, create one and install the required packages.
+# handle virtualenv
 if [ ! -d "venv" ]; then
+    echo "Creating virtualenv"
     python3 -m venv venv
     source venv/bin/activate
     pip install -r requirements.txt
 fi
 
-
-# alert user if they have not activated the virtual environment
 if [ ! -n "$VIRTUAL_ENV" ]; then
-    echo "Please activate your virtual environment."
-    echo "Run the following command: source venv/bin/activate"
-    exit 1
+    source venv/bin/activate
+    echo "Activated $VIRTUAL_ENV"
 fi
+
+if ! cmp -s <(sort requirements.txt) <(pip freeze | sort); then
+    echo "╭───────────────────────────────────────────────────────────.★..─╮"
+    echo " Pip freeze does not match requirements.txt. Installing packages."
+    echo "╰─..★.───────────────────────────────────────────────────────────╯"
+    pip install -r requirements.txt
+fi
+
+
+# create data dirs if they do not exist
+for path in $(jq -r '.paths[]' config.json); do
+    if [ ! -d "$path" ]; then
+        mkdir -p $path
+        echo "Created $path"
+    fi
+done
+
+
+# build data
+export PYTHONPATH=`pwd`
+echo "Fetching raw data..."
+python src/data/fetch_raw_data.py
+echo "Building features..."
+python src/features/build_features.py
 
 

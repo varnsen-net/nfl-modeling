@@ -1,10 +1,14 @@
+import json
 import csv
 
 import numpy as np
 import pandas as pd
 import requests
 
-from src.config import WEATHER_FEAT_PATH
+
+with open('config.json') as f:
+    config = json.load(f)
+    WEATHER_FEAT_PATH = config['paths']['weather_features']
 
 
 def fix_indoor_weather(games, weather):

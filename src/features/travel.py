@@ -3,7 +3,10 @@ import json
 import pandas as pd
 import numpy as np
 
-from src.config import TRAVEL_FEAT_PATH
+
+with open('config.json') as f:
+    config = json.load(f)
+    TRAVEL_FEAT_PATH = config['paths']['travel_features']
 
 
 def get_city_coordinates(teams, loc_replacements):

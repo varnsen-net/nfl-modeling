@@ -1,7 +1,12 @@
+import json
+
 import pandas as pd
 import numpy as np
 
-from src.config import STATS_FEAT_PATH
+
+with open('config.json') as f:
+    config = json.load(f)
+    STATS_FEAT_PATH = config['paths']['stats_features']
 
 
 def calculate_cumulative_points(games):
