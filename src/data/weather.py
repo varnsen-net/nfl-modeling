@@ -1,11 +1,16 @@
+import json
 import csv
 
 import numpy as np
 import pandas as pd
 import requests
 
-from src.config import RAW_WEATHER_PATH
 from src.utils import fix_game_times, get_kickoff_hours
+
+
+with open('config.json') as f:
+    config = json.load(f)
+    WEATHER_FEAT_PATH = config['paths']['weather_features']
 
 
 def fetch_gameday_weather(latitude, longtiude, date):
