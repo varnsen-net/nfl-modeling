@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import requests
 
-from src.data.weather import refresh_weather_data
+from src.data.raw.weather import refresh_weather_data
 
 
 with open('config.json') as f:

@@ -34,8 +34,8 @@ done
 # build data
 export PYTHONPATH=`pwd`
 echo "Fetching raw data..."
-python src/data/fetch_raw_data.py
+python src/data/raw/fetch_raw_data.py
 echo "Building features..."
-python src/features/build_features.py
+python src/data/features/build_features.py
 
 

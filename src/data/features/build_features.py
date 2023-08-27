@@ -3,9 +3,9 @@ import json
 import pandas as pd
 import numpy as np
 
-from src.features.travel import make_travel_features
-from src.features.stats import make_stats_features
-from src.features.weather import make_weather_features
+from src.data.features.travel import make_travel_features
+from src.data.features.stats import make_stats_features
+from src.data.features.weather import make_weather_features
 
 
 with open('config.json') as f:
