@@ -13,6 +13,23 @@ with open('config.json') as f:
     TRAINING_DATA_PATH = config['paths']['training_data']
 
 
+def preprocess_games_data(games):
+    """Reduce the games dataframe -- only consider regular season games played
+    at home.
+    
+    :param pd.DataFrame games: raw games dataframe
+    :return: reduced games data
+    :rtype: pd.DataFrame
+    """
+    games = (games
+             .loc[games['game_type'] == 'REG']
+             .loc[games['location'] == 'Home']
+             .drop(columns=['game_type', 'location'])
+             .dropna(subset=['result'])
+             .copy())
+    return games
+
+
 def merge_pythag_exp(games, pythag_exp):
     """Merge pythagorean expectation data with games data.
     

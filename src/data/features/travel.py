@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 
+from src.utils import parse_common_args
+
 
 def get_city_coordinates(teams, loc_replacements):
     """Returns a dataframe with the decimal latitude and longitude for every
@@ -51,6 +53,25 @@ def calculate_distances(home_coords, away_coords):
     return distance
 
 
+def attach_lats_lons(games, city_coords):
+    """Merge the city coordinates onto the games dataframe.
+    
+    :param pd.DataFrame games: raw games data
+    :param pd.DataFrame city_coords: city lat/lon coordinates
+    :return: games dataframe with home and away coordinates attached
+    :rtype: pd.DataFrame
+    """
+    games = (games
+             .merge(city_coords[['name', 'lat', 'lon']], 
+                    left_on='away_team', right_on='name', how='left')
+             .drop(columns=['name'])
+             .merge(city_coords[['name', 'lat', 'lon']],
+                    left_on='home_team', right_on='name', how='left',
+                    suffixes=['_away', '_home'])
+             .drop(columns=['name']))
+    return games
+
+
 def get_away_travel_distances(games):
     """Calculate the distance traveled by the away team for each game.
     
@@ -74,14 +95,22 @@ def make_travel_features(games, city_coords, travel_feat_path):
     :return: None
     :rtype: None
     """
-    games = (games
-             .merge(city_coords[['name', 'lat', 'lon']], 
-                    left_on='away_team', right_on='name', how='left')
-             .drop(columns=['name'])
-             .merge(city_coords[['name', 'lat', 'lon']],
-                    left_on='home_team', right_on='name', how='left',
-                    suffixes=['_away', '_home'])
-             .drop(columns=['name']))
+    games = attach_lats_lons(games, city_coords)
     away_travel_distances = get_away_travel_distances(games)
-    away_travel_distances.to_csv(travel_feat_path, index=False)
+    away_travel_distances.to_csv(f"{travel_feat_path}/away-travel-distances.csv",
+                                 index=False)
     return
+
+
+if __name__ == '__main__':
+    args = parse_common_args()
+    raw_games_path = args.g
+    city_coords_path = args.cc
+    travel_feat_path = args.o
+
+    games = (pd.read_csv(raw_games_path)
+             .dropna(subset=['result']))
+    city_coords = pd.read_csv(city_coords_path)
+    make_travel_features(games, city_coords, travel_feat_path)
+             
+

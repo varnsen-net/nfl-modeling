@@ -1,3 +1,5 @@
+import argparse
+
 import numpy as np
 import pandas as pd
 
@@ -33,4 +35,15 @@ def get_kickoff_hours(gametimes):
     hours = gametimes.str.split(':').str[0].astype(int)
     return hours
 
+
+def parse_common_args():
+    """Parse a common set of arguments for writing data files."""
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('-c', help='path to config file')
+    argparser.add_argument('-g', help='path to raw games data')
+    argparser.add_argument('-w', help='path to raw weather data')
+    argparser.add_argument('-cc', help='path to city coordinates')
+    argparser.add_argument('-o', help='path to output files')
+    args = argparser.parse_args()
+    return args
 

@@ -1,6 +1,8 @@
 import pandas as pd
 import numpy as np
 
+from src.utils import parse_common_args
+
 
 def calculate_cumulative_points(games):
     """Calculate the cumulative points for/against each team up to each week.
@@ -51,5 +53,17 @@ def make_stats_features(games, stats_feat_path):
     """
     cumulative_points = calculate_cumulative_points(games)
     pythag_exp = calculate_pythag_exp(cumulative_points)
-    pythag_exp.to_csv(stats_feat_path)
+    pythag_exp.to_csv(f"{stats_feat_path}/pythagorean-expectations.csv")
     return
+
+
+if __name__ == '__main__':
+    args = parse_common_args()
+    raw_games_path = args.g
+    stats_feat_path = args.o
+
+    games = (pd.read_csv(raw_games_path)
+             .dropna(subset=['result']))
+    make_stats_features(games, stats_feat_path)
+             
+

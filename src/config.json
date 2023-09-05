@@ -1,0 +1,78 @@
+{
+    "training": {
+        "holdout_years": [2021, 2022, 2023]
+    },
+    "features": {
+        "weather": {
+            "temperature": {
+                "enabled": true,
+                "api_name": "temperature_2m",
+                "agg_func": "mean",
+                "default": 21.0,
+                "precision": 1
+            },
+            "apparent_temperature": {
+                "enabled": true,
+                "api_name": "apparent_temperature",
+                "agg_func": "mean",
+                "default": 21.0,
+                "precision": 1
+            },
+            "humidity": {
+                "enabled": true,
+                "api_name": "relativehumidity_2m",
+                "agg_func": "mean",
+                "default": 50.0,
+                "precision": 1
+            },
+            "dewpoint": {
+                "enabled": true,
+                "api_name": "dewpoint_2m",
+                "agg_func": "mean",
+                "default": 12.0,
+                "precision": 1
+            },
+            "pressure": {
+                "enabled": true,
+                "api_name": "surface_pressure",
+                "agg_func": "mean",
+                "default": null,
+                "precision": 0
+            },
+            "wind_speed": {
+                "enabled": true,
+                "api_name": "windspeed_10m",
+                "agg_func": "mean",
+                "default": 0.0,
+                "precision": 1
+            },
+            "cloud_cover": {
+                "enabled": true,
+                "api_name": "cloudcover",
+                "agg_func": "mean",
+                "default": 100.0,
+                "precision": 1
+            },
+            "rain": {
+                "enabled": true,
+                "api_name": "rain",
+                "agg_func": "sum",
+                "default": 0.0,
+                "precision": 2
+            },
+            "snow": {
+                "enabled": true,
+                "api_name": "snowfall",
+                "agg_func": "sum",
+                "default": 0.0,
+                "precision": 2
+            }
+        },
+        "stats": {
+            "pythagorean_expectation": {
+                "enabled": true,
+                "precision": 3
+            }
+        }
+    }
+}
