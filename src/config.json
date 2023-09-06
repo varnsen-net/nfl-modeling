@@ -1,6 +1,7 @@
 {
     "training": {
-        "holdout_years": [2021, 2022, 2023]
+        "holdout_years": [2021, 2022, 2023],
+        "games_cols": ["game_id", "season", "week", "away_rest", "home_rest", "div_game", "roof", "surface"]
     },
     "features": {
         "weather": {

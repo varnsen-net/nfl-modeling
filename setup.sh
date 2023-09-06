@@ -79,5 +79,5 @@ done
 # build training data
 fancy_echo "Building training data."
 mkdir -p "$TRAIN"
-python "$SOURCE/$RAW_TRAIN.py" -g "$RAW_GAMES.csv" -f "$FEATURES" -o "$RAW_TRAIN.csv"
+python "$SOURCE/$RAW_TRAIN.py" -c "$CONFIG" -g "$RAW_GAMES.csv" -f "$FEATURES" -o "$RAW_TRAIN.csv"
 echo "Raw training data written to $RAW_TRAIN.csv"
