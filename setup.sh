@@ -19,12 +19,14 @@ DATA="data"
 RAW="$DATA/raw"
 FEATURES="$DATA/features"
 ANCILLARY="$DATA/ancillary"
+TRAIN="$DATA/train"
 
 # file paths
 CONFIG="$SOURCE/config.json"
+CITY_COORDS="$ANCILLARY/city-coordinates.csv"
 RAW_GAMES="$RAW/games"
 RAW_WEATHER="$RAW/weather"
-CITY_COORDS="$ANCILLARY/city-coordinates.csv"
+RAW_TRAIN="$TRAIN/train"
 
 # common arguments to pass to python data scripts
 BUILD_ARGS="-c $CONFIG -g $RAW_GAMES.csv -w $RAW_WEATHER.csv -cc $CITY_COORDS"
@@ -72,3 +74,10 @@ find "$SOURCE/$FEATURES" -type f -name "*.py" | while read -r py_file; do
     mkdir -p "$target_dir"
     python "$py_file" $BUILD_ARGS -o "$target_dir"
 done
+
+
+# build training data
+fancy_echo "Building training data."
+mkdir -p "$TRAIN"
+python "$SOURCE/$RAW_TRAIN.py" -g "$RAW_GAMES.csv" -f "$FEATURES" -o "$RAW_TRAIN.csv"
+echo "Raw training data written to $RAW_TRAIN.csv"
