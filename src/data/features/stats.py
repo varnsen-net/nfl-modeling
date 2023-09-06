@@ -43,6 +43,31 @@ def calculate_pythag_exp(points):
     return pythag_exp
 
 
+def map_team_data_to_games(games, stats):
+    """Map a pandas series of team stats with a season/week/team multiindex
+    to game_ids in the games data.
+    
+    :param pd.DataFrame games: raw games dataframe
+    :param pd.Series stats: series of team stats with season/week/team index
+    :return: dataframe with game_id, away_team_stat, home_team_stat
+    :rtype: pd.DataFrame
+    """
+    name = stats.name
+    merged = (games
+              .merge(stats, how='inner',
+                     left_on=['season', 'week', 'away_team'],
+                     right_on=['season', 'week', 'team'])
+              .rename(columns={f'{name}': f'away_{name}'})
+              .merge(stats, how='inner',
+                     left_on=['season', 'week', 'home_team'],
+                     right_on=['season', 'week', 'team'])
+              .rename(columns={f'{name}': f'home_{name}'}))
+    remapped_stats = (merged
+                      [['game_id', f'away_{name}', f'home_{name}']]
+                      .set_index('game_id'))
+    return remapped_stats
+
+
 def make_stats_features(games, stats_feat_path):
     """Build engineered features for team stats.
     
@@ -53,6 +78,7 @@ def make_stats_features(games, stats_feat_path):
     """
     cumulative_points = calculate_cumulative_points(games)
     pythag_exp = calculate_pythag_exp(cumulative_points)
+    pythag_exp = map_team_data_to_games(games, pythag_exp)
     pythag_exp.to_csv(f"{stats_feat_path}/pythagorean-expectations.csv")
     return
 
