@@ -74,6 +74,12 @@
                 "enabled": true,
                 "precision": 3
             }
+        },
+        "travel": {
+            "away_travel_distance": {
+                "enabled": true,
+                "precision": -1
+            }
         }
     }
 }
