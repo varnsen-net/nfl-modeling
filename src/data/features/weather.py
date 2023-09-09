@@ -8,25 +8,18 @@ import requests
 from src.utils import parse_common_args
 
 
-def fix_indoor_weather(games, weather):
+def fix_indoor_weather(games, weather, defaults):
     """Fix the weather data for indoor games.
     
     :param pd.DataFrame games: raw games data
     :param pd.DataFrame weather: raw weather data
+    :param dict defaults: default weather values
     :return: weather data with indoor games fixed
     :rtype: pd.DataFrame
     """
-    weather_cols = {'temp_C': 21.0,
-                    'feelslike_C': 21.0,
-                    'rel_humidity_pc': 50,
-                    'dewpoint_C': 16.0,
-                    'wind_speed_kmh': 0.0,
-                    'cloudcover_pc': 100,
-                    'rain_mm': 0.0,
-                    'snowfall_cm': 0.0}
     indoor_labels = ['dome', 'closed']
     indoor_games = games.query('roof in @indoor_labels').set_index('game_id')
-    indoor_weather = pd.DataFrame(weather_cols, index=indoor_games.index)
+    indoor_weather = pd.DataFrame(defaults, index=indoor_games.index)
     weather = weather.set_index('game_id')
     weather.update(indoor_weather)
     weather = weather.reset_index()
@@ -43,8 +36,10 @@ def make_weather_features(games, weather, weather_metadata, output_path):
     :return: None
     :rtype: None
     """
-    weather = fix_indoor_weather(games, weather)
-    for feature in weather_metadata.values():
+    metadata_values = weather_metadata.values()
+    weather_defaults = {f['api_name']: f['default'] for f in metadata_values}
+    weather = fix_indoor_weather(games, weather, weather_defaults)
+    for feature in metadata_values:
         col = feature['api_name']
         feature_data = weather[['game_id', col]]
         feature_data.to_csv(f"{output_path}/{col}.csv", index=False)

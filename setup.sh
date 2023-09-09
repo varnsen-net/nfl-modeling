@@ -22,11 +22,13 @@ ANCILLARY="$DATA/ancillary"
 TRAIN="$DATA/train"
 
 # file paths
+# some paths lack extensions because they can refer to .py or .csv files
 CONFIG="$SOURCE/config.json"
 CITY_COORDS="$ANCILLARY/city-coordinates.csv"
 RAW_GAMES="$RAW/games"
 RAW_WEATHER="$RAW/weather"
 RAW_TRAIN="$TRAIN/train"
+RAW_TARGET="$TRAIN/target"
 
 # common arguments to pass to python data scripts
 BUILD_ARGS="-c $CONFIG -g $RAW_GAMES.csv -w $RAW_WEATHER.csv -cc $CITY_COORDS"
@@ -81,3 +83,9 @@ fancy_echo "Building training data."
 mkdir -p "$TRAIN"
 python "$SOURCE/$RAW_TRAIN.py" -c "$CONFIG" -g "$RAW_GAMES.csv" -f "$FEATURES" -o "$RAW_TRAIN.csv"
 echo "Raw training data written to $RAW_TRAIN.csv"
+
+
+# build target data
+fancy_echo "Building target data."
+python "$SOURCE/$RAW_TARGET.py" -g "$RAW_GAMES.csv" -o "$RAW_TARGET.csv"
+echo "Raw target data written to $RAW_TARGET.csv"
