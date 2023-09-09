@@ -76,6 +76,31 @@ def attach_city_coords(games, city_coords):
     return games
 
 
+def weather_values_are_good(aggs):
+    """Checks the weather response aggregation for NaN values.
+    
+    :param list[float] aggs: aggregated weather data
+    :return: True if any values in aggs are NaN, False otherwise
+    :rtype: bool
+    """
+    return not any(np.isnan(aggs))
+
+
+def write_weather_row(game_id, agg, raw_weather_path):
+    """Writes a row to the weather.csv file.
+    
+    :param str game_id: game id
+    :param list[float] agg: aggregated weather data
+    :param str raw_weather_path: path to raw data directory
+    :return: None
+    :rtype: None
+    """
+    with open(raw_weather_path, 'a') as f:
+        writer = csv.writer(f)
+        writer.writerow([game_id] + agg)
+    return
+
+
 def fetch_missing_weather(weather, raw_weather_path, weather_vars,
                           aggregations, batch_size):
     """Fetches weather data for each game in weather and appends to weather.csv.
@@ -83,6 +108,7 @@ def fetch_missing_weather(weather, raw_weather_path, weather_vars,
     :param pd.DataFrame weather: weather dataframe
     :param str raw_weather_path: path to raw data directory
     :param str weather_vars: comma-separated weather variables to fetch
+    :param dict aggregations: aggregation functions for each weather variable
     :param int batch_size: number of games to fetch weather for at a time
     :return: None
     :rtype: None
@@ -97,9 +123,8 @@ def fetch_missing_weather(weather, raw_weather_path, weather_vars,
         print(f"Fetching weather for {latitude} by {longitude} on {date}...")
         response = fetch_gameday_weather(latitude, longitude, date, weather_vars)
         agg = aggregate_weather_response(response, kickoff_hour, aggregations).to_list()
-        with open(raw_weather_path, 'a') as f:
-            writer = csv.writer(f)
-            writer.writerow([game_id] + agg)
+        if weather_values_are_good(agg):
+            write_weather_row(game_id, agg, raw_weather_path)
     return
 
 
