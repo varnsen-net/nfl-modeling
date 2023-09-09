@@ -1,7 +1,9 @@
+import json
+
 import pandas as pd
 import numpy as np
 
-from src.utils import parse_common_args
+from src.utils import parse_common_args, map_team_data_to_games
 
 
 def calculate_cumulative_points(games):
@@ -39,57 +41,53 @@ def calculate_pythag_exp(points):
     numerator = points['cpf'] ** 2.68
     denominator = points['cpf'] ** 2.68 + points['cpa'] ** 2.68
     pythag_exp = numerator / denominator
-    pythag_exp.name = 'pythag_exp'
     return pythag_exp
 
 
-def map_team_data_to_games(games, stats):
-    """Map a pandas series of team stats with a season/week/team multiindex
-    to game_ids in the games data.
+def make_pythag_exp_feature(games, pythag_exp_name):
+    """Build pythagorean expectation feature.
     
     :param pd.DataFrame games: raw games dataframe
-    :param pd.Series stats: series of team stats with season/week/team index
-    :return: dataframe with game_id, away_team_stat, home_team_stat
-    :rtype: pd.DataFrame
-    """
-    name = stats.name
-    merged = (games
-              .merge(stats, how='inner',
-                     left_on=['season', 'week', 'away_team'],
-                     right_on=['season', 'week', 'team'])
-              .rename(columns={f'{name}': f'away_{name}'})
-              .merge(stats, how='inner',
-                     left_on=['season', 'week', 'home_team'],
-                     right_on=['season', 'week', 'team'])
-              .rename(columns={f'{name}': f'home_{name}'}))
-    remapped_stats = (merged
-                      [['game_id', f'away_{name}', f'home_{name}']]
-                      .set_index('game_id'))
-    return remapped_stats
-
-
-def make_stats_features(games, stats_feat_path):
-    """Build engineered features for team stats.
-    
-    :param pd.DataFrame games: raw games dataframe
-    :param str stats_feat_path: path to save stats features
+    :param dict stats_features: stats features to build
+    :param str output_path: path to save stats features
     :return: None
     :rtype: None
     """
     cumulative_points = calculate_cumulative_points(games)
     pythag_exp = calculate_pythag_exp(cumulative_points)
+    pythag_exp.name = pythag_exp_name
     pythag_exp = map_team_data_to_games(games, pythag_exp)
-    pythag_exp.to_csv(f"{stats_feat_path}/pythagorean-expectations.csv")
+    return pythag_exp
+
+
+def make_stats_features(games, stats_features, output_path):
+    """Build engineered features for team stats.
+    
+    :param pd.DataFrame games: raw games dataframe
+    :param dict stats_features: stats features to build
+    :param str output_path: path to save stats features
+    :return: None
+    :rtype: None
+    """
+    feature_names = list(stats_features)
+    pythag_exp_name = feature_names[0]
+    pythag_exp = make_pythag_exp_feature(games, pythag_exp_name)
+    pythag_exp.to_csv(f"{output_path}/{pythag_exp_name}.csv")
     return
 
 
 if __name__ == '__main__':
     args = parse_common_args()
+    config_path = args.c
     raw_games_path = args.g
-    stats_feat_path = args.o
+    output_path = args.o
+
+    with open(config_path, 'r') as f:
+        config = json.load(f)
+        stats_features = config['features']['stats']
 
     games = (pd.read_csv(raw_games_path)
              .dropna(subset=['result']))
-    make_stats_features(games, stats_feat_path)
+    make_stats_features(games, stats_features, output_path)
              
 

@@ -4,6 +4,18 @@ import numpy as np
 import pandas as pd
 
 
+def parse_common_args():
+    """Parse a common set of arguments for writing data files."""
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('-c', help='path to config file')
+    argparser.add_argument('-g', help='path to raw games data')
+    argparser.add_argument('-w', help='path to raw weather data')
+    argparser.add_argument('-cc', help='path to city coordinates')
+    argparser.add_argument('-o', help='path to output files')
+    args = argparser.parse_args()
+    return args
+
+
 def fix_game_times(games):
     """Cleans the gametime column.
 
@@ -36,14 +48,26 @@ def get_kickoff_hours(gametimes):
     return hours
 
 
-def parse_common_args():
-    """Parse a common set of arguments for writing data files."""
-    argparser = argparse.ArgumentParser()
-    argparser.add_argument('-c', help='path to config file')
-    argparser.add_argument('-g', help='path to raw games data')
-    argparser.add_argument('-w', help='path to raw weather data')
-    argparser.add_argument('-cc', help='path to city coordinates')
-    argparser.add_argument('-o', help='path to output files')
-    args = argparser.parse_args()
-    return args
-
+def map_team_data_to_games(games, stats):
+    """Map a pandas series of team stats with a season/week/team multiindex
+    to game_ids in the games data.
+    
+    :param pd.DataFrame games: raw games dataframe
+    :param pd.Series stats: series of team stats with season/week/team index
+    :return: dataframe with game_id, away_team_stat, home_team_stat
+    :rtype: pd.DataFrame
+    """
+    name = stats.name
+    merged = (games
+              .merge(stats, how='inner',
+                     left_on=['season', 'week', 'away_team'],
+                     right_on=['season', 'week', 'team'])
+              .rename(columns={f'{name}': f'away_{name}'})
+              .merge(stats, how='inner',
+                     left_on=['season', 'week', 'home_team'],
+                     right_on=['season', 'week', 'team'])
+              .rename(columns={f'{name}': f'home_{name}'}))
+    remapped_stats = (merged
+                      [['game_id', f'away_{name}', f'home_{name}']]
+                      .set_index('game_id'))
+    return remapped_stats
