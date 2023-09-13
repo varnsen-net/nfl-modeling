@@ -56,6 +56,8 @@ if __name__ == '__main__':
 
     # Build training data
     print('Building training data...')
+    train_dir = train_path.rsplit('/', 1)[0]
+    os.makedirs(train_dir, exist_ok=True)
     build_train(config_path, raw_games_path, features_path, train_path)
     build_target(raw_games_path, target_path)
 
