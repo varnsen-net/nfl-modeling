@@ -1,9 +1,4 @@
-import argparse
-
-import pandas as pd
 import requests
-
-from src.utils import parse_common_args
 
 
 def refresh_games_data(path):
@@ -21,9 +16,3 @@ def refresh_games_data(path):
         with open(path, 'w') as f:
             f.write(response.text)
     return
-
-
-if __name__ == '__main__':
-    args = parse_common_args()
-    raw_games_path = args.g
-    refresh_games_data(raw_games_path)

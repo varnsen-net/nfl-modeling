@@ -13,25 +13,22 @@ fancy_echo() {
     echo "└${flair}${bar}┘"
 }
 
-# base paths
+# paths
 SOURCE="src"
 DATA="data"
 RAW="$DATA/raw"
 FEATURES="$DATA/features"
 ANCILLARY="$DATA/ancillary"
-TRAIN="$DATA/train"
 
-# file paths
-# some paths lack extensions because they can refer to .py or .csv files
 CONFIG="$SOURCE/config.json"
+RAW_GAMES="$RAW/games.csv"
+RAW_WEATHER="$RAW/weather.csv"
 CITY_COORDS="$ANCILLARY/city-coordinates.csv"
-RAW_GAMES="$RAW/games"
-RAW_WEATHER="$RAW/weather"
-RAW_TRAIN="$TRAIN/train"
-RAW_TARGET="$TRAIN/target"
+TRAIN="$DATA/train/train.csv"
+TARGET="$DATA/train/target.csv"
 
-# common arguments to pass to python data scripts
-BUILD_ARGS="-c $CONFIG -g $RAW_GAMES.csv -w $RAW_WEATHER.csv -cc $CITY_COORDS"
+# arguments
+BUILD_ARGS="-c $CONFIG -g $RAW_GAMES -w $RAW_WEATHER -cc $CITY_COORDS -f $FEATURES -tr $TRAIN -ta $TARGET"
 
 
 # handle virtualenv
@@ -53,39 +50,6 @@ if ! cmp -s <(sort requirements.txt) <(pip freeze | sort); then
 fi
 
 
-# fetch latest raw data
-fancy_echo "Fetching latest raw data."
-mkdir -p "$RAW"
-python "$SOURCE/$RAW_GAMES.py" -g "$RAW_GAMES.csv"
-echo "Raw games written to $RAW_GAMES.csv"
-
-
-# update raw weather data
-fancy_echo "Updating raw weather data."
-python "$SOURCE/$RAW_WEATHER.py" $BUILD_ARGS
-echo "Raw weather written to $RAW_WEATHER.csv"
-
-
-# recurvisely build features data
-fancy_echo "Building features data."
-echo "Build arguments: $BUILD_ARGS"
-find "$SOURCE/$FEATURES" -type f -name "*.py" | while read -r py_file; do
-    relative_path=${py_file#"$SOURCE/$DATA/"}
-    target_dir="$DATA/${relative_path%.py}"
-    echo "Running $py_file and writing to $target_dir"
-    mkdir -p "$target_dir"
-    python "$py_file" $BUILD_ARGS -o "$target_dir"
-done
-
-
-# build training data
-fancy_echo "Building training data."
-mkdir -p "$TRAIN"
-python "$SOURCE/$RAW_TRAIN.py" -c "$CONFIG" -g "$RAW_GAMES.csv" -f "$FEATURES" -o "$RAW_TRAIN.csv"
-echo "Raw training data written to $RAW_TRAIN.csv"
-
-
-# build target data
-fancy_echo "Building target data."
-python "$SOURCE/$RAW_TARGET.py" -g "$RAW_GAMES.csv" -o "$RAW_TARGET.csv"
-echo "Raw target data written to $RAW_TARGET.csv"
+# build data
+fancy_echo "Building data"
+python3 $SOURCE/data/build.py $BUILD_ARGS

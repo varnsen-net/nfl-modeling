@@ -1,6 +1,5 @@
 import os
 import json
-import argparse
 
 import numpy as np
 import pandas as pd
@@ -65,24 +64,22 @@ def reduce_training_cols(games, games_cols):
     return games
 
 
-if __name__ == '__main__':
-    argparser = argparse.ArgumentParser()
-    argparser.add_argument('-c', help='path to config file')
-    argparser.add_argument('-g', help='path to games data')
-    argparser.add_argument('-f', help='path to features data')
-    argparser.add_argument('-o', help='path to output data')
-    args = argparser.parse_args()
-    config_path = args.c
-    raw_games_path = args.g
-    features_path = args.f
-    output_path = args.o
-
+def build_train(config_path, raw_games_path, features_path, train_path):
+    """Build the training data.
+    
+    :param str config_path: path to config file
+    :param str raw_games_path: path to raw games data
+    :param str features_path: path to features directory
+    :param str train_path: path to save training data
+    :return: None
+    :rtype: None
+    """
     with open(config_path, 'r') as f:
         config = json.load(f)
         games_cols = config['training']['games_cols']
-
     games = pd.read_csv(raw_games_path)
     processed = preprocess_games_data(games)
     reduced = reduce_training_cols(processed, games_cols)
     train = merge_features(reduced, features_path)
-    train.to_csv(output_path, index=False)
+    train.to_csv(train_path, index=False)
+    return

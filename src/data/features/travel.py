@@ -3,8 +3,6 @@ import json
 import pandas as pd
 import numpy as np
 
-from src.utils import parse_common_args
-
 
 def get_city_coordinates(teams, loc_replacements):
     """Returns a dataframe with the decimal latitude and longitude for every
@@ -89,38 +87,26 @@ def get_away_travel_distances(games, name):
     return away_travel_distances
 
 
-def make_travel_features(games, city_coords, travel_metadata, output_path):
+def build_features(config_path, raw_games_path, city_coords_path, output_dir, **kwargs):
     """Build engineered features for team travel.
 
-    :param pd.DataFrame games: raw games data
-    :param pd.DataFrame city_coords: city coordinates
-    :param dict travel_metadata: travel feature metadata
-    :param str output_path: path to save travel features
+    :param str config_path: path to config file
+    :param str raw_games_path: path to raw games data
+    :param str city_coords_path: path to city coordinates data
+    :param str output_dir: path to output directory
+    :param dict kwargs: additional keyword arguments
     :return: None
     :rtype: None
     """
+    with open(config_path) as f:
+        config = json.load(f)
+        travel_metadata = config['features']['travel']
+    games = (pd.read_csv(raw_games_path)
+             .dropna(subset=['result']))
+    city_coords = pd.read_csv(city_coords_path)
     feature_names = list(travel_metadata)
     away_travel_distance_name = feature_names[0]
     games = attach_lats_lons(games, city_coords)
     away_travel_distances = get_away_travel_distances(games, away_travel_distance_name)
-    away_travel_distances.to_csv(f"{output_path}/{away_travel_distance_name}.csv")
+    away_travel_distances.to_csv(f"{output_dir}/{away_travel_distance_name}.csv")
     return
-
-
-if __name__ == '__main__':
-    args = parse_common_args()
-    config_path = args.c
-    raw_games_path = args.g
-    city_coords_path = args.cc
-    output_path = args.o
-
-    with open(config_path) as f:
-        config = json.load(f)
-        travel_metadata = config['features']['travel']
-
-    games = (pd.read_csv(raw_games_path)
-             .dropna(subset=['result']))
-    city_coords = pd.read_csv(city_coords_path)
-    make_travel_features(games, city_coords, travel_metadata, output_path)
-             
-

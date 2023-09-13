@@ -1,6 +1,5 @@
 import os
 import json
-import argparse
 
 import numpy as np
 import pandas as pd
@@ -17,15 +16,16 @@ def make_target_col(games):
     return target
 
 
-if __name__ == '__main__':
-    argparser = argparse.ArgumentParser()
-    argparser.add_argument('-g', help='path to games data')
-    argparser.add_argument('-o', help='path to output data')
-    args = argparser.parse_args()
-    raw_games_path = args.g
-    output_path = args.o
-
+def build_target(raw_games_path, target_path):
+    """Build target column for games data.
+    
+    :param str raw_games_path: path to raw games data
+    :param str target_path: path to output data
+    :return: None
+    :rtype: None
+    """
     games = pd.read_csv(raw_games_path)
     games['target'] = make_target_col(games)
-    train = games[['game_id', 'target']]
-    train.to_csv(output_path, index=False)
+    target = games[['game_id', 'target']]
+    target.to_csv(target_path, index=False)
+    return
