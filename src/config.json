@@ -10,14 +10,14 @@
                 "api_name": "temperature_2m",
                 "agg_func": "mean",
                 "default": 21.0,
-                "precision": 1
+                "precision": 0
             },
             "apparent_temperature": {
                 "enabled": true,
                 "api_name": "apparent_temperature",
                 "agg_func": "mean",
                 "default": 21.0,
-                "precision": 1
+                "precision": 0
             },
             "humidity": {
                 "enabled": true,
@@ -52,21 +52,21 @@
                 "api_name": "cloudcover",
                 "agg_func": "mean",
                 "default": 100.0,
-                "precision": 1
+                "precision": 0
             },
             "rain": {
                 "enabled": true,
                 "api_name": "rain",
                 "agg_func": "sum",
                 "default": 0.0,
-                "precision": 2
+                "precision": 1
             },
             "snow": {
                 "enabled": true,
                 "api_name": "snowfall",
                 "agg_func": "sum",
                 "default": 0.0,
-                "precision": 2
+                "precision": 1
             }
         },
         "stats": {
