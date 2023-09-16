@@ -1,3 +1,5 @@
+"""Functions for fetching and processing weather data."""
+
 import json
 import csv
 
