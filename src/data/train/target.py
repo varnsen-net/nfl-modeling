@@ -1,5 +1,4 @@
-import os
-import json
+"""Helper functions for building target column for games data."""
 
 import numpy as np
 import pandas as pd

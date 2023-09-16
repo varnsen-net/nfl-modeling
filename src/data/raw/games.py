@@ -1,3 +1,5 @@
+"""Helper functions for fetching and saving NFL game data."""
+
 import requests
 
 

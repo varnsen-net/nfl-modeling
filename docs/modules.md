@@ -3,7 +3,7 @@
 ## src.utils
 **Path:** `src/utils.py`
 
-Utility functions. These are all functions which are used in mutliple places throughout the source code and cannot be coupled to any particular module.
+Utility functions. These functions are used in mutliple places throughout the source code and cannot be coupled to any particular module.
 
 ## src.__init__
 **Path:** `src/__init__.py`
@@ -13,57 +13,53 @@ None
 ## src.data.preprocess
 **Path:** `src/data/preprocess.py`
 
-A set of functions for processing training data after it has been compiled (but before sending it to the pipeline).
+Helper functions for preprocessing training data before sending it to the model pipeline.
 
 ## src.data.build
 **Path:** `src/data/build.py`
 
-Handles fetching raw data, building features, and assembling training data.
+Builds the full set of training data from scratch.
 
-build.py is the main script for building the training data. It coordinates all of the paths it receives from setup.sh with helper functions for fetching/building data.
-
-Notes
------
-Feature data creation 
+Receives a set of paths from setup.sh, then fetches raw data, builds features, and assembles training data.
 
 
 ## src.data.features.travel
 **Path:** `src/data/features/travel.py`
 
-None
+Helper functions for building engineered features for team travel.
 
 ## src.data.features.weather
 **Path:** `src/data/features/weather.py`
 
-None
+Helper functions for building weather features.
 
 ## src.data.features.stats
 **Path:** `src/data/features/stats.py`
 
-None
+Helper functions for building engineered features for team stats.
 
 ## src.data.raw.weather
 **Path:** `src/data/raw/weather.py`
 
-Functions for fetching and processing weather data.
+Helper functions for fetching raw weather data.
 
 ## src.data.raw.games
 **Path:** `src/data/raw/games.py`
 
-None
+Helper functions for fetching and saving NFL game data.
 
 ## src.data.train.target
 **Path:** `src/data/train/target.py`
 
-None
+Helper functions for building target column for games data.
 
 ## src.data.train.train
 **Path:** `src/data/train/train.py`
 
-None
+Helper functions for building the training data.
 
 ## src.docs.build
 **Path:** `src/docs/build.py`
 
-Extract docstrings from source files and build the documentation.
+Extracts docstrings from source files and builds the documentation.
 

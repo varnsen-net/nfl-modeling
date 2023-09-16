@@ -1,4 +1,4 @@
-"""Extract docstrings from source files and build the documentation."""
+"""Extracts docstrings from source files and builds the documentation."""
 
 import os
 import importlib.util

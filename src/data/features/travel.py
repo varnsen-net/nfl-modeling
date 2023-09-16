@@ -1,3 +1,5 @@
+"""Helper functions for building engineered features for team travel."""
+
 import json
 
 import pandas as pd

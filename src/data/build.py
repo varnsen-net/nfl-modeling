@@ -1,10 +1,6 @@
-"""Handles fetching raw data, building features, and assembling training data.
+"""Builds the full set of training data from scratch.
 
-build.py is the main script for building the training data. It coordinates all of the paths it receives from setup.sh with helper functions for fetching/building data.
-
-Notes
------
-Feature data creation 
+Receives a set of paths from setup.sh, then fetches raw data, builds features, and assembles training data.
 """
 
 import os

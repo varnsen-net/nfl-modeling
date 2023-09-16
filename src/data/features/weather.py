@@ -1,4 +1,5 @@
-import json
+"""Helper functions for building weather features."""
+
 import csv
 
 import numpy as np

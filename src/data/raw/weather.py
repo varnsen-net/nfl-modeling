@@ -1,4 +1,4 @@
-"""Functions for fetching and processing weather data."""
+"""Helper functions for fetching raw weather data."""
 
 import json
 import csv

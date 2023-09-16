@@ -1,4 +1,4 @@
-"""Utility functions. These are all functions which are used in mutliple places throughout the source code and cannot be coupled to any particular module."""
+"""Utility functions. These functions are used in mutliple places throughout the source code and cannot be coupled to any particular module."""
 
 import numpy as np
 import pandas as pd

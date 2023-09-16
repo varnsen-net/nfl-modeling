@@ -1,4 +1,4 @@
-import json
+"""Helper functions for building engineered features for team stats."""
 
 import pandas as pd
 import numpy as np
