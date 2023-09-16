@@ -59,23 +59,19 @@ def make_pythag_exp_feature(games, pythag_exp_name):
     return pythag_exp
 
 
-def build_features(config_path, raw_games_path, output_dir, **kwargs):
+def build_features(metadata, raw_games_path, output_dir, **kwargs):
     """Build engineered features for team stats.
     
-    :param str config_path: path to config file
+    :param dict metadata: metadata for stats features
     :param str raw_games_path: path to raw games data
     :param str output_dir: path to save stats features
     :param dict kwargs: additional arguments
     :return: None
     :rtype: None
     """
-    with open(config_path, 'r') as f:
-        config = json.load(f)
-        stats_features = config['features']['stats']
     games = (pd.read_csv(raw_games_path)
              .dropna(subset=['result']))
-
-    feature_names = list(stats_features)
+    feature_names = list(metadata)
     pythag_exp_name = feature_names[0]
     pythag_exp = make_pythag_exp_feature(games, pythag_exp_name)
     pythag_exp.to_csv(f"{output_dir}/{pythag_exp_name}.csv")

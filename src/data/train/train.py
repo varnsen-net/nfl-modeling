@@ -5,7 +5,7 @@ import numpy as np
 import pandas as pd
 
 
-def preprocess_games_data(games):
+def preprocess_raw_games(games):
     """Reduce the games dataframe -- only consider regular season games played
     at home.
     
@@ -64,21 +64,18 @@ def reduce_training_cols(games, games_cols):
     return games
 
 
-def build_train(config_path, raw_games_path, features_path, train_path):
+def build_train(games_cols, raw_games_path, features_path, train_path):
     """Build the training data.
     
-    :param str config_path: path to config file
+    :param list games_cols: columns to keep
     :param str raw_games_path: path to raw games data
     :param str features_path: path to features directory
     :param str train_path: path to save training data
     :return: None
     :rtype: None
     """
-    with open(config_path, 'r') as f:
-        config = json.load(f)
-        games_cols = config['training']['games_cols']
     games = pd.read_csv(raw_games_path)
-    processed = preprocess_games_data(games)
+    processed = preprocess_raw_games(games)
     reduced = reduce_training_cols(processed, games_cols)
     train = merge_features(reduced, features_path)
     train.to_csv(train_path, index=False)

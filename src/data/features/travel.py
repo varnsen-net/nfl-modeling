@@ -87,10 +87,10 @@ def get_away_travel_distances(games, name):
     return away_travel_distances
 
 
-def build_features(config_path, raw_games_path, city_coords_path, output_dir, **kwargs):
+def build_features(metadata, raw_games_path, city_coords_path, output_dir, **kwargs):
     """Build engineered features for team travel.
 
-    :param str config_path: path to config file
+    :param dict metadata: travel features metadata
     :param str raw_games_path: path to raw games data
     :param str city_coords_path: path to city coordinates data
     :param str output_dir: path to output directory
@@ -98,13 +98,10 @@ def build_features(config_path, raw_games_path, city_coords_path, output_dir, **
     :return: None
     :rtype: None
     """
-    with open(config_path) as f:
-        config = json.load(f)
-        travel_metadata = config['features']['travel']
     games = (pd.read_csv(raw_games_path)
              .dropna(subset=['result']))
     city_coords = pd.read_csv(city_coords_path)
-    feature_names = list(travel_metadata)
+    feature_names = list(metadata)
     away_travel_distance_name = feature_names[0]
     games = attach_lats_lons(games, city_coords)
     away_travel_distances = get_away_travel_distances(games, away_travel_distance_name)

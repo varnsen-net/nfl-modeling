@@ -31,23 +31,32 @@ if __name__ == '__main__':
     target_path = args.ta
 
 
+    # Load config
+    with open(config_path, 'r') as f:
+        config = json.load(f)
+        features_metadata = config['features']
+        weather_metadata = features_metadata['weather']
+        games_cols = config['training']['games_cols']
+
+
     # Refresh raw data
     print('Refreshing raw games data...')
     refresh_games_data(raw_games_path)
     print('Refreshing raw weather data...')
-    refresh_weather_data(config_path, raw_games_path, raw_weather_path,
+    refresh_weather_data(weather_metadata, raw_games_path, raw_weather_path,
                          city_coords_path, batch_size=1000)
 
 
     # Build features
     for file in os.listdir('src/data/features'):
         if file.endswith('.py'):
-            print(f'Building features from {file}...')
+            print(f'Building features with {file}...')
             module = file[:-3]
             exec(f'from src.data.features.{module} import build_features')
             output_dir = f"{features_path}/{module}"
             os.makedirs(output_dir, exist_ok=True)
-            build_features(config_path=config_path,
+            metadata = features_metadata[module]
+            build_features(metadata=metadata,
                            raw_games_path=raw_games_path,
                            raw_weather_path=raw_weather_path,
                            city_coords_path=city_coords_path,
@@ -58,6 +67,6 @@ if __name__ == '__main__':
     print('Building training data...')
     train_dir = train_path.rsplit('/', 1)[0]
     os.makedirs(train_dir, exist_ok=True)
-    build_train(config_path, raw_games_path, features_path, train_path)
+    build_train(games_cols, raw_games_path, features_path, train_path)
     build_target(raw_games_path, target_path)
 
