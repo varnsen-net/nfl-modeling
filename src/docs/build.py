@@ -12,10 +12,8 @@ def extract_module_info(module):
     :rtype: dict
     """
     name = module.__name__
-    relative_path = os.path.relpath(module.__file__, os.environ["PYTHONPATH"])
     docstring = module.__doc__
     module_info = {"name": name,
-                   "path": relative_path,
                    "docstring": docstring}
     return module_info
 
@@ -48,7 +46,6 @@ def build_modules_markdown(path):
         for doc in fetch_module_docs():
             print(doc)
             f.write(f"## {doc['name']}\n")
-            f.write(f"**Path:** `{doc['path']}`\n\n")
             f.write(f"{doc['docstring']}\n\n")
     return
 
