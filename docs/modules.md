@@ -10,11 +10,6 @@ Utility functions. These functions are used in mutliple places throughout the so
 
 None
 
-## src.data.preprocess
-**Path:** `src/data/preprocess.py`
-
-Helper functions for preprocessing training data before sending it to the model pipeline.
-
 ## src.data.build
 **Path:** `src/data/build.py`
 
@@ -62,4 +57,14 @@ Helper functions for building the training data.
 **Path:** `src/docs/build.py`
 
 Extracts docstrings from source files and builds the documentation.
+
+## src.model.process
+**Path:** `src/model/process.py`
+
+Helper functions for processing training data in a scikit pipeline.
+
+Instead of creating bespoke classes that inherit from scikit, we'll rely on the FunctionTransformer to make them compatible with scikit pipelines.
+
+https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html
+
 
