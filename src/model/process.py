@@ -1,8 +1,8 @@
 """Helper functions for processing training data in a scikit pipeline.
 
-Instead of creating bespoke classes that inherit from scikit, we'll rely on the FunctionTransformer to make them compatible with scikit pipelines.
+Instead of creating bespoke classes that inherit from scikit, we'll rely on the FunctionTransformer to make them compatible with scikit pipelines. https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html
 
-https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html
+The preprocessing function is reserved for model-agnostic transformations that should be done at the start of a pipeline.
 """
 
 import numpy as np
@@ -38,3 +38,13 @@ def set_precision(X, features):
     return df
 
 
+def preprocess(X, features):
+    """Apply preprocessing transformations.
+
+    :param pd.DataFrame X: a set of training or test data
+    :param dict features: features metadata from a config file
+    :return: preprocessed training or test data
+    :rtype: pd.DataFrame
+    """
+    X = set_precision(X, features)
+    return X
