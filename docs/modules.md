@@ -36,11 +36,14 @@ Helper functions for building the training data.
 ## src.docs.build
 Extracts docstrings from source files and builds the documentation.
 
+## src.model.pipeline
+Helper functions for building scikit-learn pipelines.
+
 ## src.model.process
 Helper functions for processing training data in a scikit pipeline.
 
-Instead of creating bespoke classes that inherit from scikit, we'll rely on the FunctionTransformer to make them compatible with scikit pipelines.
+Instead of creating bespoke classes that inherit from scikit, we'll rely on the FunctionTransformer to make them compatible with scikit pipelines. https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html
 
-https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html
+The preprocessing function is reserved for model-agnostic transformations that should be done at the start of a pipeline.
 
 
