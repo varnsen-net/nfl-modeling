@@ -15,16 +15,17 @@ def make_target_col(games):
     return target
 
 
-def build_target(raw_games_path, target_path):
-    """Build target column for games data.
+def build_target(raw_games_path, train):
+    """Build target column for games data. Only keep rows with game_ids
+    found in train.
     
     :param str raw_games_path: path to raw games data
-    :param str target_path: path to output data
+    :param pd.DataFrame train: training data
     :return: None
     :rtype: None
     """
     games = pd.read_csv(raw_games_path)
     games['target'] = make_target_col(games)
     target = games[['game_id', 'target']]
-    target.to_csv(target_path, index=False)
-    return
+    target = target[target['game_id'].isin(train['game_id'])]
+    return target

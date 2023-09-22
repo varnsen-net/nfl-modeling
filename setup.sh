@@ -19,16 +19,16 @@ DATA="data"
 RAW="$DATA/raw"
 FEATURES="$DATA/features"
 ANCILLARY="$DATA/ancillary"
+TRAIN="$DATA/train"
+TEST="$DATA/test"
 
 CONFIG="$SOURCE/config.json"
 RAW_GAMES="$RAW/games.csv"
 RAW_WEATHER="$RAW/weather.csv"
 CITY_COORDS="$ANCILLARY/city-coordinates.csv"
-TRAIN="$DATA/train/train.csv"
-TARGET="$DATA/train/target.csv"
 
 # arguments
-BUILD_ARGS="-c $CONFIG -g $RAW_GAMES -w $RAW_WEATHER -cc $CITY_COORDS -f $FEATURES -tr $TRAIN -ta $TARGET"
+BUILD_ARGS="-c $CONFIG -g $RAW_GAMES -w $RAW_WEATHER -cc $CITY_COORDS -f $FEATURES -tr $TRAIN -te $TEST"
 
 
 # handle virtualenv

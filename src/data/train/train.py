@@ -41,17 +41,6 @@ def merge_features(games, features_path):
     return games
 
 
-def make_target_col(games):
-    """Make target column for games data.
-    
-    :param pd.DataFrame games: games data
-    :return: games data with target column
-    :rtype: pd.DataFrame
-    """
-    target = np.where(games['result'] > 0, 1, 0)
-    return target
-
-
 def reduce_training_cols(games, games_cols):
     """Reduce the games data to only the columns that will be used for
     training.
@@ -65,13 +54,12 @@ def reduce_training_cols(games, games_cols):
     return games
 
 
-def build_train(games_cols, raw_games_path, features_path, train_path):
+def build_train(games_cols, raw_games_path, features_path):
     """Build the training data.
     
     :param list games_cols: columns to keep
     :param str raw_games_path: path to raw games data
     :param str features_path: path to features directory
-    :param str train_path: path to save training data
     :return: None
     :rtype: None
     """
@@ -79,5 +67,4 @@ def build_train(games_cols, raw_games_path, features_path, train_path):
     processed = preprocess_raw_games(games)
     reduced = reduce_training_cols(processed, games_cols)
     train = merge_features(reduced, features_path)
-    train.to_csv(train_path, index=False)
-    return
+    return train

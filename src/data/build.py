@@ -16,6 +16,19 @@ from src.data.train.train import build_train
 from src.data.train.target import build_target
 
 
+def split_data(df, holdout_year):
+    """Split data into training and holdout sets.
+
+    :param pd.DataFrame df: training or target data
+    :param int holdout_year: starting season of holdout data (inclusive)
+    :return: training and holdout data
+    :rtype: tuple[pd.DataFrame]
+    """
+    train = df.loc[df["season"] < holdout_year]
+    holdout = df.loc[df["season"] >= holdout_year]
+    return train, holdout
+
+
 if __name__ == '__main__':
     argparser = argparse.ArgumentParser()
     argparser.add_argument('-c', help='path to config file')
@@ -24,7 +37,7 @@ if __name__ == '__main__':
     argparser.add_argument('-cc', help='path to city coordinates')
     argparser.add_argument('-f', help='path to features data')
     argparser.add_argument('-tr', help='path to training data')
-    argparser.add_argument('-ta', help='path to target data')
+    argparser.add_argument('-te', help='path to test data')
     args = argparser.parse_args()
 
     config_path = args.c
@@ -33,7 +46,7 @@ if __name__ == '__main__':
     city_coords_path = args.cc
     features_path = args.f
     train_path = args.tr
-    target_path = args.ta
+    test_path = args.te
 
 
     # Load config
@@ -42,6 +55,7 @@ if __name__ == '__main__':
         features_metadata = config['features']
         weather_metadata = features_metadata['weather']
         games_cols = config['training']['games_cols']
+        holdout_year = config['training']['holdout_year']
 
 
     # Refresh raw data
@@ -68,10 +82,21 @@ if __name__ == '__main__':
                            output_dir=output_dir)
 
 
-    # Build training data
-    print('Building training data...')
-    train_dir = train_path.rsplit('/', 1)[0]
-    os.makedirs(train_dir, exist_ok=True)
-    build_train(games_cols, raw_games_path, features_path, train_path)
-    build_target(raw_games_path, target_path)
+    # Build training and test data
+    print('Building training and test data...')
+    os.makedirs(train_path, exist_ok=True)
+    os.makedirs(test_path, exist_ok=True)
+    full_train = build_train(games_cols, raw_games_path, features_path)
+    train, train_holdout = split_data(full_train, holdout_year)
+    full_target = build_target(raw_games_path, full_train)
+    target = (full_target
+              .loc[full_target["game_id"].isin(train["game_id"])]
+              .sort_values('game_id'))
+    target_holdout = (full_target
+                      .loc[full_target["game_id"].isin(train_holdout["game_id"])]
+                      .sort_values('game_id'))
+    train.sort_values('game_id').to_csv(f'{train_path}/train.csv', index=False)
+    target.to_csv(f'{train_path}/target.csv', index=False)
+    train_holdout.sort_values('game_id').to_csv(f'{test_path}/test.csv', index=False)
+    target_holdout.to_csv(f'{test_path}/target.csv', index=False)
 
