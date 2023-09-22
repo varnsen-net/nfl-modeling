@@ -1,6 +1,6 @@
-"""Builds the full set of training data from scratch.
+"""Builds the full set of training and testing data from scratch.
 
-Receives a set of paths from setup.sh, then fetches raw data, builds features, and assembles training data.
+Receives a set of paths from setup.sh, then fetches raw data, builds features, and assembles training data. Then it splits holdout data by year and writes to disk.
 """
 
 import os

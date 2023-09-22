@@ -7,9 +7,9 @@ Utility functions. These functions are used in mutliple places throughout the so
 None
 
 ## src.data.build
-Builds the full set of training data from scratch.
+Builds the full set of training and testing data from scratch.
 
-Receives a set of paths from setup.sh, then fetches raw data, builds features, and assembles training data.
+Receives a set of paths from setup.sh, then fetches raw data, builds features, and assembles training data. Then it splits holdout data by year and writes to disk.
 
 
 ## src.data.features.travel
@@ -38,6 +38,9 @@ Extracts docstrings from source files and builds the documentation.
 
 ## src.model.pipeline
 Helper functions for building scikit-learn pipelines.
+
+## src.model.train
+Trains models and records metadata about each training run.
 
 ## src.model.process
 Helper functions for processing training data in a scikit pipeline.

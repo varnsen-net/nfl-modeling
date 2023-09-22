@@ -51,5 +51,9 @@ fi
 
 
 # build data
-fancy_echo "Building data"
-python3 $SOURCE/data/build.py $BUILD_ARGS
+echo -n "Build data? [y/N]: "
+read answer
+if [[ $answer =~ ^[Yy]$ ]]; then
+    fancy_echo "Building data"
+    python3 $SOURCE/data/build.py $BUILD_ARGS
+fi
