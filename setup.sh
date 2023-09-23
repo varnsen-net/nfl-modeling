@@ -21,6 +21,7 @@ FEATURES="$DATA/features"
 ANCILLARY="$DATA/ancillary"
 TRAIN="$DATA/train"
 TEST="$DATA/test"
+MODELING="$SOURCE/model"
 
 CONFIG="$SOURCE/config.json"
 RAW_GAMES="$RAW/games.csv"
@@ -58,4 +59,13 @@ read answer
 if [[ $answer =~ ^[Yy]$ ]]; then
     fancy_echo "Building data"
     python3 $SOURCE/data/build.py $BUILD_ARGS
+fi
+
+
+# train models
+echo -n "Train models? [y/N]: "
+read answer
+if [[ $answer =~ ^[Yy]$ ]]; then
+    fancy_echo "Training models"
+    python3 $MODELING/train.py $BUILD_ARGS
 fi
