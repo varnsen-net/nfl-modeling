@@ -1,5 +1,7 @@
 """Utility functions. These functions are used in mutliple places throughout the source code and cannot be coupled to any particular module."""
 
+import argparse
+
 import numpy as np
 import pandas as pd
 
@@ -59,3 +61,21 @@ def map_team_data_to_games(games, stats):
                       [['game_id', f'away_{name}', f'home_{name}']]
                       .set_index('game_id'))
     return remapped_stats
+
+
+def collect_setup_args():
+    """Collects the command line arguments for the setup script.
+    
+    :return: command line arguments
+    :rtype: argparse.Namespace
+    """
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('-c', help='path to config file')
+    argparser.add_argument('-g', help='path to raw games data')
+    argparser.add_argument('-w', help='path to raw weather data')
+    argparser.add_argument('-cc', help='path to city coordinates')
+    argparser.add_argument('-f', help='path to features data')
+    argparser.add_argument('-tr', help='path to training data')
+    argparser.add_argument('-te', help='path to test data')
+    args = argparser.parse_args()
+    return args
