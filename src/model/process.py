@@ -50,3 +50,14 @@ def preprocessor(X, features):
     """
     X = set_precision(X, features)
     return X
+
+
+def reduce_columns(X, columns):
+    """Reduce a set of training or test data to a subset of columns.
+
+    :param pd.DataFrame X: a set of training or test data
+    :param list columns: a list of columns to keep
+    :return: a set of training or test data with a subset of columns
+    :rtype: pd.DataFrame
+    """
+    return X[columns]
