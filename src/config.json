@@ -1,6 +1,6 @@
 {
     "training": {
-        "holdout_year": 2021,
+        "holdout_year": 2020,
         "games_cols": ["game_id", "season", "week", "away_rest", "home_rest", "div_game", "roof", "surface"]
     },
     "features": {

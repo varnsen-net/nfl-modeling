@@ -33,12 +33,14 @@ def set_precision(X, features):
     """
     precision_map = make_precision_map(features)
     for col, precision in precision_map.items():
-        feature = df.filter(regex=f"{col}$")
-        df[feature.columns] = feature.round(precision)
-    return df
+        feature = X.filter(regex=f"{col}$")
+        col_names = feature.columns
+        X = X.drop(columns=col_names)
+        X[col_names] = feature.round(precision)
+    return X
 
 
-def preprocess(X, features):
+def preprocessor(X, features):
     """Apply preprocessing transformations.
 
     :param pd.DataFrame X: a set of training or test data
