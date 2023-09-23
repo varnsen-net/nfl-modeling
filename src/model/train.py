@@ -1,6 +1,9 @@
 """Trains models and records metadata about each training run."""
 
 import json
+import datetime
+import os
+import joblib
 
 import numpy as np
 import pandas as pd
@@ -10,6 +13,32 @@ from src.utils import collect_setup_args
 from src.model.process import preprocessor, reduce_columns
 from src.model.estimators import baseline_estimator
 from src.model.pipeline import calibrated_classifier_pipeline
+
+
+def create_datetime_id():
+    """Creates a unique identifier for the current datetime.
+    
+    :return: unique identifier
+    :rtype: str
+    """
+    now = datetime.datetime.now()
+    dt_id = now.strftime("%Y%m%d%H%M%S")
+    return dt_id
+
+
+def save_model(model):
+    """Saves a model to a unique directory.
+    
+    :param model: model to write to disk
+    :type model: sklearn.pipeline.Pipeline
+    :return: None
+    :rtype: None
+    """
+    dt_id = create_datetime_id()
+    model_path = f"{args.m}/{dt_id}"
+    os.makedirs(model_path)
+    joblib.dump(model, f"{model_path}/model.joblib")
+    return 
 
 
 def build_baseline_model(preprocessor, features_metadata, model_params=None):
@@ -37,19 +66,19 @@ def build_baseline_model(preprocessor, features_metadata, model_params=None):
 
 if __name__ == "__main__":
     args = collect_setup_args()
-
     config_path = args.c
     features_path = args.f
     train_path = args.tr
     test_path = args.te
 
-
     with open(config_path, 'r') as f:
         config = json.load(f)
         features_metadata = config['features']
+
     train = pd.read_csv(f"{train_path}/train.csv")
     target = pd.read_csv(f"{train_path}/target.csv")
     model_params = {'solver': 'liblinear'}
     baseline = build_baseline_model(preprocessor, features_metadata,
                                     model_params)
     baseline.fit(train, target['target'])
+    save_model(baseline)
