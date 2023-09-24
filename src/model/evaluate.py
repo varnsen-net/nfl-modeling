@@ -40,7 +40,7 @@ def custom_scorer(pipeline, X, y):
     y_pred = pipeline.predict(X)
     y_pred_proba = pipeline.predict_proba(X)[:, 1]
     tn, fp, fn, tp = confusion_matrix(y, y_pred).ravel()
-    prob_true, prob_pred = calibration_curve(y, y_pred_proba, n_bins=8,
+    prob_true, prob_pred = calibration_curve(y, y_pred_proba, n_bins=7,
                                              strategy='quantile')
     scores = {'neg_brier_score': -brier_score_loss(y, y_pred_proba),
               'neg_log_loss': -log_loss(y, y_pred_proba),
@@ -71,4 +71,6 @@ def evaluate_model(pipeline, X, y, cv=5):
     scores = pd.DataFrame(scores).T
     scores.columns = [f'fold_{i+1}' for i in range(cv)]
     scores.index.name = 'metric'
+    scores['mean'] = scores.mean(axis=1)
+    scores['std'] = scores.std(axis=1)
     return scores

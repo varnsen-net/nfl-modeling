@@ -27,10 +27,9 @@ def create_datetime_id():
     return dt_id
 
 
-def save_model_and_scores(model, scores, results_path, type):
-    """Saves a model to a unique directory.
+def save_scores(scores, results_path, type):
+    """Saves model metrics to a unique directory.
     
-    :param sklearn.base.BaseEstimator model: model to save
     :param pd.DataFrame scores: scores for model
     :param str results_path: path to training results directory
     :param str type: type of model
@@ -40,7 +39,6 @@ def save_model_and_scores(model, scores, results_path, type):
     dt_id = create_datetime_id()
     save_path = f"{results_path}/{dt_id}"
     os.makedirs(save_path)
-    joblib.dump(model, f"{save_path}/{type}_model.joblib")
     scores.to_csv(f"{save_path}/{type}_scores.csv")
     return 
 
@@ -85,6 +83,5 @@ if __name__ == "__main__":
     model_params = {'solver': 'liblinear'}
     baseline = build_baseline_model(preprocessor, features_metadata,
                                     model_params)
-    scores = evaluate_model(baseline, train, target['target'])
-    baseline.fit(train, target['target'])
-    save_model_and_scores(baseline, scores, results_path, 'baseline')
+    scores = evaluate_model(baseline, train, target['target'], cv=10)
+    save_scores(scores, results_path, 'baseline')

@@ -59,3 +59,9 @@ Instead of creating bespoke classes that inherit from scikit, we'll rely on the 
 The preprocessing function is reserved for model-agnostic transformations that should be done at the start of a pipeline.
 
 
+## src.plot.plot
+Helper functions for plotting model evaluation results.
+
+## src.plot.style
+None
+
