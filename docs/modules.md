@@ -36,6 +36,9 @@ Helper functions for building the training data.
 ## src.docs.build
 Extracts docstrings from source files and builds the documentation.
 
+## src.model.evaluate
+Helper functions for evaluating models.
+
 ## src.model.estimators
 Repository for sklearn estimators.
 
