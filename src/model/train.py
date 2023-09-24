@@ -13,6 +13,7 @@ from src.utils import collect_setup_args
 from src.model.process import preprocessor, reduce_columns
 from src.model.estimators import baseline_estimator
 from src.model.pipeline import calibrated_classifier_pipeline
+from src.model.evaluate import evaluate_model
 
 
 def create_datetime_id():
@@ -26,18 +27,19 @@ def create_datetime_id():
     return dt_id
 
 
-def save_model(model):
+def save_model_and_scores(model, scores, model_path):
     """Saves a model to a unique directory.
     
-    :param model: model to write to disk
-    :type model: sklearn.pipeline.Pipeline
+    :param sklearn.base.BaseEstimator model: model to save
+    :param str model_path: path to models directory
     :return: None
     :rtype: None
     """
     dt_id = create_datetime_id()
-    model_path = f"{args.m}/{dt_id}"
-    os.makedirs(model_path)
-    joblib.dump(model, f"{model_path}/model.joblib")
+    save_path = f"{model_path}/{dt_id}"
+    os.makedirs(save_path)
+    joblib.dump(model, f"{save_path}/model.joblib")
+    scores.to_csv(f"{save_path}/scores.csv")
     return 
 
 
@@ -70,6 +72,7 @@ if __name__ == "__main__":
     features_path = args.f
     train_path = args.tr
     test_path = args.te
+    model_path = args.m
 
     with open(config_path, 'r') as f:
         config = json.load(f)
@@ -80,5 +83,6 @@ if __name__ == "__main__":
     model_params = {'solver': 'liblinear'}
     baseline = build_baseline_model(preprocessor, features_metadata,
                                     model_params)
+    scores = evaluate_model(baseline, train, target['target'])
     baseline.fit(train, target['target'])
-    save_model(baseline)
+    save_model_and_scores(baseline, scores, model_path)
