@@ -31,7 +31,6 @@ def split_data(df, holdout_year):
 
 if __name__ == '__main__':
     args = collect_setup_args()
-
     config_path = args.c
     raw_games_path = args.g
     raw_weather_path = args.w

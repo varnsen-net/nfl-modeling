@@ -77,6 +77,6 @@ def collect_setup_args():
     argparser.add_argument('-f', help='path to features data')
     argparser.add_argument('-tr', help='path to training data')
     argparser.add_argument('-te', help='path to test data')
-    argparser.add_argument('-m', help='path to model')
+    argparser.add_argument('-r', help='path to training run results')
     args = argparser.parse_args()
     return args
