@@ -14,6 +14,7 @@ from src.model.process import preprocessor, reduce_columns
 from src.model.estimators import baseline_estimator
 from src.model.pipeline import calibrated_classifier_pipeline
 from src.model.evaluate import evaluate_model
+from src.plot.plot import make_and_save_plots
 
 
 def create_datetime_id():
@@ -25,22 +26,6 @@ def create_datetime_id():
     now = datetime.datetime.now()
     dt_id = now.strftime("%Y%m%d%H%M%S")
     return dt_id
-
-
-def save_scores(scores, results_path, type):
-    """Saves model metrics to a unique directory.
-    
-    :param pd.DataFrame scores: scores for model
-    :param str results_path: path to training results directory
-    :param str type: type of model
-    :return: None
-    :rtype: None
-    """
-    dt_id = create_datetime_id()
-    save_path = f"{results_path}/{dt_id}"
-    os.makedirs(save_path)
-    scores.to_csv(f"{save_path}/{type}_scores.csv")
-    return 
 
 
 def build_baseline_model(preprocessor, features_metadata, model_params={}):
@@ -66,6 +51,19 @@ def build_baseline_model(preprocessor, features_metadata, model_params={}):
     return pipeline
 
 
+def make_save_path(results_path):
+    """Creates a directory for saving model results.
+    
+    :param str results_path: path to training results directory
+    :return: path to directory for model results
+    :rtype: str
+    """
+    dt_id = create_datetime_id()
+    save_path = f"{results_path}/{dt_id}"
+    os.makedirs(save_path)
+    return save_path
+
+
 if __name__ == "__main__":
     args = collect_setup_args()
     config_path = args.c
@@ -83,5 +81,8 @@ if __name__ == "__main__":
     model_params = {'solver': 'liblinear'}
     baseline = build_baseline_model(preprocessor, features_metadata,
                                     model_params)
-    scores = evaluate_model(baseline, train, target['target'], cv=10)
-    save_scores(scores, results_path, 'baseline')
+    scores = evaluate_model(baseline, train, target['target'], cv=5)
+    save_path = make_save_path(results_path)
+    type = 'baseline'
+    scores.to_csv(f"{save_path}/{type}_scores.csv")
+    make_and_save_plots(scores, type, save_path)
