@@ -1,4 +1,4 @@
-"""Trains models and records metadata about each training run."""
+"""Train and evaluate models."""
 
 import json
 import datetime
@@ -10,9 +10,7 @@ import pandas as pd
 from sklearn.preprocessing import FunctionTransformer
 
 from src.utils import collect_setup_args
-from src.model.process import preprocessor, reduce_columns
-from src.model.estimators import baseline_estimator
-from src.model.pipeline import calibrated_classifier_pipeline
+from src.model.pipeline import build_baseline_pipeline
 from src.model.evaluate import evaluate_model
 from src.plot.plot import make_and_save_plots
 
@@ -26,29 +24,6 @@ def create_datetime_id():
     now = datetime.datetime.now()
     dt_id = now.strftime("%Y%m%d%H%M%S")
     return dt_id
-
-
-def build_baseline_model(preprocessor, features_metadata, model_params={}):
-    """Builds a calibrated baseline classifier for training.
-    
-    :param callable preprocessor: preprocessor for pipeline
-    :param dict features_metadata: features metadata
-    :param dict model_params: estimator parameters
-    :return: complete pipeline ready for fitting
-    :rtype: sklearn.pipeline.Pipeline
-    """
-    estimator = baseline_estimator(**model_params)
-    feature_columns = ['away_pythagorean_expectation',
-                       'home_pythagorean_expectation',
-                       'away_rest',
-                       'home_rest',
-                       'away_travel_distance']
-    kw_args = {'columns': feature_columns}
-    column_reducer = FunctionTransformer(reduce_columns, kw_args=kw_args)
-    proc_steps = [('column_reducer', column_reducer)]
-    pipeline = calibrated_classifier_pipeline(estimator, preprocessor,
-                                              features_metadata, proc_steps)
-    return pipeline
 
 
 def make_save_path(results_path):
@@ -79,8 +54,7 @@ if __name__ == "__main__":
     train = pd.read_csv(f"{train_path}/train.csv")
     target = pd.read_csv(f"{train_path}/target.csv")
     model_params = {'solver': 'liblinear'}
-    baseline = build_baseline_model(preprocessor, features_metadata,
-                                    model_params)
+    baseline = build_baseline_pipeline(features_metadata, model_params)
     scores = evaluate_model(baseline, train, target['target'], cv=5)
     save_path = make_save_path(results_path)
     type = 'baseline'

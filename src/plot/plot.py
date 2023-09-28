@@ -98,7 +98,7 @@ def plot_calibration_errors(prob_true, prob_pred, type, save_path):
         axs[0].set_ylabel('True Probability')
         axs[i].legend(loc='upper left', framealpha=0.0)
     fig.tight_layout()
-    fig.savefig(f"{save_path}/calibration_curve_{type}.png")
+    fig.savefig(f"{save_path}/{type}_calibration_curve.png")
     return
 
 
@@ -129,7 +129,7 @@ def plot_confusion_matrix(scores, type, save_path):
                     fontsize=18)
     ax.set_title(f'Confusion Matrix ({type})')
     fig.tight_layout()
-    fig.savefig(f"{save_path}/confusion_matrix_{type}.png")
+    fig.savefig(f"{save_path}/{type}_confusion_matrix.png")
     return
 
 
