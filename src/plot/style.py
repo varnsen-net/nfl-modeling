@@ -1,3 +1,5 @@
+"""Helpers for setting plot style and colors."""
+
 TEAM_COLORS = {
     'ARI' : '97233F',
     'ATL' : 'A71930',
