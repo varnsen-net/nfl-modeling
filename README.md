@@ -10,9 +10,7 @@ SWIFT is a model designed to output well-calibrated probabilities for NFL games.
 Current status: can train a baseline and advanced model and record various scoring metrics for each run.
 
 ## Getting started
-Simply
-`bash setup.py`
-and you're off to the races!
+Simply `bash setup.sh` and you're off to the races!
 
 After training, you can view model scores in `./data/results`
 
