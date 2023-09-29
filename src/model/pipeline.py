@@ -8,7 +8,7 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import FunctionTransformer
 
 from src.model.process import preprocessor, reduce_columns
-from src.model.estimators import baseline_estimator
+from src.model.estimators import baseline_estimator, swift_estimator
 
 
 def base_pipeline(features_metadata):
@@ -25,7 +25,7 @@ def base_pipeline(features_metadata):
     return pipeline
 
 
-def build_baseline_pipeline(features_metadata, model_params):
+def build_baseline_pipeline(features_metadata, model_params={}):
     """Build a baseline model pipeline on top of the base pipeline.
     
     :param dict features_metadata: feature metadata
@@ -43,5 +43,13 @@ def build_baseline_pipeline(features_metadata, model_params):
     column_reducer = FunctionTransformer(reduce_columns, kw_args=kw_args)
     pipeline.steps.append(('column_reducer', column_reducer))
     estimator = baseline_estimator(**model_params)
+    pipeline.steps.append(('estimator', estimator))
+    return pipeline
+
+
+def build_swift_pipeline(features_metadata, model_params={}):
+    """Build a pipeline for a model that is actually good."""
+    pipeline = base_pipeline(features_metadata)
+    estimator = swift_estimator(**model_params)
     pipeline.steps.append(('estimator', estimator))
     return pipeline

@@ -10,7 +10,7 @@ import pandas as pd
 from sklearn.preprocessing import FunctionTransformer
 
 from src.utils import collect_setup_args
-from src.model.pipeline import build_baseline_pipeline
+from src.model.pipeline import build_baseline_pipeline, build_swift_pipeline
 from src.model.evaluate import evaluate_model
 from src.plot.plot import make_and_save_plots
 
@@ -58,5 +58,11 @@ if __name__ == "__main__":
     scores = evaluate_model(baseline, train, target['target'], cv=5)
     save_path = make_save_path(results_path)
     type = 'baseline'
+    scores.to_csv(f"{save_path}/{type}_scores.csv")
+    make_and_save_plots(scores, type, save_path)
+    swift = build_swift_pipeline(features_metadata)
+    type = 'swift'
+    X = train.drop(columns=['game_id', 'season', 'roof', 'surface'])
+    scores = evaluate_model(swift, X, target['target'], cv=5)
     scores.to_csv(f"{save_path}/{type}_scores.csv")
     make_and_save_plots(scores, type, save_path)
