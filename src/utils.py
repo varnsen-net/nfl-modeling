@@ -73,6 +73,7 @@ def collect_setup_args():
     argparser.add_argument('-c', help='path to config file')
     argparser.add_argument('-g', help='path to raw games data')
     argparser.add_argument('-w', help='path to raw weather data')
+    argparser.add_argument('-e', help='path to raw elo data')
     argparser.add_argument('-cc', help='path to city coordinates')
     argparser.add_argument('-f', help='path to features data')
     argparser.add_argument('-tr', help='path to training data')

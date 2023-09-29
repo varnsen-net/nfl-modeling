@@ -44,11 +44,12 @@ def calculate_pythag_exp(points):
     return pythag_exp
 
 
-def make_pythag_exp_feature(games, pythag_exp_name):
+def make_pythag_exp_feature(games, pythag_exp_name, output_dir):
     """Build pythagorean expectation feature.
     
     :param pd.DataFrame games: raw games dataframe
     :param str pythag_exp_name: name of pythagorean expectation feature
+    :param str output_dir: path to save stats features
     :return: None
     :rtype: None
     """
@@ -56,14 +57,50 @@ def make_pythag_exp_feature(games, pythag_exp_name):
     pythag_exp = calculate_pythag_exp(cumulative_points)
     pythag_exp.name = pythag_exp_name
     pythag_exp = map_team_data_to_games(games, pythag_exp)
-    return pythag_exp
+    pythag_exp.to_csv(f"{output_dir}/{pythag_exp_name}.csv")
+    return 
 
 
-def build_features(metadata, raw_games_path, output_dir, **kwargs):
+def make_elo_feature(games, elo_data, elo_name, output_dir):
+    """"""
+    # fix the chargers (lol as if. go chiefs.)
+    elo_data = elo_data.replace('LAC', 'SD')
+    elo_data['team1'] = np.where((elo_data['team1'] == 'SD') & (elo_data['season'] > 2016),
+                                 'LAC', elo_data['team1'])
+    elo_data['team2'] = np.where((elo_data['team2'] == 'SD') & (elo_data['season'] > 2016),
+                                 'LAC', elo_data['team2'])
+    # fix the rams
+    elo_data = elo_data.replace('LAR', 'STL')
+    elo_data['team1'] = np.where((elo_data['team1'] == 'STL') & (elo_data['season'] > 2015),
+                                 'LA', elo_data['team1'])
+    elo_data['team2'] = np.where((elo_data['team2'] == 'STL') & (elo_data['season'] > 2015),
+                                 'LA', elo_data['team2'])
+
+    # fix the raiders (lol as if. go chiefs.)
+    elo_data['team1'] = np.where((elo_data['team1'] == 'OAK') & (elo_data['season'] > 2019),
+                                 'LV', elo_data['team1'])
+    elo_data['team2'] = np.where((elo_data['team2'] == 'OAK') & (elo_data['season'] > 2019),
+                                 'LV', elo_data['team2'])
+
+    # get elo scores for each game
+    games = games.merge(elo_data, how='left',
+                        left_on=['gameday', 'away_team', 'home_team'],
+                        right_on=['date', 'team2', 'team1'])
+    elo_scores = games[['game_id', 'elo2_pre', 'elo1_pre']]
+    elo_scores.columns = ['game_id', 'away_elo', 'home_elo']
+    elo_scores = (elo_scores
+                  .set_index('game_id')
+                  .sort_index()
+                  .dropna())
+    elo_scores.to_csv(f"{output_dir}/{elo_name}.csv")
+
+
+def build_features(metadata, raw_games_path, raw_elo_path, output_dir, **kwargs):
     """Build engineered features for team stats.
     
     :param dict metadata: metadata for stats features
     :param str raw_games_path: path to raw games data
+    :param str raw_elo_path: path to raw elo data
     :param str output_dir: path to save stats features
     :param dict kwargs: additional arguments
     :return: None
@@ -71,8 +108,8 @@ def build_features(metadata, raw_games_path, output_dir, **kwargs):
     """
     games = (pd.read_csv(raw_games_path)
              .dropna(subset=['result']))
+    elo_data = pd.read_csv(raw_elo_path)
     feature_names = list(metadata)
-    pythag_exp_name = feature_names[0]
-    pythag_exp = make_pythag_exp_feature(games, pythag_exp_name)
-    pythag_exp.to_csv(f"{output_dir}/{pythag_exp_name}.csv")
+    make_pythag_exp_feature(games, feature_names[0], output_dir)
+    make_elo_feature(games, elo_data, feature_names[1], output_dir)
     return

@@ -89,6 +89,19 @@ def get_away_travel_distances(games, name):
     return away_travel_distances
 
 
+def get_away_lon_deltas(games, name):
+    """Calculate the difference in longitude between the home and away teams.
+
+    :param pd.DataFrame games: raw games data
+    :param str name: name of the travel feature
+    :return: away team travel features
+    :rtype: pd.DataFrame
+    """
+    games[name] = games['lon_home'] - games['lon_away']
+    away_lon_deltas = games[['game_id', name]].set_index('game_id')
+    return away_lon_deltas
+
+
 def build_features(metadata, raw_games_path, city_coords_path, output_dir, **kwargs):
     """Build engineered features for team travel.
 
@@ -108,4 +121,7 @@ def build_features(metadata, raw_games_path, city_coords_path, output_dir, **kwa
     games = attach_lats_lons(games, city_coords)
     away_travel_distances = get_away_travel_distances(games, away_travel_distance_name)
     away_travel_distances.to_csv(f"{output_dir}/{away_travel_distance_name}.csv")
+    away_lon_delta_name = feature_names[1]
+    away_lon_deltas = get_away_lon_deltas(games, away_lon_delta_name)
+    away_lon_deltas.to_csv(f"{output_dir}/{away_lon_delta_name}.csv")
     return

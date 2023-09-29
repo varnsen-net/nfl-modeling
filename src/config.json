@@ -73,12 +73,20 @@
             "pythagorean_expectation": {
                 "enabled": true,
                 "precision": 3
+            },
+            "elo": {
+                "enabled": true,
+                "precision": 0
             }
         },
         "travel": {
             "away_travel_distance": {
                 "enabled": true,
                 "precision": -1
+            },
+            "away_lon_delta": {
+                "enabled": true,
+                "precision": 1
             }
         }
     }
