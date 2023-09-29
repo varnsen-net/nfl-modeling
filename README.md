@@ -27,7 +27,9 @@ After training, you can view model scores in `./data/results`
 ## FAQ
 
 **Q: Is your model any good?**
+
 A: Probably not.
 
 **Q: Your acronym doesn't make any sense.**
+
 A: That's not a question.
