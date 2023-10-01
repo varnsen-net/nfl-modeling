@@ -19,9 +19,6 @@ LIGHTGBM_SPACE = {
     'n_estimators': hp.uniformint('n_estimators', 2, 500),
     'reg_alpha': hp.loguniform('reg_alpha', -6.0, 0.0),
     'reg_lambda': hp.loguniform('reg_lambda', -6.0, 0.0),
-    'min_split_gain': hp.uniform('min_split_gain', 0.0, 1.0),
-    'min_child_weight': hp.uniform('min_child_weight', 0.0, 1.0),
-    'subsample': hp.uniform('subsample', 0.0, 1.0),
     'verbosity': -1,
 }
 
