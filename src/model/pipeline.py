@@ -5,35 +5,20 @@ The base pipeline consists of a single preprocessor applicable to any training/t
 import numpy as np
 import pandas as pd
 from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import FunctionTransformer
+from sklearn.preprocessing import FunctionTransformer, OneHotEncoder
+from sklearn.compose import ColumnTransformer
 
-from src.model.process import preprocessor, reduce_columns
+from src.model.process import reduce_columns
 from src.model.estimators import baseline_estimator, swift_estimator
 
 
-def base_pipeline(features_metadata):
-    """Build a base pipeline classifier with a preprocessor. Full pipelines
-    should be built by appending additional steps to this pipeline.
-
-    :param dict features_metadata: feature metadata
-    :return: base pipeline
-    :rtype: sklearn.pipeline.Pipeline
-    """
-    kw_args = {'features': features_metadata}
-    prep = FunctionTransformer(preprocessor, kw_args=kw_args)
-    pipeline = make_pipeline(prep)
-    return pipeline
-
-
-def build_baseline_pipeline(features_metadata, model_params={}):
-    """Build a baseline model pipeline on top of the base pipeline.
+def build_baseline_pipeline(model_params={}):
+    """Build a baseline model pipeline.
     
-    :param dict features_metadata: feature metadata
     :param dict model_params: estimator parameters
     :return: baseline pipeline
     :rtype: sklearn.pipeline.Pipeline
     """
-    pipeline = base_pipeline(features_metadata)
     feature_columns = ['away_pythagorean_expectation',
                        'home_pythagorean_expectation',
                        'away_rest',
@@ -41,15 +26,21 @@ def build_baseline_pipeline(features_metadata, model_params={}):
                        'away_travel_distance']
     kw_args = {'columns': feature_columns}
     column_reducer = FunctionTransformer(reduce_columns, kw_args=kw_args)
-    pipeline.steps.append(('column_reducer', column_reducer))
     estimator = baseline_estimator(**model_params)
-    pipeline.steps.append(('estimator', estimator))
+    pipeline = make_pipeline(column_reducer, estimator)
     return pipeline
 
 
-def build_swift_pipeline(features_metadata, model_params={}):
-    """Build a pipeline for a model that is actually good."""
-    pipeline = base_pipeline(features_metadata)
+def build_swift_pipeline(model_params={}):
+    """Build a pipeline for a model that is actually good.
+    
+    :param dict model_params: estimator parameters
+    :return: swift pipeline
+    :rtype: sklearn.pipeline.Pipeline
+    """
+    transformers = [('onehot', OneHotEncoder(handle_unknown='ignore'), ['roof', 'surface'])]
+    preprocessor = ColumnTransformer(transformers=transformers,
+                                     remainder='passthrough')
     estimator = swift_estimator(**model_params)
-    pipeline.steps.append(('estimator', estimator))
+    pipeline = make_pipeline(preprocessor, estimator)
     return pipeline

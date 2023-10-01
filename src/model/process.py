@@ -2,7 +2,7 @@
 
 Instead of creating bespoke classes that inherit from scikit, we'll rely on the FunctionTransformer to make them compatible with scikit pipelines. https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html
 
-The preprocessing function is reserved for model-agnostic transformations that should be done at the start of a pipeline.
+The preprocess function is reserved for model-agnostic transformations that should be done at the start of a pipeline.
 """
 
 import numpy as np
@@ -40,7 +40,7 @@ def set_precision(X, features):
     return X
 
 
-def preprocessor(X, features):
+def preprocess(X, features):
     """Apply preprocessing transformations.
 
     :param pd.DataFrame X: a set of training or test data
