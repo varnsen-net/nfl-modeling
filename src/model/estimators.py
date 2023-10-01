@@ -1,7 +1,7 @@
 """Build estimators to be used as the final step in a pipeline.
 
 Baseline model: Logistic Regression
-Working model: SWIFT - Sample Weighted Inferential Football Tensor
+Working model: SWIFT
 """
 
 import pandas as pd

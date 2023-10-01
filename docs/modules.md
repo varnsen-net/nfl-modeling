@@ -17,6 +17,9 @@ Helper functions for building weather features.
 ## src.data.features.stats
 Helper functions for building engineered features for team stats.
 
+## src.data.raw.elo
+Helper functions for fetching raw elo ratings from 538.
+
 ## src.data.raw.weather
 Helper functions for fetching raw weather data.
 
@@ -35,10 +38,16 @@ Extract docstrings from source files and build the documentation.
 ## src.model.evaluate
 Helper functions for evaluating models.
 
+## src.model.hyperoptimize
+Helper functions for optimizing model hyperparameters.
+
+Optimizer: hyperopt
+
 ## src.model.estimators
 Build estimators to be used as the final step in a pipeline.
 
 Baseline model: Logistic Regression
+Working model: SWIFT
 
 ## src.model.pipeline
 Helper functions for building scikit-learn pipelines.
@@ -53,7 +62,7 @@ Helper functions for processing training data in a scikit pipeline.
 
 Instead of creating bespoke classes that inherit from scikit, we'll rely on the FunctionTransformer to make them compatible with scikit pipelines. https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html
 
-The preprocessing function is reserved for model-agnostic transformations that should be done at the start of a pipeline.
+The preprocess function is reserved for model-agnostic transformations that should be done at the start of a pipeline.
 
 ## src.plot.plot
 Helper functions for plotting model evaluation results.
