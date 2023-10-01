@@ -13,6 +13,7 @@ from hyperopt import tpe, hp, fmin
 from src.utils import collect_setup_args
 from src.model.process import preprocess
 from src.model.pipeline import build_baseline_pipeline, build_swift_pipeline
+from src.model.hyperoptimize import hyperoptimize, LIGHTGBM_SPACE
 from src.model.evaluate import evaluate_model
 from src.plot.plot import make_and_save_plots
 
@@ -64,7 +65,9 @@ if __name__ == "__main__":
     type = 'baseline'
     scores.to_csv(f"{save_path}/{type}_scores.csv")
     make_and_save_plots(scores, type, save_path)
-    swift = build_swift_pipeline()
+    best_params = hyperoptimize(X, y, LIGHTGBM_SPACE, max_evals=25)
+    print("Best params:", best_params)
+    swift = build_swift_pipeline(best_params)
     type = 'swift'
     scores = evaluate_model(swift, X, y, cv=5)
     scores.to_csv(f"{save_path}/{type}_scores.csv")
