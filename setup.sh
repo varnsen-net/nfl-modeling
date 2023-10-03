@@ -23,6 +23,7 @@ TRAIN="$DATA/train"
 TEST="$DATA/test"
 MODELING="$SOURCE/model"
 RESULTS="$DATA/results"
+RAW_PLAYS="$RAW/plays"
 
 CONFIG="$SOURCE/config.json"
 RAW_GAMES="$RAW/games.csv"
@@ -31,7 +32,7 @@ RAW_ELO="$RAW/elo.csv"
 CITY_COORDS="$ANCILLARY/city-coordinates.csv"
 
 # arguments
-BUILD_ARGS="-c $CONFIG -g $RAW_GAMES -w $RAW_WEATHER -e $RAW_ELO -cc $CITY_COORDS -f $FEATURES -tr $TRAIN -te $TEST -r $RESULTS"
+BUILD_ARGS="-c $CONFIG -g $RAW_GAMES -e $RAW_ELO -w $RAW_WEATHER -p $RAW_PLAYS -cc $CITY_COORDS -f $FEATURES -tr $TRAIN -te $TEST -r $RESULTS"
 
 
 # handle virtualenv
