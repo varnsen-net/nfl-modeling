@@ -4,91 +4,66 @@
         "holdout_year": 2020,
         "games_cols": ["game_id", "season", "away_rest", "home_rest", "div_game", "roof", "surface"]
     },
-    "features": {
-        "weather": {
-            "temperature": {
-                "enabled": true,
-                "api_name": "temperature_2m",
-                "agg_func": "mean",
-                "default": 21.0,
-                "precision": 0
-            },
-            "apparent_temperature": {
-                "enabled": true,
-                "api_name": "apparent_temperature",
-                "agg_func": "mean",
-                "default": 21.0,
-                "precision": 0
-            },
-            "humidity": {
-                "enabled": true,
-                "api_name": "relativehumidity_2m",
-                "agg_func": "mean",
-                "default": 50.0,
-                "precision": 1
-            },
-            "dewpoint": {
-                "enabled": true,
-                "api_name": "dewpoint_2m",
-                "agg_func": "mean",
-                "default": 12.0,
-                "precision": 1
-            },
-            "pressure": {
-                "enabled": true,
-                "api_name": "surface_pressure",
-                "agg_func": "mean",
-                "default": null,
-                "precision": 0
-            },
-            "wind_speed": {
-                "enabled": true,
-                "api_name": "windspeed_10m",
-                "agg_func": "mean",
-                "default": 0.0,
-                "precision": 1
-            },
-            "cloud_cover": {
-                "enabled": true,
-                "api_name": "cloudcover",
-                "agg_func": "mean",
-                "default": 100.0,
-                "precision": 0
-            },
-            "rain": {
-                "enabled": true,
-                "api_name": "rain",
-                "agg_func": "sum",
-                "default": 0.0,
-                "precision": 1
-            },
-            "snow": {
-                "enabled": true,
-                "api_name": "snowfall",
-                "agg_func": "sum",
-                "default": 0.0,
-                "precision": 1
-            }
+    "weather_metadata": {
+        "temperature": {
+            "api_name": "temperature_2m",
+            "agg_func": "mean",
+            "default": 21.0
         },
-        "stats": {
-            "pythagorean_expectation": {
-                "enabled": true,
-                "precision": 3
-            },
-            "elo": {
-                "enabled": true,
-                "precision": 0
-            }
+        "apparent_temperature": {
+            "api_name": "apparent_temperature",
+            "agg_func": "mean",
+            "default": 21.0
         },
-        "travel": {
-            "away_travel_distance": {
-                "enabled": true,
-                "precision": -1
-            },
-            "away_lon_delta": {
-                "enabled": true,
-                "precision": 1
-            }
+        "humidity": {
+            "api_name": "relativehumidity_2m",
+            "agg_func": "mean",
+            "default": 50.0
+        },
+        "dewpoint": {
+            "api_name": "dewpoint_2m",
+            "agg_func": "mean",
+            "default": 12.0
+        },
+        "pressure": {
+            "api_name": "surface_pressure",
+            "agg_func": "mean",
+            "default": null
+        },
+        "wind_speed": {
+            "api_name": "windspeed_10m",
+            "agg_func": "mean",
+            "default": 0.0
+        },
+        "cloud_cover": {
+            "api_name": "cloudcover",
+            "agg_func": "mean",
+            "default": 100.0
+        },
+        "rain": {
+            "api_name": "rain",
+            "agg_func": "sum",
+            "default": 0.0
+        },
+        "snow": {
+            "api_name": "snowfall",
+            "agg_func": "sum",
+            "default": 0.0
         }
+    },
+    "feature_precisions": {
+        "temperature_2m": 0,
+        "apparent_temperature": 0,
+        "relativehumidity_2m": 1,
+        "dewpoint_2m": 1,
+        "surface_pressure": 0,
+        "windspeed_10m": 1,
+        "cloudcover": 0,
+        "rain": 1,
+        "snowfall": 1,
+        "away_lon_delta": 2,
+        "away_travel_distance": 0,
+        "elo": 0,
+        "pythagorean_expectation": 3
     }
 }

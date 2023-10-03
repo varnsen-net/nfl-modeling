@@ -102,10 +102,9 @@ def get_away_lon_deltas(games, name):
     return away_lon_deltas
 
 
-def build_features(metadata, raw_games_path, city_coords_path, output_dir, **kwargs):
+def build_features(raw_games_path, city_coords_path, output_dir, **kwargs):
     """Build engineered features for team travel.
 
-    :param dict metadata: travel features metadata
     :param str raw_games_path: path to raw games data
     :param str city_coords_path: path to city coordinates data
     :param str output_dir: path to output directory
@@ -116,12 +115,11 @@ def build_features(metadata, raw_games_path, city_coords_path, output_dir, **kwa
     games = (pd.read_csv(raw_games_path)
              .dropna(subset=['result']))
     city_coords = pd.read_csv(city_coords_path)
-    feature_names = list(metadata)
-    away_travel_distance_name = feature_names[0]
+    away_travel_distance_name = "away_travel_distance"
     games = attach_lats_lons(games, city_coords)
     away_travel_distances = get_away_travel_distances(games, away_travel_distance_name)
     away_travel_distances.to_csv(f"{output_dir}/{away_travel_distance_name}.csv")
-    away_lon_delta_name = feature_names[1]
+    away_lon_delta_name = "away_lon_delta"
     away_lon_deltas = get_away_lon_deltas(games, away_lon_delta_name)
     away_lon_deltas.to_csv(f"{output_dir}/{away_lon_delta_name}.csv")
     return

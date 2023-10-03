@@ -9,29 +9,14 @@ import numpy as np
 import pandas as pd
 
 
-def make_precision_map(features):
-    """Make a precision map from a config file.
-    
-    :param dict features: features metadata from a config file
-    :return: a mapping of column names to precision
-    :rtype: dict
-    """
-    precision_map = {}
-    for category in features:
-        for feature in features[category]:
-            precision_map[feature] = features[category][feature]['precision']
-    return precision_map
-
-
-def set_precision(X, features):
+def set_precision(X, precision_map):
     """Set the precision for certain columns in a training or test set.
 
     :param pd.DataFrame X: a set of training or test data
-    :param dict features: features metadata from a config file
+    :param dict precision_map: mapping of column names and precision values
     :return: a set of training or test data with precision set
     :rtype: pd.DataFrame
     """
-    precision_map = make_precision_map(features)
     for col, precision in precision_map.items():
         feature = X.filter(regex=f"{col}$")
         col_names = feature.columns

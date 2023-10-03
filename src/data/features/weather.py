@@ -25,10 +25,10 @@ def fix_indoor_weather(games, weather, defaults):
     return weather
 
 
-def build_features(metadata, raw_games_path, raw_weather_path, output_dir, **kwargs):
+def build_features(weather_metadata, raw_games_path, raw_weather_path, output_dir, **kwargs):
     """Make weather features.
     
-    :param dict metadata: metadata for weather features
+    :param dict weather_metadata: weather_metadata for weather features
     :param str raw_games_path: path to raw games data
     :param str raw_weather_path: path to raw weather data
     :param str output_dir: path to output directory
@@ -39,7 +39,7 @@ def build_features(metadata, raw_games_path, raw_weather_path, output_dir, **kwa
     games = (pd.read_csv(raw_games_path)
              .dropna(subset=['result']))
     weather = pd.read_csv(raw_weather_path)
-    weather_features = metadata.values()
+    weather_features = weather_metadata.values()
     weather_defaults = {f['api_name']: f['default'] for f in weather_features}
     weather = fix_indoor_weather(games, weather, weather_defaults)
     for feature in weather_features:

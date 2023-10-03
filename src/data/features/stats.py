@@ -95,10 +95,9 @@ def make_elo_feature(games, elo_data, elo_name, output_dir):
     elo_scores.to_csv(f"{output_dir}/{elo_name}.csv")
 
 
-def build_features(metadata, raw_games_path, raw_elo_path, output_dir, **kwargs):
+def build_features(raw_games_path, raw_elo_path, output_dir, **kwargs):
     """Build engineered features for team stats.
     
-    :param dict metadata: metadata for stats features
     :param str raw_games_path: path to raw games data
     :param str raw_elo_path: path to raw elo data
     :param str output_dir: path to save stats features
@@ -109,7 +108,6 @@ def build_features(metadata, raw_games_path, raw_elo_path, output_dir, **kwargs)
     games = (pd.read_csv(raw_games_path)
              .dropna(subset=['result']))
     elo_data = pd.read_csv(raw_elo_path)
-    feature_names = list(metadata)
-    make_pythag_exp_feature(games, feature_names[0], output_dir)
-    make_elo_feature(games, elo_data, feature_names[1], output_dir)
+    make_pythag_exp_feature(games, "pythagorean_expectation", output_dir)
+    make_elo_feature(games, elo_data, "elo", output_dir)
     return

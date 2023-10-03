@@ -11,8 +11,9 @@ import pandas as pd
 
 from src.utils import collect_setup_args
 from src.data.raw.games import refresh_games_data
-from src.data.raw.weather import refresh_weather_data
 from src.data.raw.elo import refresh_elo_data
+from src.data.raw.weather import refresh_weather_data
+from src.data.raw.plays import refresh_plays_data
 from src.data.train.train import build_train
 from src.data.train.target import build_target
 
@@ -34,8 +35,9 @@ if __name__ == '__main__':
     args = collect_setup_args()
     config_path = args.c
     raw_games_path = args.g
-    raw_weather_path = args.w
     raw_elo_path = args.e
+    raw_weather_path = args.w
+    raw_plays_path = args.p
     city_coords_path = args.cc
     features_path = args.f
     train_path = args.tr
@@ -45,10 +47,10 @@ if __name__ == '__main__':
     # Load config
     with open(config_path, 'r') as f:
         config = json.load(f)
-        features_metadata = config['features']
-        weather_metadata = features_metadata['weather']
+        weather_metadata = config['weather_metadata']
         games_cols = config['training']['games_cols']
         holdout_year = config['training']['holdout_year']
+        current_season = config['current_season']
 
 
     # Refresh raw data
@@ -59,6 +61,8 @@ if __name__ == '__main__':
     print('Refreshing raw weather data...')
     refresh_weather_data(weather_metadata, raw_games_path, raw_weather_path,
                          city_coords_path, batch_size=1000)
+    print('Refreshing raw play-by-play data...')
+    refresh_plays_data(raw_plays_path, current_season)
 
 
     # Build features
@@ -69,8 +73,7 @@ if __name__ == '__main__':
             exec(f'from src.data.features.{module} import build_features')
             output_dir = f"{features_path}/{module}"
             os.makedirs(output_dir, exist_ok=True)
-            metadata = features_metadata[module]
-            build_features(metadata=metadata,
+            build_features(weather_metadata=weather_metadata,
                            raw_games_path=raw_games_path,
                            raw_weather_path=raw_weather_path,
                            raw_elo_path=raw_elo_path,

@@ -53,11 +53,11 @@ if __name__ == "__main__":
 
     with open(config_path, 'r') as f:
         config = json.load(f)
-        features_metadata = config['features']
+        feature_precisions = config['feature_precisions']
 
     train = pd.read_csv(f"{train_path}/train.csv", index_col=0)
     target = pd.read_csv(f"{train_path}/target.csv")
-    X = preprocess(train, features_metadata)
+    X = preprocess(train, feature_precisions)
     y = target['target'].values
     model_params = {'solver': 'liblinear'}
     baseline = build_baseline_pipeline(model_params)
