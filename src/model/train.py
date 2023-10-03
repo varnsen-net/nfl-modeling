@@ -8,13 +8,14 @@ import joblib
 import numpy as np
 import pandas as pd
 from sklearn.preprocessing import FunctionTransformer
+from sklearn.model_selection import GroupKFold
 from hyperopt import tpe, hp, fmin
 
 from src.utils import collect_setup_args
 from src.model.process import preprocess
 from src.model.pipeline import build_baseline_pipeline, build_swift_pipeline
 from src.model.hyperoptimize import hyperoptimize, LIGHTGBM_SPACE
-from src.model.evaluate import evaluate_model
+from src.model.evaluate import evaluate_model, custom_cv
 from src.plot.plot import make_and_save_plots
 
 
@@ -60,15 +61,16 @@ if __name__ == "__main__":
     y = target['target'].values
     model_params = {'solver': 'liblinear'}
     baseline = build_baseline_pipeline(model_params)
-    scores = evaluate_model(baseline, X, y, cv=5)
+    cv = custom_cv()
+    scores = evaluate_model(baseline, X, y, cv)
     save_path = make_save_path(results_path)
     type = 'baseline'
     scores.to_csv(f"{save_path}/{type}_scores.csv")
     make_and_save_plots(scores, type, save_path)
-    best_params = hyperoptimize(X, y, LIGHTGBM_SPACE, max_evals=25)
+    best_params = hyperoptimize(X, y, cv, LIGHTGBM_SPACE, max_evals=50)
     print("Best params:", best_params)
     swift = build_swift_pipeline(best_params)
     type = 'swift'
-    scores = evaluate_model(swift, X, y, cv=5)
+    scores = evaluate_model(swift, X, y, cv)
     scores.to_csv(f"{save_path}/{type}_scores.csv")
     make_and_save_plots(scores, type, save_path)

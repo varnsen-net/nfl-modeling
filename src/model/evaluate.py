@@ -2,6 +2,7 @@
 
 import numpy as np
 import pandas as pd
+from mlxtend.evaluate.time_series import GroupTimeSeriesSplit, print_split_info
 from sklearn.model_selection import cross_validate
 from sklearn.calibration import calibration_curve
 from sklearn.metrics import (brier_score_loss,
@@ -57,19 +58,33 @@ def custom_scorer(pipeline, X, y):
     return scores
 
 
-def evaluate_model(pipeline, X, y, cv=5):
+def custom_cv():
+    """Create a custom cross-validation object.
+    
+    :return: cross-validation object
+    :rtype: mlxtend.evaluate.time_series_split.GroupTimeSeriesSplit
+    """
+    cv_args = {"test_size": 1, "train_size": 4}
+    custom_cv = GroupTimeSeriesSplit(**cv_args)
+    return custom_cv
+
+
+def evaluate_model(pipeline, X, y, cv):
     """Evaluate model using a variety of metrics.
     
     :param sklearn.pipeline.Pipeline pipeline: pipeline to evaluate
     :param pd.DataFrame X: features
     :param pd.Series y: target
-    :param int cv: number of cross-validation folds
+    :param function cv: cross-validation object
     :return: evaluation metrics
     :rtype: pd.DataFrame
     """
-    scores = cross_validate(pipeline, X, y, cv=cv, scoring=custom_scorer)
+    groups = X['season']
+    scores = cross_validate(pipeline, X, y, cv=cv, groups=groups,
+                            scoring=custom_scorer)
     scores = pd.DataFrame(scores).T
-    scores.columns = [f'fold_{i+1}' for i in range(cv)]
+    num_folds = cv.get_n_splits()
+    scores.columns = [f'fold_{i+1}' for i in range(num_folds)]
     scores.index.name = 'metric'
     scores['mean'] = scores.mean(axis=1)
     scores['std'] = scores.std(axis=1)

@@ -7,7 +7,6 @@ Working model: SWIFT
 import pandas as pd
 import numpy as np
 from sklearn.linear_model import LogisticRegression
-from sklearn.ensemble import RandomForestClassifier
 from lightgbm import LGBMClassifier
 from sklearn.calibration import CalibratedClassifierCV
 

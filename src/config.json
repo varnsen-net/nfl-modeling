@@ -1,7 +1,8 @@
 {
+	"current_season": 2023,
     "training": {
         "holdout_year": 2020,
-        "games_cols": ["game_id", "season", "week", "away_rest", "home_rest", "div_game", "roof", "surface"]
+        "games_cols": ["game_id", "season", "away_rest", "home_rest", "div_game", "roof", "surface"]
     },
     "features": {
         "weather": {
