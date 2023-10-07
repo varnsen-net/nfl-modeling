@@ -11,14 +11,19 @@ Receives a set of paths from setup.sh, then fetches raw data, builds features, a
 ## src.data.features.travel
 Helper functions for building engineered features for team travel.
 
+## src.data.features.team_stats
+Helper functions for building engineered features for team stats.
+
 ## src.data.features.weather
 Helper functions for building weather features.
 
-## src.data.features.stats
-Helper functions for building engineered features for team stats.
-
 ## src.data.raw.elo
 Helper functions for fetching raw elo ratings from 538.
+
+## src.data.raw.plays
+Helper functions for fetching raw NFL play-by-play data.
+
+https://github.com/nflverse/nflverse-data/releases/tag/pbp
 
 ## src.data.raw.weather
 Helper functions for fetching raw weather data.
