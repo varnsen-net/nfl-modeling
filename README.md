@@ -5,14 +5,14 @@
 Welcome to the repo for SWIFT, a machine learning model to predict NFL outcomes.
 
 ## Description
-SWIFT is a model designed to output well-calibrated probabilities for NFL games. It's still in the very early stages of development, so many things are still missing.
+SWIFT is a model designed to output well-calibrated probabilities for NFL games. It's still in the very early stages of development. Many features are still missing.
 
-Current status: can train a baseline and advanced model and record various scoring metrics for each run.
+Current status: trains a LightGBM classifier and tunes hyperparameters with the hyperopt library.
 
 ## Getting started
 Simply `bash setup.sh` and you're off to the races!
 
-After training, you can view model scores in `./data/results`
+After training, you can view model scores in `/data/results`
 
 ## Current engineered features
 - home/away rest
@@ -21,6 +21,7 @@ After training, you can view model scores in `./data/results`
 - away travel
 - pythagorean expectation
 - elo rating
+- pass/rush efficiency metrics
 
 ## FAQ
 
