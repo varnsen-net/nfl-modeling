@@ -38,7 +38,7 @@ def get_kickoff_hours(gametimes):
     return hours
 
 
-def map_team_data_to_games(games, stats):
+def map_team_data_to_games(games, stats, feature_name):
     """Map a pandas series of team stats with a season/week/team multiindex
     to game_ids in the games data.
     
@@ -47,18 +47,17 @@ def map_team_data_to_games(games, stats):
     :return: dataframe with game_id, away_team_stat, home_team_stat
     :rtype: pd.DataFrame
     """
-    name = stats.name
     merged = (games
               .merge(stats, how='inner',
                      left_on=['season', 'week', 'away_team'],
                      right_on=['season', 'week', 'team'])
-              .rename(columns={f'{name}': f'away_{name}'})
+              .rename(columns={f'{feature_name}': f'away_{feature_name}'})
               .merge(stats, how='inner',
                      left_on=['season', 'week', 'home_team'],
                      right_on=['season', 'week', 'team'])
-              .rename(columns={f'{name}': f'home_{name}'}))
+              .rename(columns={f'{feature_name}': f'home_{feature_name}'}))
     remapped_stats = (merged
-                      [['game_id', f'away_{name}', f'home_{name}']]
+                      [['game_id', f'away_{feature_name}', f'home_{feature_name}']]
                       .set_index('game_id'))
     return remapped_stats
 

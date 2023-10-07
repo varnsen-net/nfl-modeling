@@ -77,6 +77,7 @@ if __name__ == '__main__':
                            raw_games_path=raw_games_path,
                            raw_weather_path=raw_weather_path,
                            raw_elo_path=raw_elo_path,
+                           raw_plays_path=raw_plays_path,
                            city_coords_path=city_coords_path,
                            output_dir=output_dir)
 

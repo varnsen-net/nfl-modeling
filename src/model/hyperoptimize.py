@@ -15,13 +15,17 @@ from src.model.pipeline import build_swift_pipeline
 
 LIGHTGBM_SPACE = {
     'num_leaves': hp.uniformint('num_leaves', 2, 500),
-    'max_depth': hp.uniformint('max_depth', 2, 20),
+    'max_depth': hp.uniformint('max_depth', 2, 50),
     'learning_rate': hp.loguniform('learning_rate', -6.0, 0.0),
     'n_estimators': hp.uniformint('n_estimators', 2, 500),
-    'min_data_in_leaf': hp.uniformint('min_data_in_leaf', 2, 200),
-    'min_child_samples': hp.uniformint('min_child_samples', 2, 100),
-    'reg_alpha': hp.loguniform('reg_alpha', -6.0, 0.0),
-    'reg_lambda': hp.loguniform('reg_lambda', -6.0, 0.0),
+    'min_data_in_leaf': hp.uniformint('min_data_in_leaf', 2, 500),
+    'lambda_l1': hp.loguniform('reg_alpha', -6.0, 0.0),
+    'lambda_l2': hp.loguniform('reg_lambda', -6.0, 0.0),
+    'linear_lambda': hp.loguniform('linear_lambda', -6.0, 0.0),
+    'bagging_fraction': hp.uniform('bagging_fraction', 0.2, 1.0),
+    'bagging_freq': hp.uniformint('bagging_freq', 0, 10),
+    'feature_fraction': hp.uniform('feature_fraction', 0.2, 1.0),
+    'sigmoid': hp.uniform('sigmoid', 0.0, 5.0),
     'verbosity': -1,
 }
 
@@ -39,6 +43,7 @@ def fix_param_types(params):
         'n_estimators': int,
         'min_data_in_leaf': int,
         'min_child_samples': int,
+        'bagging_freq': int,
     }
     for key, correction in corrections.items():
         if key in params:
