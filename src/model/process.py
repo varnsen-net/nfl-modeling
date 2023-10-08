@@ -46,3 +46,33 @@ def reduce_columns(X, columns):
     :rtype: pd.DataFrame
     """
     return X[columns]
+
+
+def transform_home_away_structure(X, y):
+    """Convert home/away structure to object/adversary structure.
+    
+    :param pd.DataFrame X: a set of training or test data
+    :param pd.DataFrame y: a set of training or test labels
+    :return: a set of training or test data with object/adversary structure
+    :rtype: pd.DataFrame
+    """
+    home_obj_idxs = X.sample(frac=0.5).index.sort_values()
+    home_obj_games = X.loc[home_obj_idxs]
+    away_obj_games = X.drop(home_obj_idxs)
+    home_obj_y = y.loc[home_obj_idxs]
+    away_obj_y = y.drop(home_obj_idxs)
+    
+    home_obj_games.columns = (home_obj_games.columns
+                              .str.replace("^home", "obj", regex=True)
+                              .str.replace("^away", "adv", regex=True))
+    home_obj_games['obj_team_is_home'] = 1
+    away_obj_games.columns = (away_obj_games.columns
+                              .str.replace("^away", "obj", regex=True)
+                              .str.replace("^home", "adv", regex=True))
+    away_obj_games['obj_team_is_home'] = 0
+    away_obj_y = 1 - away_obj_y
+
+    X_transformed = pd.concat([home_obj_games, away_obj_games]).sort_index()
+    y_transformed = pd.concat([home_obj_y, away_obj_y]).sort_index()
+
+    return X_transformed, y_transformed

@@ -19,11 +19,13 @@ def build_baseline_pipeline(model_params={}):
     :return: baseline pipeline
     :rtype: sklearn.pipeline.Pipeline
     """
-    feature_columns = ['away_pythagorean_expectation',
-                       'home_pythagorean_expectation',
-                       'away_rest',
-                       'home_rest',
-                       'away_travel_distance']
+    feature_columns = ['obj_pythagorean_expectation',
+                       'adv_pythagorean_expectation',
+                       'obj_rest',
+                       'adv_rest',
+                       'obj_travel_distance',
+                       'adv_travel_distance',
+                       'obj_team_is_home']
     kw_args = {'columns': feature_columns}
     column_reducer = FunctionTransformer(reduce_columns, kw_args=kw_args)
     estimator = baseline_estimator(**model_params)

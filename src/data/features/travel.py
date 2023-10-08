@@ -82,10 +82,14 @@ def get_away_travel_distances(games, name):
     :return: away team travel features
     :rtype: pd.DataFrame
     """
+    away_colname = f"away_{name}"
+    home_colname = f"home_{name}"
     home_coords = games[['lat_home', 'lon_home']].values
     away_coords = games[['lat_away', 'lon_away']].values
-    games[name] = calculate_distances(home_coords, away_coords)
-    away_travel_distances = games[['game_id', name]].set_index('game_id')
+    games[away_colname] = calculate_distances(home_coords, away_coords)
+    games[home_colname] = 0
+    away_travel_distances = (games[['game_id', away_colname, home_colname]]
+                             .set_index('game_id'))
     return away_travel_distances
 
 
@@ -97,8 +101,12 @@ def get_away_lon_deltas(games, name):
     :return: away team travel features
     :rtype: pd.DataFrame
     """
-    games[name] = games['lon_home'] - games['lon_away']
-    away_lon_deltas = games[['game_id', name]].set_index('game_id')
+    away_colname = f"away_{name}"
+    home_colname = f"home_{name}"
+    games[away_colname] = games['lon_home'] - games['lon_away']
+    games[home_colname] = 0
+    away_lon_deltas = (games[['game_id', away_colname, home_colname]]
+                             .set_index('game_id'))
     return away_lon_deltas
 
 
@@ -115,11 +123,11 @@ def build_features(raw_games_path, city_coords_path, output_dir, **kwargs):
     games = (pd.read_csv(raw_games_path)
              .dropna(subset=['result']))
     city_coords = pd.read_csv(city_coords_path)
-    away_travel_distance_name = "away_travel_distance"
+    away_travel_distance_name = "travel_distance"
     games = attach_lats_lons(games, city_coords)
     away_travel_distances = get_away_travel_distances(games, away_travel_distance_name)
     away_travel_distances.to_csv(f"{output_dir}/{away_travel_distance_name}.csv")
-    away_lon_delta_name = "away_lon_delta"
+    away_lon_delta_name = "lon_delta"
     away_lon_deltas = get_away_lon_deltas(games, away_lon_delta_name)
     away_lon_deltas.to_csv(f"{output_dir}/{away_lon_delta_name}.csv")
     return

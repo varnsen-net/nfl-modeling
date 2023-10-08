@@ -12,7 +12,7 @@ from sklearn.model_selection import GroupKFold
 from hyperopt import tpe, hp, fmin
 
 from src.utils import collect_setup_args
-from src.model.process import preprocess
+from src.model.process import preprocess, transform_home_away_structure
 from src.model.pipeline import build_baseline_pipeline, build_swift_pipeline
 from src.model.hyperoptimize import hyperoptimize, LIGHTGBM_SPACE
 from src.model.evaluate import custom_cv, evaluate_model, compile_scores
@@ -58,6 +58,7 @@ if __name__ == "__main__":
 
     train = pd.read_csv(f"{train_path}/train.csv", index_col=0)
     target = pd.read_csv(f"{train_path}/target.csv", index_col=0)
+    train, target = transform_home_away_structure(train, target)
     X = preprocess(train, feature_precisions)
     y = target['target']
     cv = custom_cv()
@@ -82,6 +83,7 @@ if __name__ == "__main__":
     print(f"Evaluating {name} on holdout data...")
     test = pd.read_csv(f"{test_path}/test.csv", index_col=0)
     target = pd.read_csv(f"{test_path}/target.csv", index_col=0)
+    test, target = transform_home_away_structure(test, target)
     X_test = preprocess(test, feature_precisions)
     y_test = target['target']
     y_pred = voting_classifier(estimators, X_test, 'hard')
