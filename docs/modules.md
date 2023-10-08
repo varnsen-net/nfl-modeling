@@ -43,6 +43,9 @@ Extract docstrings from source files and build the documentation.
 ## src.model.evaluate
 Helper functions for evaluating models.
 
+## src.model.predict
+Helper functions for producing model predictions.
+
 ## src.model.hyperoptimize
 Helper functions for optimizing model hyperparameters.
 
