@@ -15,8 +15,9 @@ from src.utils import collect_setup_args
 from src.model.process import preprocess
 from src.model.pipeline import build_baseline_pipeline, build_swift_pipeline
 from src.model.hyperoptimize import hyperoptimize, LIGHTGBM_SPACE
-from src.model.evaluate import evaluate_model, custom_cv
-from src.plot.plot import make_and_save_plots
+from src.model.evaluate import custom_cv, evaluate_model, compile_scores
+from src.model.predict import voting_classifier
+from src.plot.plot import make_and_save_plots, plot_test_calibration
 
 
 def create_datetime_id():
@@ -56,21 +57,36 @@ if __name__ == "__main__":
         feature_precisions = config['feature_precisions']
 
     train = pd.read_csv(f"{train_path}/train.csv", index_col=0)
-    target = pd.read_csv(f"{train_path}/target.csv")
+    target = pd.read_csv(f"{train_path}/target.csv", index_col=0)
     X = preprocess(train, feature_precisions)
-    y = target['target'].values
-    model_params = {'solver': 'liblinear'}
-    baseline = build_baseline_pipeline(model_params)
+    y = target['target']
     cv = custom_cv()
-    scores = evaluate_model(baseline, X, y, cv)
+
+    # evaluate baseline model
+    baseline = build_baseline_pipeline({'solver': 'liblinear'})
+    scores, _ = evaluate_model(baseline, X, y, cv)
     save_path = make_save_path(results_path)
-    type = 'baseline'
-    scores.to_csv(f"{save_path}/{type}_scores.csv")
-    make_and_save_plots(scores, type, save_path)
+    name = 'baseline'
+    scores.to_csv(f"{save_path}/{name}_scores.csv")
+    make_and_save_plots(scores, name, save_path)
+
+    # evaluate swift
     best_params = hyperoptimize(X, y, cv, LIGHTGBM_SPACE, max_evals=50)
-    print("Best params:", best_params)
     swift = build_swift_pipeline(best_params)
-    type = 'swift'
-    scores = evaluate_model(swift, X, y, cv)
-    scores.to_csv(f"{save_path}/{type}_scores.csv")
-    make_and_save_plots(scores, type, save_path)
+    scores, estimators = evaluate_model(swift, X, y, cv)
+    name = 'swift'
+    scores.to_csv(f"{save_path}/{name}_scores.csv")
+    make_and_save_plots(scores, name, save_path)
+
+    # evaluate swift on holdout data
+    print(f"Evaluating {name} on holdout data...")
+    test = pd.read_csv(f"{test_path}/test.csv", index_col=0)
+    target = pd.read_csv(f"{test_path}/target.csv", index_col=0)
+    X_test = preprocess(test, feature_precisions)
+    y_test = target['target']
+    y_pred = voting_classifier(estimators, X_test, 'hard')
+    y_pred_proba = voting_classifier(estimators, X_test, 'soft')
+    scores = compile_scores(y_test, y_pred, y_pred_proba)
+    plot_test_calibration(scores, name, save_path)
+    print("Best params:", best_params)
+

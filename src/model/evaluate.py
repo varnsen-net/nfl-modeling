@@ -29,17 +29,15 @@ def append_array_to_scores(scores, metric_array, name):
     return scores
 
 
-def custom_scorer(pipeline, X, y):
-    """Score model using a variety of metrics.
+def compile_scores(y, y_pred, y_pred_proba):
+    """Compile a dictionary of evaluation metrics.
     
-    :param sklearn.pipeline.Pipeline pipeline: pipeline to evaluate
-    :param pd.DataFrame X: features
     :param pd.Series y: target
+    :param pd.Series y_pred: predicted target
+    :param pd.Series y_pred_proba: predicted probabilities
     :return: evaluation metrics
     :rtype: dict
     """
-    y_pred = pipeline.predict(X)
-    y_pred_proba = pipeline.predict_proba(X)[:, 1]
     tn, fp, fn, tp = confusion_matrix(y, y_pred).ravel()
     prob_true, prob_pred = calibration_curve(y, y_pred_proba, n_bins=7,
                                              strategy='quantile')
@@ -55,6 +53,21 @@ def custom_scorer(pipeline, X, y):
               'tp': tp}
     scores = append_array_to_scores(scores, prob_true, 'prob_true_bin')
     scores = append_array_to_scores(scores, prob_pred, 'prob_pred_bin')
+    return scores
+
+
+def custom_scorer(pipeline, X, y):
+    """Score model using a variety of metrics.
+    
+    :param sklearn.pipeline.Pipeline pipeline: pipeline to evaluate
+    :param pd.DataFrame X: features
+    :param pd.Series y: target
+    :return: evaluation metrics
+    :rtype: dict
+    """
+    y_pred = pipeline.predict(X)
+    y_pred_proba = pipeline.predict_proba(X)[:, 1]
+    scores = compile_scores(y, y_pred, y_pred_proba)
     return scores
 
 
@@ -81,11 +94,12 @@ def evaluate_model(pipeline, X, y, cv):
     """
     groups = X['season']
     scores = cross_validate(pipeline, X, y, cv=cv, groups=groups,
-                            scoring=custom_scorer)
+                            scoring=custom_scorer, return_estimator=True)
+    estimators = scores.pop('estimator')
     scores = pd.DataFrame(scores).T
     num_folds = cv.get_n_splits()
     scores.columns = [f'fold_{i+1}' for i in range(num_folds)]
     scores.index.name = 'metric'
     scores['mean'] = scores.mean(axis=1)
     scores['std'] = scores.std(axis=1)
-    return scores
+    return scores, estimators

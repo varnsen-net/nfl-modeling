@@ -27,6 +27,8 @@ LIGHTGBM_SPACE = {
     'feature_fraction': hp.uniform('feature_fraction', 0.2, 1.0),
     'sigmoid': hp.uniform('sigmoid', 0.0, 5.0),
     'verbosity': -1,
+    'objective': 'binary',
+    'eval_metric': 'binary_logloss',
 }
 
 

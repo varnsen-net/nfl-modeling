@@ -52,12 +52,12 @@ def make_plot_data(scores):
     return prob_true, prob_pred, conf_matrix_scores
 
 
-def plot_calibration_errors(prob_true, prob_pred, type, save_path):
+def plot_train_calibration(prob_true, prob_pred, name, save_path):
     """Plot calibration errors.
     
     :param pd.DataFrame prob_true: true probabilities
     :param pd.DataFrame prob_pred: predicted probabilities
-    :param str type: model type
+    :param str name: model name
     :param str save_path: path to save plot
     :return: None
     :rtype: None
@@ -93,20 +93,52 @@ def plot_calibration_errors(prob_true, prob_pred, type, save_path):
     for i in [0, 1]:
         axs[i].set_xlim([0.1, 0.9])
         axs[i].set_ylim([0.1, 0.9])
-        axs[i].set_title(f'Calibration Curve ({type})')
+        axs[i].set_title(f'Calibration Curve ({name})')
         axs[i].set_xlabel('Predicted Probability')
         axs[0].set_ylabel('True Probability')
         axs[i].legend(loc='upper left', framealpha=0.0)
     fig.tight_layout()
-    fig.savefig(f"{save_path}/{type}_calibration_curve.png")
+    fig.savefig(f"{save_path}/{name}_calibration_curve.png")
     return
 
 
-def plot_confusion_matrix(scores, type, save_path):
+def plot_test_calibration(holdout_scores, name, save_path):
+    """Plot calibration curve for holdout data.
+    
+    :param dict holdout_scores: holdout scores
+    :param str name: model name
+    :param str save_path: path to save plot
+    :return: None
+    :rtype: None
+    """
+    x = [holdout_scores[f] for f in holdout_scores if f.startswith('prob_pred_')]
+    y = [holdout_scores[f] for f in holdout_scores if f.startswith('prob_true_')]
+    fig, ax = plt.subplots(figsize=(5, 4))
+    colors = plt.get_cmap('hellafresh')
+    ax.plot(
+        [0, 1],
+        [0, 1],
+        linestyle='--',
+        color='black',
+        alpha=0.5,
+        label='Perfect Calibration')
+    ax.plot(x, y, label='Model Calibration')
+    ax.set_xlim([0.1, 0.9])
+    ax.set_ylim([0.1, 0.9])
+    ax.set_title(f'Calibration Curve ({name})')
+    ax.set_xlabel('Predicted Probability')
+    ax.set_ylabel('True Probability')
+    ax.legend(loc='upper left', framealpha=0.0)
+    fig.tight_layout()
+    fig.savefig(f"{save_path}/{name}_calibration_curve_holdout.png")
+    return
+
+
+def plot_confusion_matrix(scores, name, save_path):
     """Plot normalized confusion matrix using matplotlib.
     
     :param np.array scores: confusion matrix scores
-    :param str type: model type
+    :param str name: model name
     :param str save_path: path to save plot
     :return: None
     :rtype: None
@@ -127,24 +159,24 @@ def plot_confusion_matrix(scores, type, save_path):
                     ha='center', va='center',
                     color='xkcd:off white',
                     fontsize=18)
-    ax.set_title(f'Confusion Matrix ({type})')
+    ax.set_title(f'Confusion Matrix ({name})')
     fig.tight_layout()
-    fig.savefig(f"{save_path}/{type}_confusion_matrix.png")
+    fig.savefig(f"{save_path}/{name}_confusion_matrix.png")
     return
 
 
-def make_and_save_plots(scores, type, save_path):
+def make_and_save_plots(scores, name, save_path):
     """Make and save plots.
     
     :param pd.DataFrame scores: scores from model evaluation
-    :param str type: model type
+    :param str name: model name
     :param str save_path: path to save plot
     :return: None
     :rtype: None
     """
     prob_true, prob_pred, conf_matrix_scores = make_plot_data(scores)
-    plot_calibration_errors(prob_true, prob_pred, type, save_path)
-    plot_confusion_matrix(conf_matrix_scores, type, save_path)
+    plot_train_calibration(prob_true, prob_pred, name, save_path)
+    plot_confusion_matrix(conf_matrix_scores, name, save_path)
     return
 
 
