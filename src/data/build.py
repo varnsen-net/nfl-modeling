@@ -17,6 +17,8 @@ from src.data.raw.plays import refresh_plays_data
 from src.data.train.train import build_train
 from src.data.train.target import build_target
 
+from src.config import WEATHER_METADATA, TRAINING, CURRENT_SEASON, CURRENT_WEEK, RAW_DATA_URLS
+
 
 def split_data(df, holdout_year):
     """Split data into training and holdout sets.
@@ -42,15 +44,8 @@ if __name__ == '__main__':
     features_path = args.f
     train_path = args.tr
     test_path = args.te
-
-
-    # Load config
-    with open(config_path, 'r') as f:
-        config = json.load(f)
-        weather_metadata = config['weather_metadata']
-        games_cols = config['training']['games_cols']
-        holdout_year = config['training']['holdout_year']
-        current_season = config['current_season']
+    games_cols = TRAINING['games_cols']
+    holdout_year = TRAINING['holdout_year']
 
 
     # Refresh raw data
@@ -59,10 +54,10 @@ if __name__ == '__main__':
     print('Refreshing raw elo data...')
     refresh_elo_data(raw_elo_path)
     print('Refreshing raw weather data...')
-    refresh_weather_data(weather_metadata, raw_games_path, raw_weather_path,
+    refresh_weather_data(WEATHER_METADATA, raw_games_path, raw_weather_path,
                          city_coords_path, batch_size=1000)
     print('Refreshing raw play-by-play data...')
-    refresh_plays_data(raw_plays_path, current_season)
+    refresh_plays_data(raw_plays_path, CURRENT_SEASON)
 
 
     # Build features
@@ -73,7 +68,7 @@ if __name__ == '__main__':
             exec(f'from src.data.features.{module} import build_features')
             output_dir = f"{features_path}/{module}"
             os.makedirs(output_dir, exist_ok=True)
-            build_features(weather_metadata=weather_metadata,
+            build_features(weather_metadata=WEATHER_METADATA,
                            raw_games_path=raw_games_path,
                            raw_weather_path=raw_weather_path,
                            raw_elo_path=raw_elo_path,
@@ -99,4 +94,3 @@ if __name__ == '__main__':
     target.to_csv(f'{train_path}/target.csv', index=False)
     train_holdout.sort_values('game_id').to_csv(f'{test_path}/test.csv', index=False)
     target_holdout.to_csv(f'{test_path}/target.csv', index=False)
-

@@ -19,6 +19,8 @@ from src.model.evaluate import custom_cv, evaluate_model, compile_scores
 from src.model.predict import voting_classifier
 from src.plot.plot import make_and_save_plots, plot_test_calibration
 
+from src.config import FEATURE_PRECISIONS
+
 
 def create_datetime_id():
     """Creates a unique identifier for the current datetime.
@@ -52,14 +54,10 @@ if __name__ == "__main__":
     test_path = args.te
     results_path = args.r
 
-    with open(config_path, 'r') as f:
-        config = json.load(f)
-        feature_precisions = config['feature_precisions']
-
     train = pd.read_csv(f"{train_path}/train.csv", index_col=0)
     target = pd.read_csv(f"{train_path}/target.csv", index_col=0)
     train, target = transform_home_away_structure(train, target)
-    X = preprocess(train, feature_precisions)
+    X = preprocess(train, FEATURE_PRECISIONS)
     y = target['target']
     cv = custom_cv()
 
@@ -84,7 +82,7 @@ if __name__ == "__main__":
     test = pd.read_csv(f"{test_path}/test.csv", index_col=0)
     target = pd.read_csv(f"{test_path}/target.csv", index_col=0)
     test, target = transform_home_away_structure(test, target)
-    X_test = preprocess(test, feature_precisions)
+    X_test = preprocess(test, FEATURE_PRECISIONS)
     y_test = target['target']
     y_pred = voting_classifier(estimators, X_test, 'hard')
     y_pred_proba = voting_classifier(estimators, X_test, 'soft')
