@@ -46,18 +46,21 @@ if __name__ == '__main__':
     test_path = args.te
     games_cols = TRAINING['games_cols']
     holdout_year = TRAINING['holdout_year']
+    games_url = RAW_DATA_URLS['games']
+    elos_url = RAW_DATA_URLS['elos']
+    plays_url = RAW_DATA_URLS['plays']
 
 
     # Refresh raw data
     print('Refreshing raw games data...')
-    refresh_games_data(raw_games_path)
+    refresh_games_data(games_url, raw_games_path)
     print('Refreshing raw elo data...')
-    refresh_elo_data(raw_elo_path)
+    refresh_elo_data(elos_url, raw_elo_path)
     print('Refreshing raw weather data...')
     refresh_weather_data(WEATHER_METADATA, raw_games_path, raw_weather_path,
                          city_coords_path, batch_size=1000)
     print('Refreshing raw play-by-play data...')
-    refresh_plays_data(raw_plays_path, CURRENT_SEASON)
+    refresh_plays_data(CURRENT_SEASON, plays_url, raw_plays_path)
 
 
     # Build features

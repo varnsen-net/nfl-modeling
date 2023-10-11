@@ -9,47 +9,52 @@ import numpy as np
 import pandas as pd
 import requests
 
+from src.utils import refresh_raw_data
 
-def fetch_pbp_data(path, year):
-    """Fetch raw play-by-play data for a given year and write to disk.
+
+def fetch_pbp_data(url, path, filename):
+    """Fetch raw play-by-play data for a given season and write to disk.
     
+    :param str url: url to fetch data from
     :param str path: dir to write data to
-    :param int year: season to fetch data for
+    :param str filename: name of file
     :return: None
     :rtype: None
     """
-    url = f"https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_{year}.parquet"
-    r = requests.get(url)
-    with open(f"{path}/play_by_play_{year}.parquet", "wb") as f:
-        f.write(r.content)
+    url = f"{url}/{filename}"
+    path = f"{path}/{filename}"
+    refresh_raw_data(url, path)
     return
 
 
-def fetch_missing_data(path, current_season):
-    """Fetch missing play-by-play data for years prior to current season.
+def find_missing_seasons(current_season, path):
+    """Find any missing local pbp season files.
     
-    :param str path: dir to write data to
     :param int current_season: current nfl season
-    :return: None
-    :rtype: None
+    :param str path: dir to search for files
+    :yield: missing season filenames
+    :rtype: str
     """
-    years = range(1999, current_season)
+    years = range(1999, current_season+1)
     files = os.listdir(path)
-    for year in years:
-        if f"play_by_play_{year}.parquet" not in files:
-            fetch_pbp_data(path, year)
-    return
+    for season in years:
+        filename = f"play_by_play_{season}.parquet"
+        if filename not in files:
+            yield filename
+        elif season == current_season:
+            yield filename
 
 
-def refresh_plays_data(path, current_season):
+def refresh_plays_data(current_season, url, path):
     """Refresh raw play-by-play data if necessary.
     
-    :param str path: dir to write data to
     :param int current_season: current nfl season
+    :param str url: url to fetch data from
+    :param str path: dir to write data to
     :return: None
     :rtype: None
     """
     os.makedirs(path, exist_ok=True)
-    fetch_missing_data(path, current_season)
-    fetch_pbp_data(path, current_season)
+    for filename in find_missing_seasons(current_season, path):
+        fetch_pbp_data(url, path, filename)
     return

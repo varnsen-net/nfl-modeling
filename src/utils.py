@@ -1,5 +1,6 @@
 """Utility functions. These functions are used in mutliple places throughout the source code and cannot be coupled to any particular module."""
 
+import requests
 import argparse
 
 import numpy as np
@@ -60,6 +61,21 @@ def map_team_data_to_games(games, stats, feature_name):
                       [['game_id', f'away_{feature_name}', f'home_{feature_name}']]
                       .set_index('game_id'))
     return remapped_stats
+
+
+def refresh_raw_data(url, save_path):
+    """Fetches data from a URL and saves to disk.
+
+    :param str url: URL to fetch data from
+    :param str path: Path to save data to
+    :return: None
+    :rtype: None
+    """
+    r = requests.get(url)
+    if r.status_code == 200:
+        with open(save_path, 'wb') as f:
+            f.write(r.content)
+    return
 
 
 def collect_setup_args():
