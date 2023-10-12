@@ -1,6 +1,5 @@
 RAW_DATA_URLS = {
     "games": "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv",
-    "elos": "https://projects.fivethirtyeight.com/nfl-api/nfl_elo.csv",
     "weather_hist": "https://archive-api.open-meteo.com/v1/archive",
     "weather_forecast": "https://api.open-meteo.com/v1/forecast",
     "plays": "https://github.com/nflverse/nflverse-data/releases/download/pbp",

@@ -2,6 +2,7 @@
 
 import requests
 import argparse
+import datetime
 
 import numpy as np
 import pandas as pd
@@ -78,6 +79,19 @@ def refresh_raw_data(url, save_path):
     return
 
 
+def get_date_n_days_out(n):
+    """Get the date n days from today.
+    
+    :param int n: number of days from today
+    :return: date n days from today in YYYY-MM-DD format
+    :rtype: str
+    """
+    today = datetime.date.today()
+    n_days_out = today + datetime.timedelta(days=n)
+    formatted_date = n_days_out.strftime('%Y-%m-%d')
+    return formatted_date
+
+
 def collect_setup_args():
     """Collects the command line arguments for the setup script.
     
@@ -87,7 +101,6 @@ def collect_setup_args():
     argparser = argparse.ArgumentParser()
     argparser.add_argument('-c', help='path to config file')
     argparser.add_argument('-g', help='path to raw games data')
-    argparser.add_argument('-e', help='path to raw elo data')
     argparser.add_argument('-w', help='path to raw weather data')
     argparser.add_argument('-p', help='path to raw play-by-play data')
     argparser.add_argument('-cc', help='path to city coordinates')

@@ -11,7 +11,6 @@ import pandas as pd
 
 from src.utils import collect_setup_args
 from src.data.raw.games import refresh_games_data
-from src.data.raw.elo import refresh_elo_data
 from src.data.raw.weather import refresh_weather_data
 from src.data.raw.plays import refresh_plays_data
 from src.data.train.train import build_train
@@ -37,7 +36,6 @@ if __name__ == '__main__':
     args = collect_setup_args()
     config_path = args.c
     raw_games_path = args.g
-    raw_elo_path = args.e
     raw_weather_path = args.w
     raw_plays_path = args.p
     city_coords_path = args.cc
@@ -47,15 +45,12 @@ if __name__ == '__main__':
     games_cols = TRAINING['games_cols']
     holdout_year = TRAINING['holdout_year']
     games_url = RAW_DATA_URLS['games']
-    elos_url = RAW_DATA_URLS['elos']
     plays_url = RAW_DATA_URLS['plays']
 
 
     # Refresh raw data
     print('Refreshing raw games data...')
     refresh_games_data(games_url, raw_games_path)
-    print('Refreshing raw elo data...')
-    refresh_elo_data(elos_url, raw_elo_path)
     print('Refreshing raw weather data...')
     refresh_weather_data(WEATHER_METADATA, raw_games_path, raw_weather_path,
                          city_coords_path, batch_size=1000)
@@ -74,7 +69,6 @@ if __name__ == '__main__':
             build_features(weather_metadata=WEATHER_METADATA,
                            raw_games_path=raw_games_path,
                            raw_weather_path=raw_weather_path,
-                           raw_elo_path=raw_elo_path,
                            raw_plays_path=raw_plays_path,
                            city_coords_path=city_coords_path,
                            output_dir=output_dir)
