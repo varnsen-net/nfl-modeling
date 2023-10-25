@@ -8,6 +8,26 @@ import numpy as np
 import pandas as pd
 
 
+def collect_setup_args():
+    """Collects the command line arguments for the setup script.
+    
+    :return: command line arguments
+    :rtype: argparse.Namespace
+    """
+    argparser = argparse.ArgumentParser()
+    argparser.add_argument('-c', help='path to config file')
+    argparser.add_argument('-g', help='path to raw games data')
+    argparser.add_argument('-w', help='path to raw weather data')
+    argparser.add_argument('-p', help='path to raw play-by-play data')
+    argparser.add_argument('-cc', help='path to city coordinates')
+    argparser.add_argument('-f', help='path to features data')
+    argparser.add_argument('-tr', help='path to training data')
+    argparser.add_argument('-te', help='path to test data')
+    argparser.add_argument('-r', help='path to training run results')
+    args = argparser.parse_args()
+    return args
+
+
 def fix_game_times(games):
     """Cleans the gametime column.
 
@@ -92,21 +112,22 @@ def get_date_n_days_out(n):
     return formatted_date
 
 
-def collect_setup_args():
-    """Collects the command line arguments for the setup script.
+def shift_season_team_idx(df, n, dropna=True):
+    """Shifts the season/team index of a dataframe by n rows.
     
-    :return: command line arguments
-    :rtype: argparse.Namespace
+    Aggregations are nearly always calculated up to the *end* of a week.
+    Shifting is useful when you want your stats to align with the week before
+    or the week after.
+
+    :param pd.DataFrame df: dataframe with season/team cols or multiindex
+    :param int n: number of rows to shift
+    :param bool dropna: whether to drop rows with missing values
+    :return: dataframe with shifted season/team index
+    :rtype: pd.DataFrame
     """
-    argparser = argparse.ArgumentParser()
-    argparser.add_argument('-c', help='path to config file')
-    argparser.add_argument('-g', help='path to raw games data')
-    argparser.add_argument('-w', help='path to raw weather data')
-    argparser.add_argument('-p', help='path to raw play-by-play data')
-    argparser.add_argument('-cc', help='path to city coordinates')
-    argparser.add_argument('-f', help='path to features data')
-    argparser.add_argument('-tr', help='path to training data')
-    argparser.add_argument('-te', help='path to test data')
-    argparser.add_argument('-r', help='path to training run results')
-    args = argparser.parse_args()
-    return args
+    df = (df
+          .groupby(['season', 'team'])
+          .shift(n))
+    if dropna:
+        df = df.dropna()
+    return df

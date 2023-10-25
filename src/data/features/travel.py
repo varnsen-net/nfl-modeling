@@ -120,8 +120,7 @@ def build_features(raw_games_path, city_coords_path, output_dir, **kwargs):
     :return: None
     :rtype: None
     """
-    games = (pd.read_csv(raw_games_path)
-             .dropna(subset=['result']))
+    games = pd.read_csv(raw_games_path)
     city_coords = pd.read_csv(city_coords_path)
     away_travel_distance_name = "travel_distance"
     games = attach_lats_lons(games, city_coords)

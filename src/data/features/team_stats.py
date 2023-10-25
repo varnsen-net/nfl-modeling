@@ -3,7 +3,7 @@
 import pandas as pd
 import numpy as np
 
-from src.utils import map_team_data_to_games
+from src.utils import map_team_data_to_games, shift_season_team_idx
 
 
 PASSING_AGGS = {'week': 'max',
@@ -53,42 +53,39 @@ def calculate_cumulative_points(games):
               .sort_index())
     points['cpf'] = points.groupby(['season', 'team']).cumsum()['points_for']
     points['cpa'] = points.groupby(['season', 'team']).cumsum()['points_against']
-    points = (points
-              .groupby(['season', 'team'])
-              .shift(1)
-              .dropna())
     return points
 
 
-def calculate_pythag_exp(points):
+def calculate_pythag_exp(points, x=2.68):
     """Calculates the pythagorean expectation for a set of points for and
     points against.
     
     :param pd.DataFrame points: df with points for and points against columns
+    :param float x: exponent to use in pythagorean expectation formula
     :return: pythagorean expectations
     :rtype: pd.Series
     """
-    numerator = points['cpf'] ** 2.68
-    denominator = points['cpf'] ** 2.68 + points['cpa'] ** 2.68
+    numerator = points['cpf'] ** x
+    denominator = points['cpf'] ** x + points['cpa'] ** x
     pythag_exp = numerator / denominator
     return pythag_exp
 
 
-def make_pythag_exp_feature(games, feature_name, output_dir):
+def make_pythag_exp_feature(games, feature_name, n_shift=1):
     """Build pythagorean expectation feature.
     
     :param pd.DataFrame games: raw games dataframe
-    :param str feature_name: name of pythagorean expectation feature
-    :param str output_dir: path to save stats features
+    :param str feature_name: name of feature to create
+    :param int n_shift: number of weeks to shift
     :return: None
     :rtype: None
     """
     cumulative_points = calculate_cumulative_points(games)
     pythag_exp = calculate_pythag_exp(cumulative_points)
+    pythag_exp = shift_season_team_idx(pythag_exp, n_shift)
     pythag_exp.name = feature_name
     pythag_exp = map_team_data_to_games(games, pythag_exp, feature_name)
-    pythag_exp.to_csv(f"{output_dir}/{feature_name}.csv")
-    return 
+    return pythag_exp
 
 
 def calculate_squad_aggs(plays, aggregations, squad_type, play_type):
@@ -205,6 +202,7 @@ def build_features(raw_games_path, raw_plays_path, output_dir,
     """
     games = (pd.read_csv(raw_games_path)
              .dropna(subset=['result']))
-    make_pythag_exp_feature(games, "pythagorean_expectation", output_dir)
+    pythag_exp = make_pythag_exp_feature(games, 'pythagorean_expectation')
+    pythag_exp.to_csv(f"{output_dir}/pythagorean_expectation.csv")
     make_team_stats_features(games, raw_plays_path, output_dir)
     return

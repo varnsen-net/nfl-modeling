@@ -7,85 +7,132 @@ from functools import partial
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import cross_val_score
-from hyperopt import fmin, tpe, hp
+from hyperopt import fmin, tpe, space_eval
 from hyperopt.early_stop import no_progress_loss
 
-from src.model.pipeline import build_swift_pipeline
+from src.config.config import DEFAULT_PARAM_PREFIX
 
 
-LIGHTGBM_SPACE = {
-    'num_leaves': hp.uniformint('num_leaves', 2, 500),
-    'max_depth': hp.uniformint('max_depth', 2, 50),
-    'learning_rate': hp.loguniform('learning_rate', -6.0, 0.0),
-    'n_estimators': hp.uniformint('n_estimators', 2, 500),
-    'min_data_in_leaf': hp.uniformint('min_data_in_leaf', 2, 500),
-    'lambda_l1': hp.loguniform('reg_alpha', -6.0, 0.0),
-    'lambda_l2': hp.loguniform('reg_lambda', -6.0, 0.0),
-    'linear_lambda': hp.loguniform('linear_lambda', -6.0, 0.0),
-    'bagging_fraction': hp.uniform('bagging_fraction', 0.2, 1.0),
-    'bagging_freq': hp.uniformint('bagging_freq', 0, 10),
-    'feature_fraction': hp.uniform('feature_fraction', 0.2, 1.0),
-    'sigmoid': hp.uniform('sigmoid', 0.0, 5.0),
-    'verbosity': -1,
-    'objective': 'binary',
-    'eval_metric': 'binary_logloss',
-}
+def map_name_to_param(param, prefix):
+    """Map a hyperparameter name to its distribution or value.
+    
+    :param namedtuple param: a named tuple with the following fields:
+        name, value, min, max
+    :param str prefix: the prefix to add to the key
+    :return: a key-value pair for the hyperparameter
+    :rtype: tuple
+    """
+    key = f"{prefix}{param.name}"
+    if param.min is not None and param.max is not None:
+        return (key, param.value(key, param.min, param.max))
+    else:
+        return (key, param.value)
 
 
-def fix_param_types(params):
-    """Convert hyperopt parameters to correct types.
+def map_name_to_type(param, prefix):
+    """Map a hyperparameter name to its type.
+    
+    :param namedtuple param: a named tuple with the following fields:
+        name, type
+    :param str prefix: the prefix to add to the key
+    :return: a key-value pair for the parameter type
+    :rtype: tuple
+    """
+    key = f"{prefix}{param.name}"
+    return (key, param.type)
 
-    :param dict params: dictionary of hyperparameters
-    :return: dictionary of hyperparameters with correct types
+
+def make_param_mapping(params, mapper, prefix=DEFAULT_PARAM_PREFIX):
+    """Make a parameter space from a list of named tuples.
+    
+    :param list[namedtuple] params: named tuples with the following fields:
+        name, value, min, max, type
+    :param callable mapper: a function that converts a named tuple to a key-value pair
+    :param str prefix: the prefix to add to the key
+    :return: hyperparameter space
     :rtype: dict
     """
-    corrections = {
-        'num_leaves': int,
-        'max_depth': int,
-        'n_estimators': int,
-        'min_data_in_leaf': int,
-        'min_child_samples': int,
-        'bagging_freq': int,
-    }
-    for key, correction in corrections.items():
-        if key in params:
-            params[key] = correction(params[key])
-    return params
+    param_space = {}
+    for param in params:
+        key, value = mapper(param, prefix)
+        param_space.update({key: value})
+    return param_space
 
 
-def hyperoptimize(X, y, cv, space, max_evals=100):
-    """Optimize hyperparameters using hyperopt.
+def crossval_objective(params, model, X, y, cv, scoring):
+    """Objective function for hyperopt.
 
+    Uses cross validation scoring.
+    
+    :param dict params: hyperparameters to test
+    :param sklearn.base.BaseEstimator model: estimator to test
     :param pd.DataFrame X: features
     :param pd.Series y: target
-    :param function cv: cross-validation strategy
+    :param Union[int, callable] cv: cross-validation strategy
+    :param Union[str, dict] scoring: scoring metric
+    :return: loss
+    :rtype: float
+    """
+    print("Testing params:", params)
+    model.set_params(**params)
+    scores = cross_val_score(model, X, y, cv=cv, groups=X['season'],
+                             scoring=scoring)
+    loss = -scores.mean()
+    print(f"Loss: {loss}")
+    return loss
+
+
+def find_best_params(objective, space, max_evals, early_stop_n):
+    """Search for the optimal model hyperparams using hyperopt.
+
+    :param callable objective: objective function to minimize
     :param dict space: hyperparameter ranges
     :param int max_evals: number of evaluations to perform
+    :param int early_stop_n: number of iterations without improvement to stop
     :return: best hyperparameters
     :rtype: dict
     """
-    def objective(params):
-        """Objective function for hyperopt.
-
-        Uses the SWIFT pipeline and brier loss to evaluate the model.
-        
-        :param dict params: hyperparameters to test
-        :return: loss
-        :rtype: float
-        """
-        print("Testing params:", params)
-        pipeline = build_swift_pipeline(params)
-        scores = cross_val_score(pipeline, X, y, cv=cv, groups=X['season'],
-                                 scoring='neg_brier_score')
-        loss = -scores.mean()
-        print(f"Loss: {loss}")
-        return loss
-    best = fmin(
+    best_params = fmin(
         objective,
         space=space,
         algo=tpe.suggest,
         max_evals=max_evals,
-        early_stop_fn=no_progress_loss(15),
+        early_stop_fn=no_progress_loss(early_stop_n),
     )
-    best = fix_param_types(best)
-    return best
+    return best_params
+
+
+def fix_param_dtypes(params, param_dtypes):
+    """Fix types for best hyperparameters returned by hyperopt."""
+    for key, dtype in param_dtypes.items():
+        val = dtype(params.get(key))
+        params.update({key: val})
+    return params
+
+
+def hyperoptimize(model, X, y, cv, scoring, space, objective=crossval_objective,
+                  max_evals=100, early_stop_n=15):
+    """Optimize model hyperparameters.
+
+    :param sklearn.base.BaseEstimator model: estimator to test
+    :param callable objective: objective function to minimize
+    :param pd.DataFrame X: features
+    :param pd.Series y: target
+    :param Union[int, callable] cv: cross-validation strategy
+    :param Union[str, dict] scoring: scoring metric
+    :param list[namedtuple] space: named tuples with the following fields:
+        name, value, min, max, type
+    :param int max_evals: max number of evaluations to perform
+    :param int early_stop_n: number of iterations without improvement to stop
+    :return: best hyperparameters
+    :rtype: dict
+    """
+    search_space = make_param_mapping(space, map_name_to_param)
+    objective = partial(objective, model=model, X=X, y=y, cv=cv,
+                        scoring=scoring)
+    best_params = find_best_params(objective,
+                                   search_space,
+                                   max_evals=max_evals,
+                                   early_stop_n=early_stop_n)
+    best_params = space_eval(search_space, best_params)
+    return best_params

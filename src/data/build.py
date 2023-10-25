@@ -16,7 +16,8 @@ from src.data.raw.plays import refresh_plays_data
 from src.data.train.train import build_train
 from src.data.train.target import build_target
 
-from src.config import WEATHER_METADATA, TRAINING, CURRENT_SEASON, CURRENT_WEEK, RAW_DATA_URLS
+from src.config.config import (WEATHER_METADATA, TRAINING, CURRENT_SEASON,
+                               CURRENT_WEEK, RAW_DATA_URLS)
 
 
 def split_data(df, holdout_year):

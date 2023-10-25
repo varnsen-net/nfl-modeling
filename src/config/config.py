@@ -6,7 +6,7 @@ RAW_DATA_URLS = {
 }
 
 CURRENT_SEASON = 2023
-CURRENT_WEEK = 5
+CURRENT_WEEK = 7
 
 TRAINING = {
     "holdout_year": 2020,
@@ -73,6 +73,8 @@ FEATURE_PRECISIONS = {
     "snowfall": 1,
     "away_lon_delta": 2,
     "away_travel_distance": 0,
-    "elo": 0,
     "pythagorean_expectation": 3,
 }
+
+DEFAULT_PARAM_PREFIX = 'calibratedclassifiercv__estimator__'
+

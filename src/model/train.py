@@ -9,17 +9,17 @@ import numpy as np
 import pandas as pd
 from sklearn.preprocessing import FunctionTransformer
 from sklearn.model_selection import GroupKFold
-from hyperopt import tpe, hp, fmin
 
 from src.utils import collect_setup_args
 from src.model.process import preprocess, transform_home_away_structure
 from src.model.pipeline import build_baseline_pipeline, build_swift_pipeline
-from src.model.hyperoptimize import hyperoptimize, LIGHTGBM_SPACE
+from src.model.hyperoptimize import hyperoptimize
 from src.model.evaluate import custom_cv, evaluate_model, compile_scores
 from src.model.predict import voting_classifier
 from src.plot.plot import make_and_save_plots, plot_test_calibration
 
-from src.config import FEATURE_PRECISIONS
+from src.config.config import FEATURE_PRECISIONS
+from src.config.spaces import LIGHTGBM_SPACE
 
 
 def create_datetime_id():
@@ -60,6 +60,7 @@ if __name__ == "__main__":
     X = preprocess(train, FEATURE_PRECISIONS)
     y = target['target']
     cv = custom_cv()
+    scoring = 'neg_brier_score'
 
     # evaluate baseline model
     baseline = build_baseline_pipeline({'solver': 'liblinear'})
@@ -70,8 +71,11 @@ if __name__ == "__main__":
     make_and_save_plots(scores, name, save_path)
 
     # evaluate swift
-    best_params = hyperoptimize(X, y, cv, LIGHTGBM_SPACE, max_evals=50)
-    swift = build_swift_pipeline(best_params)
+    swift = build_swift_pipeline()
+    best_params = hyperoptimize(swift, X, y, cv, scoring, LIGHTGBM_SPACE,
+                                max_evals=50, early_stop_n=10)
+    print(f"Best params: {best_params}")
+    swift.set_params(**best_params)
     scores, estimators = evaluate_model(swift, X, y, cv)
     name = 'swift'
     scores.to_csv(f"{save_path}/{name}_scores.csv")
@@ -88,5 +92,4 @@ if __name__ == "__main__":
     y_pred_proba = voting_classifier(estimators, X_test, 'soft')
     scores = compile_scores(y_test, y_pred, y_pred_proba)
     plot_test_calibration(scores, name, save_path)
-    print("Best params:", best_params)
 
