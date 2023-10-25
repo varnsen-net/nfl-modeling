@@ -3,6 +3,9 @@
 ## src.utils
 Utility functions. These functions are used in mutliple places throughout the source code and cannot be coupled to any particular module.
 
+## src.config.spaces
+Hyperparameter spaces.
+
 ## src.data.build
 Build the full set of training and testing data from scratch.
 
@@ -16,9 +19,6 @@ Helper functions for building engineered features for team stats.
 
 ## src.data.features.weather
 Helper functions for building weather features.
-
-## src.data.raw.elo
-Helper functions for fetching raw elo ratings from 538.
 
 ## src.data.raw.plays
 Helper functions for fetching raw NFL play-by-play data.
