@@ -36,9 +36,9 @@ A: That's not a question.
 ## Training procedure
 SWIFT does everything possible to avoid data leakage. It should never get a glimpse into the future.
 
-1. Transform the home/away structure into an objective/adversary structure so that the model tries to predict a 50/50 mix of home and away win probabilities.
-2. Train and evaluate using a grouped time series cross-validation scheme. The model trains on a block of n consecutive seasons, then validates on the following m seasons. Default n and m are 4 and 1.
-3. On each training fold in the time series cv, calibrates model probabilities with a 5-fold cv.
+1. Transform the home/away team structure into an object/adversary team structure so that the model tries to predict a 50/50 mix of home and away win probabilities.
+2. Train and evaluate using a grouped time series cross-validation scheme. The model trains on a block of *m* consecutive seasons, then validates on the following *n* seasons.
+3. On each training fold in the time series cv, calibrate model probabilities with a 5-fold cv.
 4. Search for optimal hyperparameters with hyperopt and minimize the average brier score.
 5. Evaluate on holdout data using the ensemble of cross-validated estimators from step 2.
 6. Train final model on full dataset (not finished with this step yet).
