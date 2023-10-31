@@ -112,14 +112,14 @@ def get_date_n_days_out(n):
     return formatted_date
 
 
-def shift_season_team_idx(df, n, dropna=True):
-    """Shifts the season/team index of a dataframe by n rows.
+def shift_week_number(df, n, dropna=True):
+    """Shifts the week index of a season/team/week multiindex.
     
     Aggregations are nearly always calculated up to the *end* of a week.
     Shifting is useful when you want your stats to align with the week before
-    or the week after.
+    or the week after (consistent with the bye weeks).
 
-    :param pd.DataFrame df: dataframe with season/team cols or multiindex
+    :param pd.DataFrame df: dataframe with season/team/week multiindex
     :param int n: number of rows to shift
     :param bool dropna: whether to drop rows with missing values
     :return: dataframe with shifted season/team index
@@ -131,3 +131,5 @@ def shift_season_team_idx(df, n, dropna=True):
     if dropna:
         df = df.dropna()
     return df
+
+

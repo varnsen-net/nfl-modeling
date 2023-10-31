@@ -1,0 +1,11 @@
+__pycache__
+venv
+archive
+results
+external
+/data/features
+/data/test
+/data/train
+temp.py
+tmp.html
+*.parquet

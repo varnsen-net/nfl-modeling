@@ -10,7 +10,8 @@ CURRENT_WEEK = 7
 
 TRAINING = {
     "holdout_year": 2020,
-    "games_cols": ["game_id", "season", "week", "away_rest", "home_rest", "div_game", "roof", "surface"]
+    "games_cols": ["game_id", "season", "week", "away_rest", "home_rest",
+                   "div_game", "roof", "surface", "away_team", "home_team",]
 }
 
 WEATHER_METADATA = {

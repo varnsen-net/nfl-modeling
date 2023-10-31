@@ -5,6 +5,8 @@ import os
 import numpy as np
 import pandas as pd
 
+from src.utils import shift_week_number, map_team_data_to_games
+
 
 def preprocess_raw_games(games):
     """Reduce the games dataframe -- only consider regular season games played
@@ -23,22 +25,39 @@ def preprocess_raw_games(games):
     return games
 
 
-def merge_features(games, features_path):
-    """Find every csv file in the features directory (and subdirectories) and
-    merge them with the games dataframe.
+def walk_features_dir(features_path):
+    """Yield every py file path in the features dir.
     
-    :param pd.DataFrame games: raw games data
     :param str features_path: path to features directory
-    :return: games data with features
-    :rtype: pd.DataFrame
+    :return: feature file path
+    :rtype: str
     """
     for root, dirs, files in os.walk(features_path):
         for file in files:
             if file.endswith('.csv'):
                 file_path = os.path.join(root, file)
-                features = pd.read_csv(file_path)
-                games = games.merge(features, on='game_id', how='inner')
-    return games
+                yield file_path
+
+
+def merge_feature(train, feature):
+    """Merge a feature into the training data.
+    
+    :param pd.DataFrame train: training data
+    :param pd.DataFrame feature: feature data
+    :return: training data with feature merged in
+    :rtype: pd.DataFrame
+    """
+    first_col = feature.columns[0]
+    if first_col == 'game_id':
+        train = train.merge(feature, on='game_id', how='inner')
+        return train
+    else:
+        feature_name = feature.columns[-1]
+        feature = feature.set_index(['season', 'team', 'week'])
+        shifted = shift_week_number(feature, n=1)
+        feature = map_team_data_to_games(train, shifted, feature_name)
+        train = train.merge(feature, on='game_id', how='inner')
+        return train
 
 
 def reduce_training_cols(games, games_cols):
@@ -65,6 +84,9 @@ def build_train(games_cols, raw_games_path, features_path):
     """
     games = pd.read_csv(raw_games_path)
     processed = preprocess_raw_games(games)
-    reduced = reduce_training_cols(processed, games_cols)
-    train = merge_features(reduced, features_path)
+    train = reduce_training_cols(processed, games_cols)
+    for file_path in walk_features_dir(features_path):
+        feature = pd.read_csv(file_path)
+        train = merge_feature(train, feature)
+    train = train.drop(columns=['away_team', 'home_team'])
     return train

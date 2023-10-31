@@ -59,8 +59,7 @@ def find_games_missing_weather(games, weather):
     :return: rows from games that do not appear in weather
     :rtype: pd.DataFrame
     """
-    games_missing_weather = games[~games['game_id'].isin(weather['game_id'])]
-    return games_missing_weather
+    return games[~games['game_id'].isin(weather['game_id'])]
 
 
 def attach_city_coords(games, city_coords):
@@ -100,6 +99,20 @@ def write_weather_row(game_id, agg, raw_weather_path):
         writer = csv.writer(f)
         writer.writerow([game_id] + agg)
     return
+
+
+def preprocess_missing_weather(missing_weather, city_coords):
+    """Preprocesses the missing weather data before fetching it.
+    
+    :param pd.DataFrame missing_weather: games with missing weather data
+    :param pd.DataFrame city_coords: coordinates for each team's home city
+    :return: missing weather data with coordinates attached
+    :rtype: pd.DataFrame
+    """
+    missing_weather = attach_city_coords(missing_weather, city_coords)
+    start_times = fix_game_times(missing_weather)
+    missing_weather['kickoff_hour'] = get_kickoff_hours(start_times)
+    return missing_weather
 
 
 def fetch_missing_weather(weather, raw_weather_path, weather_vars,
@@ -150,14 +163,11 @@ def refresh_weather_data(weather_metadata, raw_games_path, raw_weather_path,
     weather = pd.read_csv(raw_weather_path)
     city_coords = pd.read_csv(city_coords_path)
 
-    aggregations = {f['api_name']: f['agg_func'] for f in weather_metadata.values()}
-    weather_vars = ','.join(aggregations.keys())
     missing_weather = find_games_missing_weather(games, weather)
-    missing_weather = attach_city_coords(missing_weather, city_coords)
     if missing_weather.shape[0] > 0:
-        print("Updating weather file...")
-        start_times = fix_game_times(missing_weather)
-        missing_weather['kickoff_hour'] = get_kickoff_hours(start_times)
+        aggregations = {f['api_name']: f['agg_func'] for f in weather_metadata.values()}
+        weather_vars = ','.join(aggregations.keys())
+        missing_weather = preprocess_missing_weather(missing_weather, city_coords)
         fetch_missing_weather(missing_weather, raw_weather_path, weather_vars,
                               aggregations, batch_size)
     return

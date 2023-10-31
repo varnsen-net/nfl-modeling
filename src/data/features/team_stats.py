@@ -3,7 +3,7 @@
 import pandas as pd
 import numpy as np
 
-from src.utils import map_team_data_to_games, shift_season_team_idx
+from src.utils import map_team_data_to_games
 
 
 PASSING_AGGS = {'week': 'max',
@@ -65,26 +65,23 @@ def calculate_pythag_exp(points, x=2.68):
     :return: pythagorean expectations
     :rtype: pd.Series
     """
-    numerator = points['cpf'] ** x
-    denominator = points['cpf'] ** x + points['cpa'] ** x
+    numerator = points['cpf']**x
+    denominator = points['cpf']**x + points['cpa']**x
     pythag_exp = numerator / denominator
     return pythag_exp
 
 
-def make_pythag_exp_feature(games, feature_name, n_shift=1):
+def make_pythag_exp_feature(games, feature_name):
     """Build pythagorean expectation feature.
     
     :param pd.DataFrame games: raw games dataframe
     :param str feature_name: name of feature to create
-    :param int n_shift: number of weeks to shift
     :return: None
     :rtype: None
     """
     cumulative_points = calculate_cumulative_points(games)
     pythag_exp = calculate_pythag_exp(cumulative_points)
-    pythag_exp = shift_season_team_idx(pythag_exp, n_shift)
     pythag_exp.name = feature_name
-    pythag_exp = map_team_data_to_games(games, pythag_exp, feature_name)
     return pythag_exp
 
 
@@ -120,9 +117,6 @@ def calculate_squad_aggs(plays, aggregations, squad_type, play_type):
                   .pipe(flatten_columns)
                   .groupby([squad_type, 'week_max'])
                   .last()
-                  .groupby([squad_type])
-                  .shift(1)
-                  .dropna()
                   .add_prefix(f'{play_type}_')
                   .add_prefix(f'{side}_')
                   .reset_index()
@@ -184,8 +178,7 @@ def make_team_stats_features(games, raw_plays_path, output_dir):
     for col in features.columns:
         if col not in ['team', 'week', 'season']:
             data = features[['season', 'team', 'week', col]]
-            remapped = map_team_data_to_games(game_id_map, data, col)
-            remapped.to_csv(f"{output_dir}/{col}.csv")
+            data.to_csv(f"{output_dir}/{col}.csv", index=False)
     return
 
 
