@@ -30,7 +30,6 @@ A: That's not a question.
 - weather
 - travel distances
 - pythagorean expectation
-- elo rating
 - pass/rush efficiency metrics
 
 ## Training procedure
