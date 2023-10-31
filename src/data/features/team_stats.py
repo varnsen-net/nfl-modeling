@@ -4,25 +4,7 @@ import pandas as pd
 import numpy as np
 
 from src.utils import map_team_data_to_games
-
-
-PASSING_AGGS = {'week': 'max',
-                'pass': 'sum',
-                'complete_pass': 'mean',
-                'epa': ['mean', 'sem'],
-                'wpa': ['mean', 'sem'],
-                'qb_epa': ['mean', 'sem'],
-                'interception': 'mean',
-                'fumble': 'mean',
-                'sack': 'mean',
-                'success': 'mean'}
-
-RUSHING_AGGS = {'week': 'max',
-                'rush': 'sum',
-                'epa': ['mean', 'sem'],
-                'wpa': ['mean', 'sem'],
-                'fumble': 'mean',
-                'success': 'mean'}
+from src.config.config import PASSING_AGGS, RUSHING_AGGS
 
 
 def flatten_columns(df):

@@ -79,3 +79,20 @@ FEATURE_PRECISIONS = {
 
 DEFAULT_PARAM_PREFIX = 'calibratedclassifiercv__estimator__'
 
+PASSING_AGGS = {'week': 'max',
+                'pass': 'sum',
+                'complete_pass': 'mean',
+                'epa': ['mean', 'sem'],
+                'wpa': ['mean', 'sem'],
+                'qb_epa': ['mean', 'sem'],
+                'interception': 'mean',
+                'fumble': 'mean',
+                'sack': 'mean',
+                'success': 'mean'}
+
+RUSHING_AGGS = {'week': 'max',
+                'rush': 'sum',
+                'epa': ['mean', 'sem'],
+                'wpa': ['mean', 'sem'],
+                'fumble': 'mean',
+                'success': 'mean'}
