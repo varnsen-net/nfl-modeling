@@ -10,7 +10,7 @@ SWIFT is a model designed to output well-calibrated probabilities for NFL games.
 Current status: trains a LightGBM classifier and tunes hyperparameters with the hyperopt library.
 
 ## Getting started
-Simply `bash setup.sh` and you're off to the races!
+Simply `bash run.sh` and you're off to the races!
 
 After training, you can view model scores in `/data/results`
 
