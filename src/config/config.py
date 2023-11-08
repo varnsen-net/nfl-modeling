@@ -6,13 +6,17 @@ RAW_DATA_URLS = {
 }
 
 CURRENT_SEASON = 2023
-CURRENT_WEEK = 7
-
+CURRENT_WEEK = 10
 TRAINING = {
     "holdout_year": 2020,
     "games_cols": ["game_id", "season", "week", "away_rest", "home_rest",
-                   "div_game", "roof", "surface", "away_team", "home_team",]
+                   "div_game", "roof", "surface", "away_team", "home_team"]
 }
+SCORING_METRIC = 'neg_brier_score'
+CV_TRAIN_SIZE = 3
+CV_TEST_SIZE = 5
+MAX_EVALS = 100
+EARLY_STOP_N = 15
 
 WEATHER_METADATA = {
     "temperature": {

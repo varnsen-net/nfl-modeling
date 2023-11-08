@@ -18,7 +18,12 @@ from src.model.evaluate import custom_cv, evaluate_model, compile_scores
 from src.model.predict import voting_classifier
 from src.plot.plot import make_and_save_plots, plot_test_calibration
 
-from src.config.config import FEATURE_PRECISIONS
+from src.config.config import (FEATURE_PRECISIONS,
+                               CV_TRAIN_SIZE,
+                               CV_TEST_SIZE,
+                               SCORING_METRIC,
+                               MAX_EVALS,
+                               EARLY_STOP_N)
 from src.config.spaces import LIGHTGBM_SPACE
 
 
@@ -59,8 +64,7 @@ if __name__ == "__main__":
     train, target = transform_home_away_structure(train, target)
     X = preprocess(train, FEATURE_PRECISIONS)
     y = target['target']
-    cv = custom_cv()
-    scoring = 'neg_brier_score'
+    cv = custom_cv(CV_TRAIN_SIZE, CV_TEST_SIZE)
 
     # evaluate baseline model
     baseline = build_baseline_pipeline({'solver': 'liblinear'})
@@ -72,8 +76,11 @@ if __name__ == "__main__":
 
     # evaluate swift
     swift = build_swift_pipeline()
-    best_params = hyperoptimize(swift, X, y, cv, scoring, LIGHTGBM_SPACE,
-                                max_evals=50, early_stop_n=10)
+    best_params = hyperoptimize(swift, X, y, cv,
+                                scoring=SCORING_METRIC,
+                                space=LIGHTGBM_SPACE,
+                                max_evals=MAX_EVALS,
+                                early_stop_n=EARLY_STOP_N)
     print(f"Best params: {best_params}")
     swift.set_params(**best_params)
     scores, estimators = evaluate_model(swift, X, y, cv)
@@ -93,3 +100,9 @@ if __name__ == "__main__":
     scores = compile_scores(y_test, y_pred, y_pred_proba)
     plot_test_calibration(scores, name, save_path)
 
+    # train models on all data and save
+    print(f"Training {name} on all data...")
+    X_full = pd.concat([X, X_test])
+    y_full = pd.concat([y, y_test])
+    baseline.fit(X_full, y_full)
+    joblib.dump(baseline, f"{save_path}/baseline_model.pkl")
