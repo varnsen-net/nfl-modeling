@@ -28,4 +28,5 @@ def build_target(raw_games_path, train):
     games['target'] = make_target_col(games)
     target = games[['game_id', 'target']]
     target = target[target['game_id'].isin(train['game_id'])]
+    target = target.sort_values('game_id')
     return target

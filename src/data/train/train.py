@@ -17,6 +17,7 @@ def preprocess_raw_games(games):
     :rtype: pd.DataFrame
     """
     games = (games
+             .loc[games['week'] > 4]
              .loc[games['game_type'] == 'REG']
              .loc[games['location'] == 'Home']
              .drop(columns=['game_type', 'location'])
@@ -88,5 +89,7 @@ def build_train(games_cols, raw_games_path, features_path):
     for file_path in walk_features_dir(features_path):
         feature = pd.read_csv(file_path)
         train = merge_feature(train, feature)
-    train = train.drop(columns=['away_team', 'home_team'])
+    train = (train
+             .drop(columns=['away_team', 'home_team'])
+             .sort_values('game_id'))
     return train

@@ -110,7 +110,7 @@ def get_away_lon_deltas(games, name):
     return away_lon_deltas
 
 
-def build_features(raw_games_path, city_coords_path, output_dir, **kwargs):
+def build_travel_features(raw_games_path, city_coords_path, output_dir, **kwargs):
     """Build engineered features for team travel.
 
     :param str raw_games_path: path to raw games data

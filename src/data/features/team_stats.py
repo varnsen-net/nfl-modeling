@@ -125,6 +125,10 @@ def assemble_play_type_features(pbp_data, type_aggs_pairs):
                                        'posteam', play_type)
         d_stats = calculate_squad_aggs(plays, aggregations,
                                        'defteam', play_type)
+        print(d_stats.head())
+        # flip the sign of the defensive stats
+        cols_to_flip = d_stats.columns[2:]
+        d_stats[cols_to_flip] *= -1
         merged = o_stats.merge(d_stats, on=['team', 'week'])
         full_stats = full_stats.merge(merged, on=['team', 'week'],
                                       how='outer')
@@ -164,8 +168,8 @@ def make_team_stats_features(games, raw_plays_path, output_dir):
     return
 
 
-def build_features(raw_games_path, raw_plays_path, output_dir,
-                   **kwargs):
+def build_team_stats_features(raw_games_path, raw_plays_path, output_dir,
+                              **kwargs):
     """Build engineered features for team stats.
     
     :param str raw_games_path: path to raw games data

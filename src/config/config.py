@@ -1,3 +1,21 @@
+import os
+import pathlib
+
+
+PROJ_ROOT = pathlib.Path(__file__).parents[2].absolute()
+
+PATHS = {
+    'raw_games': PROJ_ROOT / 'data' / 'raw' / 'games.csv',
+    'raw_plays': PROJ_ROOT / 'data' / 'raw' / 'plays',
+    'raw_weather': PROJ_ROOT / 'data' / 'raw' / 'weather.csv',
+    'city_coordinates': PROJ_ROOT / 'data' / 'ancillary' / 'city-coordinates.csv',
+    'features': PROJ_ROOT / 'data' / 'features',
+    'train': PROJ_ROOT / 'data' / 'train',
+    'test': PROJ_ROOT / 'data' / 'test',
+    'results': PROJ_ROOT / 'data' / 'results',
+    'features_src': PROJ_ROOT / 'src' / 'data' / 'features',
+}
+
 RAW_DATA_URLS = {
     "games": "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv",
     "weather_hist": "https://archive-api.open-meteo.com/v1/archive",

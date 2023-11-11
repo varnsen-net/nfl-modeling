@@ -25,7 +25,8 @@ def fix_indoor_weather(games, weather, defaults):
     return weather
 
 
-def build_features(weather_metadata, raw_games_path, raw_weather_path, output_dir, **kwargs):
+def build_weather_features(weather_metadata, raw_games_path, raw_weather_path,
+                           output_dir, **kwargs):
     """Make weather features.
     
     :param dict weather_metadata: weather_metadata for weather features
