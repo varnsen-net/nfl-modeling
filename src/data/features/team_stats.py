@@ -8,22 +8,40 @@ from src.config.config import PASSING_AGGS, RUSHING_AGGS
 
 
 def flatten_columns(df):
-    """Flatten multi-index columns.
+    """Flatten the multi-level columns of an aggregation dataframe.
     
-    :param pd.DataFrame df: dataframe with multi-index columns
-    :return: dataframe with flattened columns
-    :rtype: pd.DataFrame
+    :param df: *pd.DataFrame of shape (n_samples, n_features)*
+        Aggregations result with multi-index columns.
+    :return: *pd.DataFrame of shape (n_samples, n_features)*
+        Aggregations with flattened columns.
     """
     df.columns = ['_'.join(col).strip() for col in df.columns.values]
     return df
 
 
+def write_cols_to_file(features, output_dir):
+    """Write each feature to a separate csv file.
+    
+    :param features: *pd.DataFrame of shape (n_samples, n_features)*
+        Engineered features. Must have columns 'team', 'week', and 'season'.
+    :param output_dir: *str*
+        Directory to write csv files to.
+    :return: *None*
+    """
+    for col in features.columns:
+        if col not in ['team', 'week', 'season']:
+            data = features[['season', 'team', 'week', col]]
+            data.to_csv(f"{output_dir}/{col}.csv", index=False)
+    return
+
+
 def calculate_cumulative_points(games):
     """Calculate the cumulative points for/against each team up to each week.
     
-    :param pd.DataFrame games: raw games dataframe
-    :return: cumulative points for/against each team *up to* the indexed week
-    :rtype: pd.DataFrame
+    :param games: *pd.DataFrame of shape (n_games, n_features)*
+        Raw games data.
+    :return: *pd.DataFrame of shape (n_samples, n_features)*
+        Cumulative points for/against each team up to each week.
     """
     home_teams = games[['season', 'week', 'home_team', 'home_score', 'away_score']]
     away_teams = games[['season', 'week', 'away_team', 'away_score', 'home_score']]
@@ -42,10 +60,12 @@ def calculate_pythag_exp(points, x=2.68):
     """Calculates the pythagorean expectation for a set of points for and
     points against.
     
-    :param pd.DataFrame points: df with points for and points against columns
-    :param float x: exponent to use in pythagorean expectation formula
-    :return: pythagorean expectations
-    :rtype: pd.Series
+    :param points: *pd.DataFrame of shape (n_samples, 2)*
+        Points-for and points-against data.
+    :param x: *float*
+        Exponent to use in pythagorean expectation formula. Default is 2.68.
+    :return: *pd.Series of shape (n_samples,)*
+        Pythagorean expectation for each row of cumulative points data.
     """
     numerator = points['cpf']**x
     denominator = points['cpf']**x + points['cpa']**x
@@ -53,18 +73,21 @@ def calculate_pythag_exp(points, x=2.68):
     return pythag_exp
 
 
-def make_pythag_exp_feature(games, feature_name):
-    """Build pythagorean expectation feature.
+def make_points_features(games, output_dir):
+    """Build all points features (e.g. net points).
     
-    :param pd.DataFrame games: raw games dataframe
-    :param str feature_name: name of feature to create
-    :return: None
-    :rtype: None
+    :param games: *pd.DataFrame of shape (n_games, n_features)*
+        Raw games data.
+    :param output_dir: *str*
+        Directory to write csv files to.
     """
     cumulative_points = calculate_cumulative_points(games)
-    pythag_exp = calculate_pythag_exp(cumulative_points)
-    pythag_exp.name = feature_name
-    return pythag_exp
+    cumulative_points['cp_net'] = cumulative_points['cpf'] - cumulative_points['cpa']
+    cumulative_points = (cumulative_points
+                         .reset_index()
+                         .drop(columns=['points_for', 'points_against']))
+    write_cols_to_file(cumulative_points, output_dir)
+    return
 
 
 def calculate_squad_aggs(plays, aggregations, squad_type, play_type):
@@ -81,13 +104,16 @@ def calculate_squad_aggs(plays, aggregations, squad_type, play_type):
 
     NOTE: aggregations must have 'week':'max' as a key-value pair
     
-    :param pd.DataFrame plays: raw play-by-play data
-    :param dict aggregations: aggregations to calculate
-    :param str squad_type: side to group by. must be 'posteam' or 'defteam'
-    :param str play_type: play type to prefix column names with
-    :return: aggregated stats. each row is a team and week number. columns are
-        features
-    :rtype: pd.DataFrame
+    :param plays: *pd.DataFrame of shape (n_plays, n_features)*
+        Play-by-play data for a given season.
+    :param aggregations: *dict*
+        Aggregations to calculate for each feature.
+    :param squad_type: *str*
+        'posteam' or 'defteam'
+    :param play_type: *str*
+        'pass' or 'rush'
+    :return: *pd.DataFrame of shape (n_samples, n_features)*
+        Aggregated stats for each team and week.
     """
     side = ('o' if squad_type == 'posteam' else
             'd' if squad_type == 'defteam' else
@@ -108,15 +134,37 @@ def calculate_squad_aggs(plays, aggregations, squad_type, play_type):
     return aggregated
 
 
+def flip_defense_stat_signs(d_stats, stats_to_flip):
+    """Flip the sign on certain defensive stats (e.g. EPA) for which
+    negative values are good.
+
+    Use regex to find columns with names that contain any of the strings in
+    stats_to_flip. Multiply those columns by -1.
+    
+    :param d_stats: *pd.DataFrame of shape (n_samples, n_features)*
+        Aggregated defensive stats returned by calculate_squad_aggs.
+    :param stats_to_flip: *list of str*
+        List of stat names to search for.
+    :return: *pd.DataFrame of shape (n_samples, n_features)*
+        Defensive stats with flipped signs.
+    """
+    pattern = '|'.join(stats_to_flip)
+    cols_to_flip = d_stats.filter(regex=pattern).columns
+    d_stats[cols_to_flip] *= -1
+    return d_stats
+
+
 def assemble_play_type_features(pbp_data, type_aggs_pairs):
     """Assemble features for each play type.
     
-    :param pd.DataFrame pbp_data: raw play-by-play data
-    :param list type_aggs_pairs: list of tuples. each tuple is a play type and
-        a dict of aggregations to calculate
-    :return: aggregated stats. each row is a team and week number. columns are
-        features
-    :rtype: pd.DataFrame
+    :param pbp_data: *pd.DataFrame of shape (n_plays, n_features)*
+        Play-by-play data for a given season.
+    :param type_aggs_pairs: *list of tuples*
+        List of tuples of the form (play_type, aggregations) where play_type
+        is a string and aggregations is a dictionary of aggregations to
+        calculate for each feature.
+    :return: *pd.DataFrame of shape (n_samples, n_features)*
+        Aggregated stats for each team and week.
     """
     full_stats = pd.DataFrame(columns=['team', 'week'])
     for play_type, aggregations in type_aggs_pairs:
@@ -125,24 +173,23 @@ def assemble_play_type_features(pbp_data, type_aggs_pairs):
                                        'posteam', play_type)
         d_stats = calculate_squad_aggs(plays, aggregations,
                                        'defteam', play_type)
-        print(d_stats.head())
-        # flip the sign of the defensive stats
-        cols_to_flip = d_stats.columns[2:]
-        d_stats[cols_to_flip] *= -1
+        d_stats = flip_defense_stat_signs(d_stats, ['_epa_', '_wpa_'])
         merged = o_stats.merge(d_stats, on=['team', 'week'])
         full_stats = full_stats.merge(merged, on=['team', 'week'],
                                       how='outer')
     return full_stats
 
 
-def make_team_stats_features(games, raw_plays_path, output_dir):
-    """Make team stats features.
+def aggregate_efficiency_stats(games, raw_plays_path, output_dir):
+    """Make efficiency stats (e.g. EPA, WPA, etc.) for each team and week.
     
-    :param pd.DataFrame games: game data
-    :param str raw_plays_path: path to raw play-by-play data
-    :param str output_dir: path to output directory
-    :return: None
-    :rtype: None
+    :param games: *pd.DataFrame of shape (n_games, n_features)*
+        Raw games data.
+    :param raw_plays_path: *str*
+        Path to directory containing raw play-by-play data.
+    :param output_dir: *str*
+        Path to directory where features will be saved.
+    :return: *None*
     """
     game_id_map = pd.DataFrame()
     features = pd.DataFrame()
@@ -168,20 +215,19 @@ def make_team_stats_features(games, raw_plays_path, output_dir):
     return
 
 
-def build_team_stats_features(raw_games_path, raw_plays_path, output_dir,
-                              **kwargs):
+def build_team_stats_features(raw_games_path, raw_plays_path, output_dir):
     """Build engineered features for team stats.
     
-    :param str raw_games_path: path to raw games data
-    :param str raw_plays_path: path to raw play-by-play data
-    :param str output_dir: path to save stats features
-    :param dict kwargs: additional arguments
-    :return: None
-    :rtype: None
+    :param raw_games_path: *str*
+        Path to directory containing raw games data.
+    :param raw_plays_path: *str*
+        Path to directory containing raw play-by-play data.
+    :param output_dir: *str*
+        Path to directory where features will be saved.
+    :return: *None*
     """
     games = (pd.read_csv(raw_games_path)
              .dropna(subset=['result']))
-    pythag_exp = make_pythag_exp_feature(games, 'pythagorean_expectation')
-    pythag_exp.to_csv(f"{output_dir}/pythagorean_expectation.csv")
-    make_team_stats_features(games, raw_plays_path, output_dir)
+    make_points_features(games, output_dir)
+    aggregate_efficiency_stats(games, raw_plays_path, output_dir)
     return
