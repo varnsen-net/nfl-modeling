@@ -24,16 +24,22 @@ A: Probably not.
 
 A: That's not a question.
 
+**Q: How come you don't use efficiency metrics like pythagorean expectation/EPA/WPA?**
+
+A: Data leakage! These metrics are derived from all currently available NFL data and would give the model an unfair glimpse of the future.
+
 ## Current engineered features
 - home/away rest
 - field stats
 - weather
 - travel distances
-- pythagorean expectation
-- pass/rush efficiency metrics
+- points for/against
+- pass/rush statistics
 
 ## Training procedure
 SWIFT does everything possible to avoid data leakage. It should never get a glimpse into the future.
+
+#### Pipeline:
 
 1. Transform the home/away team structure into an object/adversary team structure so that the model tries to predict a 50/50 mix of home and away win probabilities.
 2. Train and evaluate using a grouped time series cross-validation scheme. The model trains on a block of *m* consecutive seasons, then validates on the following *n* seasons.
