@@ -10,11 +10,14 @@ import requests
 def fix_indoor_weather(games, weather, defaults):
     """Fix the weather data for indoor games.
     
-    :param pd.DataFrame games: raw games data
-    :param pd.DataFrame weather: raw weather data
-    :param dict defaults: default weather values
-    :return: weather data with indoor games fixed
-    :rtype: pd.DataFrame
+    :param games: *pd.DataFrame of shape (n_samples, n_features)*
+        Raw games data.
+    :param weather: *pd.DataFrame of shape (n_samples, n_features)*
+        Raw weather data.
+    :param defaults: *dict*
+        Default values for weather features.
+    :return: *pd.DataFrame*
+        Weather data with indoor games fixed.
     """
     indoor_labels = ['dome', 'closed']
     indoor_games = games.query('roof in @indoor_labels').set_index('game_id')
@@ -26,16 +29,18 @@ def fix_indoor_weather(games, weather, defaults):
 
 
 def build_weather_features(weather_metadata, raw_games_path, raw_weather_path,
-                           output_dir, **kwargs):
+                           output_dir):
     """Make weather features.
     
-    :param dict weather_metadata: weather_metadata for weather features
-    :param str raw_games_path: path to raw games data
-    :param str raw_weather_path: path to raw weather data
-    :param str output_dir: path to output directory
-    :param dict kwargs: keyword arguments
-    :return: None
-    :rtype: None
+    :param weather_metadata: *dict*
+        Metadata for weather features.
+    :param raw_games_path: *str*
+        Path to raw games data.
+    :param raw_weather_path: *str*
+        Path to raw weather data.
+    :param output_dir: *str*
+        Path to output directory.
+    :return: *None*
     """
     games = (pd.read_csv(raw_games_path)
              .dropna(subset=['result']))
