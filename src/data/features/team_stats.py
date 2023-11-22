@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 from src.utils import map_team_data_to_games
-from src.config.config import PASSING_AGGS, RUSHING_AGGS
+from src.config.config import LOOKBACK_WINDOW, PASSING_AGGS, RUSHING_AGGS
 
 
 def flatten_columns(df):
@@ -35,13 +35,14 @@ def write_cols_to_file(features, output_dir):
     return
 
 
-def calculate_cumulative_points(games):
-    """Calculate the cumulative points for/against each team up to each week.
+def make_base_points_data(games):
+    """Build base points data (e.g. points for and against) for feature
+    creation.
     
     :param games: *pd.DataFrame of shape (n_games, n_features)*
         Raw games data.
-    :return: *pd.DataFrame of shape (n_samples, n_features)*
-        Cumulative points for/against each team up to each week.
+    :return: *pd.DataFrame of shape (n_samples, 5)*
+        Points for/against indexed by season, team, and week.
     """
     home_teams = games[['season', 'week', 'home_team', 'home_score', 'away_score']]
     away_teams = games[['season', 'week', 'away_team', 'away_score', 'home_score']]
@@ -51,42 +52,57 @@ def calculate_cumulative_points(games):
               .astype({'points_for': int, 'points_against': int})
               .set_index(['season', 'team', 'week'])
               .sort_index())
-    points['cpf'] = points.groupby(['season', 'team']).cumsum()['points_for']
-    points['cpa'] = points.groupby(['season', 'team']).cumsum()['points_against']
+    points['points_net'] = points['points_for'] - points['points_against']
     return points
 
 
-def calculate_pythag_exp(points, x=2.68):
-    """Calculates the pythagorean expectation for a set of points for and
-    points against.
+def calculate_net_ppg_avg(points, window):
+    """Calculate the net points per game average for each team with expanding
+    and rolling windows.
     
-    :param points: *pd.DataFrame of shape (n_samples, 2)*
-        Points-for and points-against data.
-    :param x: *float*
-        Exponent to use in pythagorean expectation formula. Default is 2.68.
-    :return: *pd.Series of shape (n_samples,)*
-        Pythagorean expectation for each row of cumulative points data.
+    :param points: *pd.DataFrame of shape (n_samples, 5)*
+        Points for/against indexed by season, team, and week.
+    :param window: *int*
+        Number of weeks to use for rolling averages.
+    :return: *pd.DataFrame of shape (n_samples, 5)*
+        Points per game averages indexed by season, team, and week.
     """
-    numerator = points['cpf']**x
-    denominator = points['cpf']**x + points['cpa']**x
-    pythag_exp = numerator / denominator
-    return pythag_exp
+    ppg_net_avg = (points
+                   [['points_for', 'points_against', 'points_net']]
+                   .groupby(['season', 'team'])
+                   .expanding()
+                   .mean()
+                   .droplevel([0,1])
+                   .add_suffix('_avg'))
+    ppg_net_avg_rolling = (points
+                           [['points_for', 'points_against', 'points_net']]
+                           .groupby(['season', 'team'])
+                           .rolling(window=window)
+                           .mean()
+                           .droplevel([0,1])
+                           .add_suffix(f"_avg_{window}wk"))
+    net_avgs = pd.concat([ppg_net_avg, ppg_net_avg_rolling], axis=1)
+    return net_avgs
 
 
-def make_points_features(games, output_dir):
+def make_points_features(games, window, output_dir):
     """Build all points features (e.g. net points).
     
     :param games: *pd.DataFrame of shape (n_games, n_features)*
         Raw games data.
+    :param window: *int*
+        Number of weeks to use for rolling averages.
     :param output_dir: *str*
         Directory to write csv files to.
     """
-    cumulative_points = calculate_cumulative_points(games)
-    cumulative_points['cp_net'] = cumulative_points['cpf'] - cumulative_points['cpa']
-    cumulative_points = (cumulative_points
-                         .reset_index()
-                         .drop(columns=['points_for', 'points_against']))
-    write_cols_to_file(cumulative_points, output_dir)
+    base_points = make_base_points_data(games)
+    net_ppg_avgs = calculate_net_ppg_avg(base_points, window)
+    net_ppg_avgs = net_ppg_avgs.round(1)
+    points = pd.concat([base_points, net_ppg_avgs], axis=1)
+    points = (points
+              .reset_index()
+              .drop(columns=['points_for', 'points_against', 'points_net']))
+    write_cols_to_file(points, output_dir)
     return
 
 
@@ -208,10 +224,7 @@ def aggregate_efficiency_stats(games, raw_plays_path, output_dir):
         id_map = id_map.reset_index()
         id_map['season'] = season
         game_id_map = pd.concat([game_id_map, id_map])
-    for col in features.columns:
-        if col not in ['team', 'week', 'season']:
-            data = features[['season', 'team', 'week', col]]
-            data.to_csv(f"{output_dir}/{col}.csv", index=False)
+    write_cols_to_file(features, output_dir)
     return
 
 
@@ -228,6 +241,10 @@ def build_team_stats_features(raw_games_path, raw_plays_path, output_dir):
     """
     games = (pd.read_csv(raw_games_path)
              .dropna(subset=['result']))
-    make_points_features(games, output_dir)
+    make_points_features(games, LOOKBACK_WINDOW, output_dir)
     aggregate_efficiency_stats(games, raw_plays_path, output_dir)
     return
+
+
+if __name__ == '__main__':
+    from src.config.config import PATHS

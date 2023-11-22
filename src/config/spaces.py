@@ -24,3 +24,4 @@ LIGHTGBM_SPACE = [
     param('objective', 'binary', None, None, str),
     param('eval_metric', 'binary_logloss', None, None, str),
 ]
+"""*list of namedtuples*: LightGBM hyperparameter space."""

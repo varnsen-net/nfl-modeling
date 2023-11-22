@@ -19,8 +19,8 @@ def build_baseline_pipeline(model_params={}):
     :return: baseline pipeline
     :rtype: sklearn.pipeline.Pipeline
     """
-    feature_columns = ['obj_cp_net',
-                       'adv_cp_net',
+    feature_columns = ['obj_points_net_avg',
+                       'adv_points_net_avg',
                        'obj_rest',
                        'adv_rest',
                        'obj_travel_distance',

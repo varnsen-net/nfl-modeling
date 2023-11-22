@@ -27,7 +27,7 @@ RAW_DATA_URLS = {
 
 CURRENT_SEASON = 2023
 """*int*: Current NFL season. Used to fetch current season of play-by-play data."""
-CURRENT_WEEK = 10
+CURRENT_WEEK = 12
 """*int*: Current NFL week. Used to fetch current week of play-by-play data."""
 TRAINING = {
     "holdout_year": 2020,
@@ -47,6 +47,10 @@ EARLY_STOP_N = 15
 """*int*: Number of iterations without improvement to stop hyperparameter tuning."""
 DEFAULT_PARAM_PREFIX = 'calibratedclassifiercv__estimator__'
 """*str*: Prefix for default hyperparameters."""
+
+
+LOOKBACK_WINDOW = 3
+"""*int*: Number of weeks to look back for features that only consider recent performance."""
 
 
 WEATHER_METADATA = {
@@ -116,6 +120,7 @@ FEATURE_PRECISIONS = {
 
 PASSING_AGGS = {'week': ['max'],
                 'pass': 'sum',
+                'yards_gained': 'mean',
                 'complete_pass': 'mean',
                 'interception': 'mean',
                 'fumble': 'mean',
@@ -123,5 +128,6 @@ PASSING_AGGS = {'week': ['max'],
 """*dict*: Functions for aggregating passing features from play-by-play data."""
 RUSHING_AGGS = {'week': ['max'],
                 'rush': 'sum',
+                'yards_gained': 'mean',
                 'fumble': 'mean'}
 """*dict*: Functions for aggregating rushing features from play-by-play data."""
