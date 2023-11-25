@@ -35,6 +35,20 @@ def write_cols_to_file(features, output_dir):
     return
 
 
+def reframe_team_as_opponent(df):
+    """Transform a df index such that 'team' is now 'opponent'.
+    
+    :param df: *pd.DataFrame of shape (n_samples, n_features)*
+        Dataframe with season/team/week/opponent multiindex.
+    :return: *pd.DataFrame of shape (n_samples, n_features)*
+        Dataframe with season/opponent/week multiindex.
+    """
+    df = df.droplevel('opponent')
+    df.index = df.index.rename({'team': 'opponent'})
+    df = df.add_prefix('opp_')
+    return df
+
+
 def make_base_points_data(games):
     """Build base points data (e.g. points for and against) for feature
     creation.
@@ -44,45 +58,65 @@ def make_base_points_data(games):
     :return: *pd.DataFrame of shape (n_samples, 5)*
         Points for/against indexed by season, team, and week.
     """
-    home_teams = games[['season', 'week', 'home_team', 'home_score', 'away_score']]
-    away_teams = games[['season', 'week', 'away_team', 'away_score', 'home_score']]
+    home_teams = games[['season', 'week', 'home_team', 'away_team', 'home_score', 'away_score']]
+    away_teams = games[['season', 'week', 'away_team', 'home_team', 'away_score', 'home_score']]
     points = pd.DataFrame(np.append(home_teams, away_teams, axis=0))
-    points.columns = ['season', 'week', 'team', 'points_for', 'points_against']
+    points.columns = ['season', 'week', 'team', 'opponent', 'points_for', 'points_against']
     points = (points
               .astype({'points_for': int, 'points_against': int})
-              .set_index(['season', 'team', 'week'])
+              .set_index(['season', 'team', 'week', 'opponent'])
               .sort_index())
-    points['points_net'] = points['points_for'] - points['points_against']
     return points
 
 
-def calculate_net_ppg_avg(points, window):
-    """Calculate the net points per game average for each team with expanding
-    and rolling windows.
+def calculate_avgs(points, window):
+    """Calculate averages per team per week per season with expanding or
+    rolling windows.
     
-    :param points: *pd.DataFrame of shape (n_samples, 5)*
+    :param points: *pd.DataFrame of shape (n_samples, n_features)*
         Points for/against indexed by season, team, and week.
     :param window: *int*
         Number of weeks to use for rolling averages.
-    :return: *pd.DataFrame of shape (n_samples, 5)*
+    :return: *pd.DataFrame of shape (n_samples, n_features)*
         Points per game averages indexed by season, team, and week.
     """
-    ppg_net_avg = (points
-                   [['points_for', 'points_against', 'points_net']]
-                   .groupby(['season', 'team'])
-                   .expanding()
-                   .mean()
-                   .droplevel([0,1])
-                   .add_suffix('_avg'))
-    ppg_net_avg_rolling = (points
-                           [['points_for', 'points_against', 'points_net']]
-                           .groupby(['season', 'team'])
-                           .rolling(window=window)
-                           .mean()
-                           .droplevel([0,1])
-                           .add_suffix(f"_avg_{window}wk"))
-    net_avgs = pd.concat([ppg_net_avg, ppg_net_avg_rolling], axis=1)
-    return net_avgs
+    group = points.groupby(['season', 'team'])
+    if window:
+        avgs = (group
+                .rolling(window=window)
+                .mean()
+                .add_suffix(f"_avg_{window}wk"))
+    else:
+        avgs = (group
+                .expanding()
+                .mean()
+                .add_suffix('_avg'))
+    avgs = avgs.droplevel([0,1])
+    return avgs
+
+
+def adjust_for_opponent(base, opponent):
+    """Adjust base data for opponent strength.
+    
+    :param base: *pd.DataFrame of shape (n_samples, n_features)*
+        Base data to adjust. Must have season/team/week/opponent multiindex.
+    :param opponent: *pd.DataFrame of shape (n_samples, n_features)*
+        Opponent data to use for adjustment. Must have season/team/week/opponent
+        multiindex.
+    :return: *pd.DataFrame of shape (n_samples, n_features)*
+        Adjusted data.
+    """
+    opponent = (opponent
+                .groupby(['season', 'team'])
+                .shift(1)
+                .fillna(0))
+    opponent = reframe_team_as_opponent(opponent)
+    merged = pd.merge(base, opponent, left_index=True, right_index=True)
+    base_cols = base.columns
+    opp_cols = opponent.columns
+    adjusted = merged.loc[:,base_cols] - merged.loc[:,opp_cols].values
+    adjusted = adjusted.add_prefix('opp_adj_')
+    return adjusted
 
 
 def make_points_features(games, window, output_dir):
@@ -96,13 +130,19 @@ def make_points_features(games, window, output_dir):
         Directory to write csv files to.
     """
     base_points = make_base_points_data(games)
-    net_ppg_avgs = calculate_net_ppg_avg(base_points, window)
-    net_ppg_avgs = net_ppg_avgs.round(1)
-    points = pd.concat([base_points, net_ppg_avgs], axis=1)
-    points = (points
-              .reset_index()
-              .drop(columns=['points_for', 'points_against', 'points_net']))
-    write_cols_to_file(points, output_dir)
+    net_ppg_avgs = calculate_avgs(base_points, window=None)
+    net_ppg_avgs = net_ppg_avgs.iloc[:,[1,0]]
+    adj_points = adjust_for_opponent(base_points, net_ppg_avgs)
+    adj_points['opp_adj_points_net'] = (adj_points['opp_adj_points_for']
+                                        - adj_points['opp_adj_points_against'])
+    adj_points = calculate_avgs(adj_points, window=None)
+    adj_points = (adj_points
+                  .round(1)
+                  .droplevel('opponent')
+                  .swaplevel('week', 'team')
+                  .reset_index()
+                  .sort_values(['season', 'team', 'week']))
+    write_cols_to_file(adj_points, output_dir)
     return
 
 
@@ -248,3 +288,5 @@ def build_team_stats_features(raw_games_path, raw_plays_path, output_dir):
 
 if __name__ == '__main__':
     from src.config.config import PATHS
+
+    games = pd.read_csv(PATHS['raw_games']).dropna(subset=['result'])
