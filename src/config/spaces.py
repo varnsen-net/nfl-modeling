@@ -5,8 +5,15 @@ from collections import namedtuple
 from hyperopt import hp
 
 
-param = namedtuple('param', ['name', 'value', 'min', 'max', 'type'])
+BASELINE_PARAMS = {'solver': 'saga',
+                   'penalty': 'elasticnet',
+                   'l1_ratio': 0.5,
+                   'max_iter': 10000,
+                   'C': 0.1}
+"""*dict*: Baseline model hyperparameters. These will not be tuned."""
 
+
+param = namedtuple('param', ['name', 'value', 'min', 'max', 'type'])
 LIGHTGBM_SPACE = [
     param('num_leaves', hp.uniformint, 2, 500, int),
     param('max_depth', hp.uniformint, 2, 50, int),

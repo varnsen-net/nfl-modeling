@@ -24,7 +24,7 @@ from src.config.config import (FEATURE_PRECISIONS,
                                SCORING_METRIC,
                                MAX_EVALS,
                                EARLY_STOP_N)
-from src.config.spaces import LIGHTGBM_SPACE
+from src.config.spaces import BASELINE_PARAMS, LIGHTGBM_SPACE
 
 
 def create_datetime_id():
@@ -67,7 +67,7 @@ if __name__ == "__main__":
     cv = custom_cv(CV_TRAIN_SIZE, CV_TEST_SIZE)
 
     # evaluate baseline model
-    baseline = build_baseline_pipeline({'solver': 'liblinear'})
+    baseline = build_baseline_pipeline(BASELINE_PARAMS)
     scores, _ = evaluate_model(baseline, X, y, cv)
     save_path = make_save_path(results_path)
     name = 'baseline'
