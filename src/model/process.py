@@ -56,7 +56,7 @@ def transform_home_away_structure(X, y):
     :return: a set of training or test data with object/adversary structure
     :rtype: pd.DataFrame
     """
-    home_obj_idxs = X.sample(frac=0.5).index.sort_values()
+    home_obj_idxs = X[::2].index
     home_obj_games = X.loc[home_obj_idxs]
     away_obj_games = X.drop(home_obj_idxs)
     home_obj_y = y.loc[home_obj_idxs]

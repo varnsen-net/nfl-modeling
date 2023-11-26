@@ -43,7 +43,7 @@ CV_TEST_SIZE = 3
 """*int*: Number of consecutive seasons to use for testing in grouped time-series cross validation."""
 MAX_EVALS = 100
 """*int*: Maximum number of hyperparameter tuning iterations."""
-EARLY_STOP_N = 10
+EARLY_STOP_N = 15
 """*int*: Number of iterations without improvement to stop hyperparameter tuning."""
 DEFAULT_PARAM_PREFIX = 'calibratedclassifiercv__estimator__'
 """*str*: Prefix for default hyperparameters."""
