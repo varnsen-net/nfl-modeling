@@ -9,7 +9,6 @@ import pathlib
 import numpy as np
 import pandas as pd
 
-from src.utils import collect_setup_args
 from src.data.raw.games import refresh_games_data
 from src.data.raw.weather import refresh_weather_data
 from src.data.raw.plays import refresh_plays_data

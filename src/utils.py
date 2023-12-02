@@ -8,26 +8,6 @@ import numpy as np
 import pandas as pd
 
 
-def collect_setup_args():
-    """Collects the command line arguments for the setup script.
-    
-    :return: command line arguments
-    :rtype: argparse.Namespace
-    """
-    argparser = argparse.ArgumentParser()
-    argparser.add_argument('-c', help='path to config file')
-    argparser.add_argument('-g', help='path to raw games data')
-    argparser.add_argument('-w', help='path to raw weather data')
-    argparser.add_argument('-p', help='path to raw play-by-play data')
-    argparser.add_argument('-cc', help='path to city coordinates')
-    argparser.add_argument('-f', help='path to features data')
-    argparser.add_argument('-tr', help='path to training data')
-    argparser.add_argument('-te', help='path to test data')
-    argparser.add_argument('-r', help='path to training run results')
-    args = argparser.parse_args()
-    return args
-
-
 def fix_game_times(games):
     """Cleans the gametime column.
 

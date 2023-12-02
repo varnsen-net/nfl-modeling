@@ -15,23 +15,7 @@ fancy_echo() {
 
 # paths
 SOURCE="src"
-DATA="data"
-RAW="$DATA/raw"
-FEATURES="$DATA/features"
-ANCILLARY="$DATA/ancillary"
-TRAIN="$DATA/train"
-TEST="$DATA/test"
 MODELING="$SOURCE/model"
-RESULTS="$DATA/results"
-RAW_PLAYS="$RAW/plays"
-
-CONFIG="$SOURCE/config.json"
-RAW_GAMES="$RAW/games.csv"
-RAW_WEATHER="$RAW/weather.csv"
-CITY_COORDS="$ANCILLARY/city-coordinates.csv"
-
-# arguments
-BUILD_ARGS="-c $CONFIG -g $RAW_GAMES -w $RAW_WEATHER -p $RAW_PLAYS -cc $CITY_COORDS -f $FEATURES -tr $TRAIN -te $TEST -r $RESULTS"
 
 
 # handle virtualenv
@@ -60,7 +44,7 @@ echo -n "Build data? [y/N]: "
 read answer
 if [[ $answer =~ ^[Yy]$ ]]; then
     fancy_echo "Building data"
-    python3 $SOURCE/data/build.py $BUILD_ARGS
+    python3 $SOURCE/data/build.py
 fi
 
 
@@ -69,5 +53,5 @@ echo -n "Train models? [y/N]: "
 read answer
 if [[ $answer =~ ^[Yy]$ ]]; then
     fancy_echo "Training models"
-    python3 $MODELING/train.py $BUILD_ARGS
+    python3 $MODELING/train.py
 fi

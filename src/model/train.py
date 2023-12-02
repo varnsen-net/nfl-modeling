@@ -10,7 +10,6 @@ import pandas as pd
 from sklearn.preprocessing import FunctionTransformer
 from sklearn.model_selection import GroupKFold
 
-from src.utils import collect_setup_args
 from src.model.process import preprocess, transform_home_away_structure
 from src.model.pipeline import build_baseline_pipeline, build_swift_pipeline
 from src.model.hyperoptimize import hyperoptimize
@@ -18,7 +17,8 @@ from src.model.evaluate import custom_cv, evaluate_model, compile_scores
 from src.model.predict import voting_classifier
 from src.plot.plot import make_and_save_plots, plot_test_calibration
 
-from src.config.config import (FEATURE_PRECISIONS,
+from src.config.config import (PATHS,
+                               FEATURE_PRECISIONS,
                                CV_TRAIN_SIZE,
                                CV_TEST_SIZE,
                                SCORING_METRIC,
@@ -52,12 +52,10 @@ def make_save_path(results_path):
 
 
 if __name__ == "__main__":
-    args = collect_setup_args()
-    config_path = args.c
-    features_path = args.f
-    train_path = args.tr
-    test_path = args.te
-    results_path = args.r
+    features_path = PATHS['features']
+    train_path = PATHS['train']
+    test_path = PATHS['test']
+    results_path = PATHS['results']
 
     train = pd.read_csv(f"{train_path}/train.csv", index_col=0)
     target = pd.read_csv(f"{train_path}/target.csv", index_col=0)
