@@ -10,16 +10,17 @@ import numpy as np
 import pandas as pd
 
 from src.data.raw.games import refresh_games_data
-from src.data.raw.weather import refresh_weather_data
 from src.data.raw.plays import refresh_plays_data
 from src.data.features.team_stats import build_team_stats_features
 from src.data.features.travel import build_travel_features
-from src.data.features.weather import build_weather_features
 from src.data.train.train import build_train
 from src.data.train.target import build_target
 
-from src.config.config import (WEATHER_METADATA, TRAINING, CURRENT_SEASON,
-                               CURRENT_WEEK, RAW_DATA_URLS, PATHS)
+from src.config.config import (TRAINING,
+                               CURRENT_SEASON,
+                               CURRENT_WEEK,
+                               RAW_DATA_URLS,
+                               PATHS)
 
 
 def split_data(df, holdout_year):
@@ -37,22 +38,14 @@ def split_data(df, holdout_year):
     return train, holdout
 
 
-def refresh_raw_data(games_url, raw_games_path, weather_metadata,
-                     raw_weather_path, city_coords_path, current_season,
-                     plays_url, raw_plays_path):
+def refresh_raw_data(games_url, raw_games_path, current_season, plays_url,
+                     raw_plays_path):
     """Fetch raw data from web sources and save to local paths.
 
     :param games_url: *str*
         URL of raw games repository.
     :param raw_games_path: *str*
         Path to save raw games data.
-    :param weather_metadata: *dict*
-        Metadata for weather data, e.g. default values and agg functions to
-        apply to game window. See: src.config.config for details.
-    :param raw_weather_path: *str*
-        Path to save raw weather data.
-    :param city_coords_path: *str*
-        Path to local city coordinates data. Required to fetch raw weather.
     :param current_season: *int*
         Current season, e.g. 2023.
     :param plays_url: *str*
@@ -63,28 +56,19 @@ def refresh_raw_data(games_url, raw_games_path, weather_metadata,
     """
     print('Refreshing raw games data...')
     refresh_games_data(games_url, raw_games_path)
-    print('Refreshing raw weather data...')
-    refresh_weather_data(weather_metadata, raw_games_path, raw_weather_path,
-                         city_coords_path, batch_size=1000)
     print('Refreshing raw play-by-play data...')
     refresh_plays_data(current_season, plays_url, raw_plays_path)
     return
 
 
-def build_features(features_path, weather_metadata,
-                       raw_games_path, raw_weather_path, raw_plays_path,
-                       city_coords_path):
+def build_features(features_path, raw_games_path, raw_plays_path,
+                   city_coords_path):
     """Build features from raw data and save to local paths.
     
     :param features_path: *str*
         Path to save features data.
-    :param weather_metadata: *dict*
-        Metadata for weather data, e.g. default values and agg functions to
-        apply to game window. See: src.config.config for details.
     :param raw_games_path: *str*
         Path to raw games data.
-    :param raw_weather_path: *str*
-        Path to raw weather data.
     :param raw_plays_path: *str*
         Path to raw play-by-play data.
     :param city_coords_path: *str*
@@ -102,11 +86,6 @@ def build_features(features_path, weather_metadata,
     os.makedirs(output_dir, exist_ok=True)
     build_travel_features(raw_games_path, city_coords_path, output_dir)
 
-    print('Building weather features...')
-    output_dir = features_path / 'weather'
-    os.makedirs(output_dir, exist_ok=True)
-    build_weather_features(weather_metadata, raw_games_path, raw_weather_path,
-                           output_dir)
     return
 
 
@@ -145,7 +124,6 @@ def build_train_and_test_data(train_path, test_path, games_cols, raw_games_path,
 
 if __name__ == '__main__':
     raw_games_path = PATHS['raw_games']
-    raw_weather_path = PATHS['raw_weather']
     raw_plays_path = PATHS['raw_plays']
     city_coords_path = PATHS['city_coordinates']
     features_path = PATHS['features']
@@ -158,14 +136,12 @@ if __name__ == '__main__':
 
 
     # Refresh raw data
-    refresh_raw_data(games_url, raw_games_path, WEATHER_METADATA,
-                     raw_weather_path, city_coords_path, CURRENT_SEASON,
-                     plays_url, raw_plays_path)
+    refresh_raw_data(games_url, raw_games_path, CURRENT_SEASON, plays_url,
+                     raw_plays_path)
 
 
     # Build features
-    build_features(features_path, WEATHER_METADATA,
-                   raw_games_path, raw_weather_path, raw_plays_path,
+    build_features(features_path, raw_games_path, raw_plays_path,
                    city_coords_path)
 
 
