@@ -31,7 +31,6 @@ A: Data leakage! These metrics are derived from all currently available NFL data
 ## Current engineered features
 - home/away rest
 - field stats
-- weather
 - travel distances
 - points for/against
 - pass/rush statistics
