@@ -5,7 +5,9 @@ import os
 import numpy as np
 import pandas as pd
 
-from src.utils import shift_week_number, map_team_data_to_games
+from src.utils import (shift_week_number,
+                       map_team_data_to_games,
+                       walk_features_dir)
 
 
 def preprocess_raw_games(games):
@@ -24,20 +26,6 @@ def preprocess_raw_games(games):
              .dropna(subset=['result'])
              .copy())
     return games
-
-
-def walk_features_dir(features_path):
-    """Yield every py file path in the features dir.
-    
-    :param str features_path: path to features directory
-    :return: feature file path
-    :rtype: str
-    """
-    for root, dirs, files in os.walk(features_path):
-        for file in files:
-            if file.endswith('.csv'):
-                file_path = os.path.join(root, file)
-                yield file_path
 
 
 def merge_feature(train, feature):

@@ -7,19 +7,17 @@ PROJ_ROOT = pathlib.Path(__file__).parents[2].absolute()
 PATHS = {
     'raw_games': PROJ_ROOT / 'data' / 'raw' / 'games.csv',
     'raw_plays': PROJ_ROOT / 'data' / 'raw' / 'plays',
-    'raw_weather': PROJ_ROOT / 'data' / 'raw' / 'weather.csv',
     'city_coordinates': PROJ_ROOT / 'data' / 'ancillary' / 'city-coordinates.csv',
     'features': PROJ_ROOT / 'data' / 'features',
     'train': PROJ_ROOT / 'data' / 'train',
     'test': PROJ_ROOT / 'data' / 'test',
     'results': PROJ_ROOT / 'data' / 'results',
+    'prediction': PROJ_ROOT / 'data' / 'prediction',
     'features_src': PROJ_ROOT / 'src' / 'data' / 'features',
 }
 """*dict*: Paths to data files and directories."""
 RAW_DATA_URLS = {
     "games": "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv",
-    "weather_hist": "https://archive-api.open-meteo.com/v1/archive",
-    "weather_forecast": "https://api.open-meteo.com/v1/forecast",
     "plays": "https://github.com/nflverse/nflverse-data/releases/download/pbp",
 }
 """*dict*: URLs to raw data files."""
@@ -27,7 +25,7 @@ RAW_DATA_URLS = {
 
 CURRENT_SEASON = 2023
 """*int*: Current NFL season. Used to fetch current season of play-by-play data."""
-CURRENT_WEEK = 13
+CURRENT_WEEK = 16
 """*int*: Current NFL week. Used to fetch current week of play-by-play data."""
 TRAINING = {
     "holdout_year": 2020,
@@ -37,13 +35,13 @@ TRAINING = {
 """*dict*: Parameters for training data."""
 SCORING_METRIC = 'neg_brier_score'
 """*str*: Scoring metric for hyperparameter tuning."""
-CV_TRAIN_SIZE = 5
+CV_TRAIN_SIZE = 7
 """*int*: Number of consecutive seasons to use for training in grouped time-series cross validation."""
 CV_TEST_SIZE = 3
 """*int*: Number of consecutive seasons to use for testing in grouped time-series cross validation."""
 MAX_EVALS = 100
 """*int*: Maximum number of hyperparameter tuning iterations."""
-EARLY_STOP_N = 15
+EARLY_STOP_N = 20
 """*int*: Number of iterations without improvement to stop hyperparameter tuning."""
 DEFAULT_PARAM_PREFIX = 'calibratedclassifiercv__estimator__'
 """*str*: Prefix for default hyperparameters."""

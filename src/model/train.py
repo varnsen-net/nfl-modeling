@@ -104,3 +104,5 @@ if __name__ == "__main__":
     y_full = pd.concat([y, y_test])
     baseline.fit(X_full, y_full)
     joblib.dump(baseline, f"{save_path}/baseline_model.pkl")
+    swift.fit(X_full, y_full)
+    joblib.dump(swift, f"{save_path}/swift_model.pkl")

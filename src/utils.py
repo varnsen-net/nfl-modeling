@@ -1,5 +1,6 @@
 """Utility functions. These functions are used in mutliple places throughout the source code and cannot be coupled to any particular module."""
 
+import os
 import requests
 import argparse
 import datetime
@@ -38,6 +39,20 @@ def get_kickoff_hours(gametimes):
     """
     hours = gametimes.str.split(':').str[0].astype(int)
     return hours
+
+
+def walk_features_dir(features_path):
+    """Yield every py file path in the features dir.
+    
+    :param str features_path: path to features directory
+    :return: feature file path
+    :rtype: str
+    """
+    for root, dirs, files in os.walk(features_path):
+        for file in files:
+            if file.endswith('.csv'):
+                file_path = os.path.join(root, file)
+                yield file_path
 
 
 def map_team_data_to_games(games, stats, feature_name):
