@@ -55,3 +55,12 @@ if [[ $answer =~ ^[Yy]$ ]]; then
     fancy_echo "Training models"
     python3 $MODELING/train.py
 fi
+
+
+# generate predictions
+echo -n "Generate predictions? [y/N]: "
+read answer
+if [[ $answer =~ ^[Yy]$ ]]; then
+    fancy_echo "Generating predictions"
+    python3 $SOURCE/data/predict/predict.py
+fi
