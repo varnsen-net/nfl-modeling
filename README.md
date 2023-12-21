@@ -45,5 +45,5 @@ SWIFT does everything possible to avoid data leakage. It should never get a glim
 3. On each training fold in the time series cv, calibrate model probabilities with a 5-fold cv.
 4. Search for optimal hyperparameters with hyperopt and minimize the average brier score.
 5. Evaluate on holdout data using the ensemble of cross-validated estimators from step 2.
-6. Train final model on full dataset (not finished with this step yet).
+6. Train final model on full dataset.
 
