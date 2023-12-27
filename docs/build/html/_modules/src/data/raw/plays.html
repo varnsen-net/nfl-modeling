@@ -91,13 +91,11 @@
 <span class="k">def</span> <span class="nf">fetch_pbp_data</span><span class="p">(</span><span class="n">url</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">filename</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch raw play-by-play data for a given season and write to disk.</span>
 <span class="sd">    </span>
-<span class="sd">    :param url: *str*</span>
-<span class="sd">        URL to fetch data from.</span>
-<span class="sd">    :param path: *str*</span>
-<span class="sd">        Path to write data to.</span>
-<span class="sd">    :param filename: *str*</span>
-<span class="sd">        Name of file to write data to.</span>
-<span class="sd">    :return: *None*</span>
+<span class="sd">    :param str url: url to fetch data from</span>
+<span class="sd">    :param str path: dir to write data to</span>
+<span class="sd">    :param str filename: name of file to write data to</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    :rtype: None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">url</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">path</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">filename</span><span class="si">}</span><span class="s2">&quot;</span>
@@ -111,12 +109,10 @@
 <span class="k">def</span> <span class="nf">find_missing_seasons</span><span class="p">(</span><span class="n">current_season</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Find any missing local pbp season files.</span>
 <span class="sd">    </span>
-<span class="sd">    :param current_season: *int*</span>
-<span class="sd">        Current season.</span>
-<span class="sd">    :param path: *str*</span>
-<span class="sd">        Path to local data.</span>
-<span class="sd">    :yield: *str*</span>
-<span class="sd">        Name of missing file.</span>
+<span class="sd">    :param int current_season: current nfl season</span>
+<span class="sd">    :param str path: dir to search for files</span>
+<span class="sd">    :yield: missing season filenames</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">years</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1999</span><span class="p">,</span> <span class="n">current_season</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
     <span class="n">files</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
@@ -134,13 +130,11 @@
 <span class="k">def</span> <span class="nf">refresh_plays_data</span><span class="p">(</span><span class="n">current_season</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Refresh raw play-by-play data if necessary.</span>
 <span class="sd">    </span>
-<span class="sd">    :param current_season: *int*</span>
-<span class="sd">        Current season.</span>
-<span class="sd">    :param url: *str*</span>
-<span class="sd">        URL to fetch data from.</span>
-<span class="sd">    :param path: *str*</span>
-<span class="sd">        Path to write data to.</span>
-<span class="sd">    :return: *None*</span>
+<span class="sd">    :param int current_season: current nfl season</span>
+<span class="sd">    :param str url: url to fetch data from</span>
+<span class="sd">    :param str path: dir to write data to</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    :rtype: None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">find_missing_seasons</span><span class="p">(</span><span class="n">current_season</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>

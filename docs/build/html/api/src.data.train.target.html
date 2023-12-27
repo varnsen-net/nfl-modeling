@@ -63,7 +63,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.train.train.html">src.data.train.train</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src.docs.build.html">src.docs.build</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.model.estimators.html">src.model.estimators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.model.evaluate.html">src.model.evaluate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.model.hyperoptimize.html">src.model.hyperoptimize</a></li>
@@ -114,15 +113,15 @@ found in train.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>raw_games_path</strong> – <em>str</em>
-Path to raw games data.</p></li>
-<li><p><strong>train</strong> – <em>pd.DataFrame of shape (n_train, n_columns)</em>
-Training data.</p></li>
+<li><p><strong>raw_games_path</strong> (<em>str</em>) – path to raw games data</p></li>
+<li><p><strong>train</strong> (<em>pd.DataFrame</em>) – training data</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>pd.DataFrame of shape (n_train, 2)</em>
-Target column.</p>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -133,12 +132,13 @@ Target column.</p>
 <dd><p>Make target column for games data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>games</strong> – <em>pd.DataFrame</em>
-Games data.</p>
+<dd class="field-odd"><p><strong>games</strong> (<em>pd.DataFrame</em>) – games data</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>np.array</em>
-Target column.</p>
+<dd class="field-even"><p>games data with target column</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>

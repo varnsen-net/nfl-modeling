@@ -83,10 +83,9 @@
 <span class="k">def</span> <span class="nf">make_target_col</span><span class="p">(</span><span class="n">games</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make target column for games data.</span>
 <span class="sd">    </span>
-<span class="sd">    :param games: *pd.DataFrame*</span>
-<span class="sd">        Games data.</span>
-<span class="sd">    :return: *np.array*</span>
-<span class="sd">        Target column.</span>
+<span class="sd">    :param pd.DataFrame games: games data</span>
+<span class="sd">    :return: games data with target column</span>
+<span class="sd">    :rtype: pd.DataFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">target</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">games</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">target</span></div>
@@ -99,12 +98,10 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build target column for games data. Only keep rows with game_ids</span>
 <span class="sd">    found in train.</span>
 <span class="sd">    </span>
-<span class="sd">    :param raw_games_path: *str*</span>
-<span class="sd">        Path to raw games data.</span>
-<span class="sd">    :param train: *pd.DataFrame of shape (n_train, n_columns)*</span>
-<span class="sd">        Training data.</span>
-<span class="sd">    :return: *pd.DataFrame of shape (n_train, 2)*</span>
-<span class="sd">        Target column.</span>
+<span class="sd">    :param str raw_games_path: path to raw games data</span>
+<span class="sd">    :param pd.DataFrame train: training data</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    :rtype: None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">games</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">raw_games_path</span><span class="p">)</span>
     <span class="n">games</span><span class="p">[</span><span class="s1">&#39;target&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">make_target_col</span><span class="p">(</span><span class="n">games</span><span class="p">)</span>

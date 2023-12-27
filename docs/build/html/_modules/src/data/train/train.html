@@ -87,12 +87,11 @@
 <div class="viewcode-block" id="preprocess_raw_games">
 <a class="viewcode-back" href="../../../../api/src.data.train.train.html#src.data.train.train.preprocess_raw_games">[docs]</a>
 <span class="k">def</span> <span class="nf">preprocess_raw_games</span><span class="p">(</span><span class="n">games</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reduce the raw games dataframe.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Reduce the games dataframe.</span>
 <span class="sd">    </span>
-<span class="sd">    :param games: *pd.DataFrame of shape (n_games, n_cols)*</span>
-<span class="sd">        Raw games dataframe.</span>
-<span class="sd">    :return: *pd.DataFrame of shape (n_games, n_cols)*</span>
-<span class="sd">        Processed games dataframe.</span>
+<span class="sd">    :param pd.DataFrame games: raw games dataframe</span>
+<span class="sd">    :return: reduced games data</span>
+<span class="sd">    :rtype: pd.DataFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">games</span> <span class="o">=</span> <span class="p">(</span><span class="n">games</span>
              <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">games</span><span class="p">[</span><span class="s1">&#39;week&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">]</span>
@@ -110,12 +109,10 @@
 <span class="k">def</span> <span class="nf">merge_feature</span><span class="p">(</span><span class="n">train</span><span class="p">,</span> <span class="n">feature</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge a feature into the training data.</span>
 <span class="sd">    </span>
-<span class="sd">    :param train: *pd.DataFrame of shape (n_games, n_cols)*</span>
-<span class="sd">        Training data.</span>
-<span class="sd">    :param feature: *pd.DataFrame*</span>
-<span class="sd">        Feature to merge into the training data.</span>
-<span class="sd">    :return: *pd.DataFrame of shape (n_games, n_cols)*</span>
-<span class="sd">        Training data with the feature merged in.</span>
+<span class="sd">    :param pd.DataFrame train: training data</span>
+<span class="sd">    :param pd.DataFrame feature: feature data</span>
+<span class="sd">    :return: training data with feature merged in</span>
+<span class="sd">    :rtype: pd.DataFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">first_col</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">first_col</span> <span class="o">==</span> <span class="s1">&#39;game_id&#39;</span><span class="p">:</span>
@@ -137,13 +134,10 @@
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Reduce the games data to only the columns that will be used for</span>
 <span class="sd">    training.</span>
 <span class="sd">    </span>
-<span class="sd">    :param games: *pd.DataFrame of shape (n_games, n_cols)*</span>
-<span class="sd">        Games dataframe.</span>
-<span class="sd">    :param games_cols: *list of str*</span>
-<span class="sd">        List of columns to keep from the games dataframe.</span>
-<span class="sd">    :return: *pd.DataFrame of shape (n_games, n_cols)*</span>
-<span class="sd">        Games dataframe with only the columns that will be used for</span>
-<span class="sd">        training.</span>
+<span class="sd">    :param pd.DataFrame games: games data</span>
+<span class="sd">    :param list games_cols: columns to keep</span>
+<span class="sd">    :return: games data with reduced columns</span>
+<span class="sd">    :rtype: pd.DataFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">games</span> <span class="o">=</span> <span class="n">games</span><span class="p">[</span><span class="n">games_cols</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">games</span></div>
@@ -155,14 +149,11 @@
 <span class="k">def</span> <span class="nf">build_train</span><span class="p">(</span><span class="n">games_cols</span><span class="p">,</span> <span class="n">raw_games_path</span><span class="p">,</span> <span class="n">features_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the training data.</span>
 <span class="sd">    </span>
-<span class="sd">    :param games_cols: *list of str*</span>
-<span class="sd">        List of columns to keep from the games dataframe.</span>
-<span class="sd">    :param raw_games_path: *str*</span>
-<span class="sd">        Path to the raw games data.</span>
-<span class="sd">    :param features_path: *str*</span>
-<span class="sd">        Path to the directory containing the features.</span>
-<span class="sd">    :return: *pd.DataFrame of shape (n_games, n_cols)*</span>
-<span class="sd">        Training data.</span>
+<span class="sd">    :param list games_cols: columns to keep</span>
+<span class="sd">    :param str raw_games_path: path to raw games data</span>
+<span class="sd">    :param str features_path: path to features directory</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    :rtype: None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">games</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">raw_games_path</span><span class="p">)</span>
     <span class="n">processed</span> <span class="o">=</span> <span class="n">preprocess_raw_games</span><span class="p">(</span><span class="n">games</span><span class="p">)</span>

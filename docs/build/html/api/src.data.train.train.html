@@ -21,7 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="src.docs.build" href="src.docs.build.html" />
+    <link rel="next" title="src.model.estimators" href="src.model.estimators.html" />
     <link rel="prev" title="src.data.train.target" href="src.data.train.target.html" /> 
 </head>
 
@@ -65,7 +65,6 @@
 <li class="toctree-l3"><a class="reference internal" href="#src.data.train.train.reduce_training_cols"><code class="docutils literal notranslate"><span class="pre">reduce_training_cols()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="src.docs.build.html">src.docs.build</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.model.estimators.html">src.model.estimators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.model.evaluate.html">src.model.evaluate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.model.hyperoptimize.html">src.model.hyperoptimize</a></li>
@@ -115,17 +114,16 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>games_cols</strong> – <em>list of str</em>
-List of columns to keep from the games dataframe.</p></li>
-<li><p><strong>raw_games_path</strong> – <em>str</em>
-Path to the raw games data.</p></li>
-<li><p><strong>features_path</strong> – <em>str</em>
-Path to the directory containing the features.</p></li>
+<li><p><strong>games_cols</strong> (<em>list</em>) – columns to keep</p></li>
+<li><p><strong>raw_games_path</strong> (<em>str</em>) – path to raw games data</p></li>
+<li><p><strong>features_path</strong> (<em>str</em>) – path to features directory</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>pd.DataFrame of shape (n_games, n_cols)</em>
-Training data.</p>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -137,15 +135,15 @@ Training data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>train</strong> – <em>pd.DataFrame of shape (n_games, n_cols)</em>
-Training data.</p></li>
-<li><p><strong>feature</strong> – <em>pd.DataFrame</em>
-Feature to merge into the training data.</p></li>
+<li><p><strong>train</strong> (<em>pd.DataFrame</em>) – training data</p></li>
+<li><p><strong>feature</strong> (<em>pd.DataFrame</em>) – feature data</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>pd.DataFrame of shape (n_games, n_cols)</em>
-Training data with the feature merged in.</p>
+<dd class="field-even"><p>training data with feature merged in</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -153,15 +151,16 @@ Training data with the feature merged in.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="src.data.train.train.preprocess_raw_games">
 <span class="sig-prename descclassname"><span class="pre">src.data.train.train.</span></span><span class="sig-name descname"><span class="pre">preprocess_raw_games</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">games</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/train/train.html#preprocess_raw_games"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.train.train.preprocess_raw_games" title="Link to this definition"></a></dt>
-<dd><p>Reduce the raw games dataframe.</p>
+<dd><p>Reduce the games dataframe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>games</strong> – <em>pd.DataFrame of shape (n_games, n_cols)</em>
-Raw games dataframe.</p>
+<dd class="field-odd"><p><strong>games</strong> (<em>pd.DataFrame</em>) – raw games dataframe</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>pd.DataFrame of shape (n_games, n_cols)</em>
-Processed games dataframe.</p>
+<dd class="field-even"><p>reduced games data</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -174,16 +173,15 @@ training.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>games</strong> – <em>pd.DataFrame of shape (n_games, n_cols)</em>
-Games dataframe.</p></li>
-<li><p><strong>games_cols</strong> – <em>list of str</em>
-List of columns to keep from the games dataframe.</p></li>
+<li><p><strong>games</strong> (<em>pd.DataFrame</em>) – games data</p></li>
+<li><p><strong>games_cols</strong> (<em>list</em>) – columns to keep</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>pd.DataFrame of shape (n_games, n_cols)</em>
-Games dataframe with only the columns that will be used for
-training.</p>
+<dd class="field-even"><p>games data with reduced columns</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>
@@ -195,7 +193,7 @@ training.</p>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="src.data.train.target.html" class="btn btn-neutral float-left" title="src.data.train.target" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="src.docs.build.html" class="btn btn-neutral float-right" title="src.docs.build" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="src.model.estimators.html" class="btn btn-neutral float-right" title="src.model.estimators" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

@@ -64,7 +64,6 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.train.target.html">src.data.train.target</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.train.train.html">src.data.train.train</a></li>
-<li class="toctree-l2"><a class="reference internal" href="src.docs.build.html">src.docs.build</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.model.estimators.html">src.model.estimators</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.model.evaluate.html">src.model.evaluate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.model.hyperoptimize.html">src.model.hyperoptimize</a></li>
@@ -115,16 +114,16 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>url</strong> – <em>str</em>
-URL to fetch data from.</p></li>
-<li><p><strong>path</strong> – <em>str</em>
-Path to write data to.</p></li>
-<li><p><strong>filename</strong> – <em>str</em>
-Name of file to write data to.</p></li>
+<li><p><strong>url</strong> (<em>str</em>) – url to fetch data from</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – dir to write data to</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – name of file to write data to</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>None</em></p>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -136,15 +135,15 @@ Name of file to write data to.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>current_season</strong> – <em>int</em>
-Current season.</p></li>
-<li><p><strong>path</strong> – <em>str</em>
-Path to local data.</p></li>
+<li><p><strong>current_season</strong> (<em>int</em>) – current nfl season</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – dir to search for files</p></li>
 </ul>
 </dd>
 <dt class="field-even">Yield<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>str</em>
-Name of missing file.</p>
+<dd class="field-even"><p>missing season filenames</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -156,16 +155,16 @@ Name of missing file.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>current_season</strong> – <em>int</em>
-Current season.</p></li>
-<li><p><strong>url</strong> – <em>str</em>
-URL to fetch data from.</p></li>
-<li><p><strong>path</strong> – <em>str</em>
-Path to write data to.</p></li>
+<li><p><strong>current_season</strong> (<em>int</em>) – current nfl season</p></li>
+<li><p><strong>url</strong> (<em>str</em>) – url to fetch data from</p></li>
+<li><p><strong>path</strong> (<em>str</em>) – dir to write data to</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>None</em></p>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>

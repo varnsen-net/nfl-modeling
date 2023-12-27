@@ -15,7 +15,6 @@ API Reference
    src.data.raw.plays
    src.data.train.target
    src.data.train.train
-   src.docs.build
    src.model.estimators
    src.model.evaluate
    src.model.hyperoptimize
