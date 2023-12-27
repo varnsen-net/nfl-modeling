@@ -13,6 +13,10 @@ After training, you can view model scores in `/data/results`
 
 If you want to generate predictions on upcoming games, specify the current NFL week and season in `/src/config/config.py`
 
+## Documentation
+
+For source code documentation, see `docs/build/html/index.html`
+
 ## FAQ
 **Q: Is your model any good?**
 
@@ -25,10 +29,6 @@ A: That's not a question.
 **Q: How come you don't use efficiency metrics like pythagorean expectation/EPA/WPA?**
 
 A: Data leakage! These metrics are derived from all currently available NFL data and would give the model an unfair glimpse of the future.
-
-## Documentation
-
-For source code documentation, see `docs/build/html/index.html`
 
 ## Current engineered features
 - home/away rest
