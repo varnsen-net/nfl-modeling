@@ -25,7 +25,7 @@ RAW_DATA_URLS = {
 
 CURRENT_SEASON = 2023
 """*int*: Current NFL season. Used to fetch current season of play-by-play data."""
-CURRENT_WEEK = 16
+CURRENT_WEEK = 17
 """*int*: Current NFL week. Used to fetch current week of play-by-play data."""
 TRAINING = {
     "holdout_year": 2020,
@@ -41,7 +41,7 @@ CV_TEST_SIZE = 3
 """*int*: Number of consecutive seasons to use for testing in grouped time-series cross validation."""
 MAX_EVALS = 100
 """*int*: Maximum number of hyperparameter tuning iterations."""
-EARLY_STOP_N = 20
+EARLY_STOP_N = 10
 """*int*: Number of iterations without improvement to stop hyperparameter tuning."""
 DEFAULT_PARAM_PREFIX = 'calibratedclassifiercv__estimator__'
 """*str*: Prefix for default hyperparameters."""

@@ -17,7 +17,7 @@ def fetch_pbp_data(url, path, filename):
     
     :param str url: url to fetch data from
     :param str path: dir to write data to
-    :param str filename: name of file
+    :param str filename: name of file to write data to
     :return: None
     :rtype: None
     """

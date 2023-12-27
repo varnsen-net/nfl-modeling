@@ -11,8 +11,7 @@ from src.utils import (shift_week_number,
 
 
 def preprocess_raw_games(games):
-    """Reduce the games dataframe -- only consider regular season games played
-    at home.
+    """Reduce the games dataframe.
     
     :param pd.DataFrame games: raw games dataframe
     :return: reduced games data

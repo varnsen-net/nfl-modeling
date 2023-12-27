@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.model.hyperoptimize &mdash; SWIFT  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="src.model.pipeline" href="src.model.pipeline.html" />
+    <link rel="prev" title="src.model.evaluate" href="src.model.evaluate.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SWIFT
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html">src.config.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.spaces.html">src.config.spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.ancillary.depth_charts.html">src.data.ancillary.depth_charts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.build.html">src.data.build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html">src.data.features.team_stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.travel.html">src.data.features.travel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.predict.predict.html">src.data.predict.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.raw.games.html">src.data.raw.games</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.raw.plays.html">src.data.raw.plays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.train.target.html">src.data.train.target</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.train.train.html">src.data.train.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.docs.build.html">src.docs.build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.estimators.html">src.model.estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.evaluate.html">src.model.evaluate</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">src.model.hyperoptimize</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.model.hyperoptimize.crossval_objective"><code class="docutils literal notranslate"><span class="pre">crossval_objective()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.model.hyperoptimize.find_best_params"><code class="docutils literal notranslate"><span class="pre">find_best_params()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.model.hyperoptimize.fix_param_dtypes"><code class="docutils literal notranslate"><span class="pre">fix_param_dtypes()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.model.hyperoptimize.hyperoptimize"><code class="docutils literal notranslate"><span class="pre">hyperoptimize()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.model.hyperoptimize.make_param_mapping"><code class="docutils literal notranslate"><span class="pre">make_param_mapping()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.model.hyperoptimize.map_name_to_param"><code class="docutils literal notranslate"><span class="pre">map_name_to_param()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.model.hyperoptimize.map_name_to_type"><code class="docutils literal notranslate"><span class="pre">map_name_to_type()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.pipeline.html">src.model.pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.predict.html">src.model.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.process.html">src.model.process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.train.html">src.model.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.plot.html">src.plot.plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.style.html">src.plot.style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.utils.html">src.utils</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SWIFT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">src.model.hyperoptimize</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/src.model.hyperoptimize.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-src.model.hyperoptimize">
+<span id="src-model-hyperoptimize"></span><h1>src.model.hyperoptimize<a class="headerlink" href="#module-src.model.hyperoptimize" title="Link to this heading"></a></h1>
+<p>Helper functions for optimizing model hyperparameters.</p>
+<p>Optimizer: hyperopt</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.model.hyperoptimize.crossval_objective">
+<span class="sig-prename descclassname"><span class="pre">src.model.hyperoptimize.</span></span><span class="sig-name descname"><span class="pre">crossval_objective</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/model/hyperoptimize.html#crossval_objective"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.model.hyperoptimize.crossval_objective" title="Link to this definition"></a></dt>
+<dd><p>Objective function for hyperopt.</p>
+<p>Uses cross validation scoring.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>dict</em>) – hyperparameters to test</p></li>
+<li><p><strong>model</strong> (<em>sklearn.base.BaseEstimator</em>) – estimator to test</p></li>
+<li><p><strong>X</strong> (<em>pd.DataFrame</em>) – features</p></li>
+<li><p><strong>y</strong> (<em>pd.Series</em>) – target</p></li>
+<li><p><strong>cv</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>callable</em><em>]</em>) – cross-validation strategy</p></li>
+<li><p><strong>scoring</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>dict</em><em>]</em>) – scoring metric</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>loss</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.model.hyperoptimize.find_best_params">
+<span class="sig-prename descclassname"><span class="pre">src.model.hyperoptimize.</span></span><span class="sig-name descname"><span class="pre">find_best_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">objective</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stop_n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/model/hyperoptimize.html#find_best_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.model.hyperoptimize.find_best_params" title="Link to this definition"></a></dt>
+<dd><p>Search for the optimal model hyperparams using hyperopt.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>objective</strong> (<em>callable</em>) – objective function to minimize</p></li>
+<li><p><strong>space</strong> (<em>dict</em>) – hyperparameter ranges</p></li>
+<li><p><strong>max_evals</strong> (<em>int</em>) – number of evaluations to perform</p></li>
+<li><p><strong>early_stop_n</strong> (<em>int</em>) – number of iterations without improvement to stop</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>best hyperparameters</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.model.hyperoptimize.fix_param_dtypes">
+<span class="sig-prename descclassname"><span class="pre">src.model.hyperoptimize.</span></span><span class="sig-name descname"><span class="pre">fix_param_dtypes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">param_dtypes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/model/hyperoptimize.html#fix_param_dtypes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.model.hyperoptimize.fix_param_dtypes" title="Link to this definition"></a></dt>
+<dd><p>Fix types for best hyperparameters returned by hyperopt.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.model.hyperoptimize.hyperoptimize">
+<span class="sig-prename descclassname"><span class="pre">src.model.hyperoptimize.</span></span><span class="sig-name descname"><span class="pre">hyperoptimize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cv</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">scoring</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">objective=&lt;function</span> <span class="pre">crossval_objective&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_evals=100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">early_stop_n=15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/model/hyperoptimize.html#hyperoptimize"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.model.hyperoptimize.hyperoptimize" title="Link to this definition"></a></dt>
+<dd><p>Optimize model hyperparameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>model</strong> (<em>sklearn.base.BaseEstimator</em>) – estimator to test</p></li>
+<li><p><strong>objective</strong> (<em>callable</em>) – objective function to minimize</p></li>
+<li><p><strong>X</strong> (<em>pd.DataFrame</em>) – features</p></li>
+<li><p><strong>y</strong> (<em>pd.Series</em>) – target</p></li>
+<li><p><strong>cv</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>callable</em><em>]</em>) – cross-validation strategy</p></li>
+<li><p><strong>scoring</strong> (<em>Union</em><em>[</em><em>str</em><em>, </em><em>dict</em><em>]</em>) – scoring metric</p></li>
+<li><p><strong>space</strong> (<em>list</em><em>[</em><em>namedtuple</em><em>]</em>) – named tuples with the following fields:
+name, value, min, max, type</p></li>
+<li><p><strong>max_evals</strong> (<em>int</em>) – max number of evaluations to perform</p></li>
+<li><p><strong>early_stop_n</strong> (<em>int</em>) – number of iterations without improvement to stop</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>best hyperparameters</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.model.hyperoptimize.make_param_mapping">
+<span class="sig-prename descclassname"><span class="pre">src.model.hyperoptimize.</span></span><span class="sig-name descname"><span class="pre">make_param_mapping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mapper</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'calibratedclassifiercv__estimator__'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/model/hyperoptimize.html#make_param_mapping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.model.hyperoptimize.make_param_mapping" title="Link to this definition"></a></dt>
+<dd><p>Make a parameter space from a list of named tuples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>params</strong> (<em>list</em><em>[</em><em>namedtuple</em><em>]</em>) – named tuples with the following fields:
+name, value, min, max, type</p></li>
+<li><p><strong>mapper</strong> (<em>callable</em>) – a function that converts a named tuple to a key-value pair</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – the prefix to add to the key</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>hyperparameter space</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.model.hyperoptimize.map_name_to_param">
+<span class="sig-prename descclassname"><span class="pre">src.model.hyperoptimize.</span></span><span class="sig-name descname"><span class="pre">map_name_to_param</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/model/hyperoptimize.html#map_name_to_param"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.model.hyperoptimize.map_name_to_param" title="Link to this definition"></a></dt>
+<dd><p>Map a hyperparameter name to its distribution or value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>param</strong> (<em>namedtuple</em>) – a named tuple with the following fields:
+name, value, min, max</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – the prefix to add to the key</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a key-value pair for the hyperparameter</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.model.hyperoptimize.map_name_to_type">
+<span class="sig-prename descclassname"><span class="pre">src.model.hyperoptimize.</span></span><span class="sig-name descname"><span class="pre">map_name_to_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">param</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/model/hyperoptimize.html#map_name_to_type"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.model.hyperoptimize.map_name_to_type" title="Link to this definition"></a></dt>
+<dd><p>Map a hyperparameter name to its type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>param</strong> (<em>namedtuple</em>) – a named tuple with the following fields:
+name, type</p></li>
+<li><p><strong>prefix</strong> (<em>str</em>) – the prefix to add to the key</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>a key-value pair for the parameter type</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="src.model.evaluate.html" class="btn btn-neutral float-left" title="src.model.evaluate" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="src.model.pipeline.html" class="btn btn-neutral float-right" title="src.model.pipeline" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Kel Varnsen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

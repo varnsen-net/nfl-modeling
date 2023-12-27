@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.data.train.train &mdash; SWIFT  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="src.docs.build" href="src.docs.build.html" />
+    <link rel="prev" title="src.data.train.target" href="src.data.train.target.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SWIFT
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html">src.config.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.spaces.html">src.config.spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.ancillary.depth_charts.html">src.data.ancillary.depth_charts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.build.html">src.data.build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html">src.data.features.team_stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.travel.html">src.data.features.travel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.predict.predict.html">src.data.predict.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.raw.games.html">src.data.raw.games</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.raw.plays.html">src.data.raw.plays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.train.target.html">src.data.train.target</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">src.data.train.train</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.data.train.train.build_train"><code class="docutils literal notranslate"><span class="pre">build_train()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.data.train.train.merge_feature"><code class="docutils literal notranslate"><span class="pre">merge_feature()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.data.train.train.preprocess_raw_games"><code class="docutils literal notranslate"><span class="pre">preprocess_raw_games()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.data.train.train.reduce_training_cols"><code class="docutils literal notranslate"><span class="pre">reduce_training_cols()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.docs.build.html">src.docs.build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.estimators.html">src.model.estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.evaluate.html">src.model.evaluate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.hyperoptimize.html">src.model.hyperoptimize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.pipeline.html">src.model.pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.predict.html">src.model.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.process.html">src.model.process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.train.html">src.model.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.plot.html">src.plot.plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.style.html">src.plot.style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.utils.html">src.utils</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SWIFT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">src.data.train.train</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/src.data.train.train.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-src.data.train.train">
+<span id="src-data-train-train"></span><h1>src.data.train.train<a class="headerlink" href="#module-src.data.train.train" title="Link to this heading"></a></h1>
+<p>Helper functions for building the training data.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="src.data.train.train.build_train">
+<span class="sig-prename descclassname"><span class="pre">src.data.train.train.</span></span><span class="sig-name descname"><span class="pre">build_train</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">games_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_games_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/train/train.html#build_train"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.train.train.build_train" title="Link to this definition"></a></dt>
+<dd><p>Build the training data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>games_cols</strong> – <em>list of str</em>
+List of columns to keep from the games dataframe.</p></li>
+<li><p><strong>raw_games_path</strong> – <em>str</em>
+Path to the raw games data.</p></li>
+<li><p><strong>features_path</strong> – <em>str</em>
+Path to the directory containing the features.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>pd.DataFrame of shape (n_games, n_cols)</em>
+Training data.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.data.train.train.merge_feature">
+<span class="sig-prename descclassname"><span class="pre">src.data.train.train.</span></span><span class="sig-name descname"><span class="pre">merge_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/train/train.html#merge_feature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.train.train.merge_feature" title="Link to this definition"></a></dt>
+<dd><p>Merge a feature into the training data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>train</strong> – <em>pd.DataFrame of shape (n_games, n_cols)</em>
+Training data.</p></li>
+<li><p><strong>feature</strong> – <em>pd.DataFrame</em>
+Feature to merge into the training data.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>pd.DataFrame of shape (n_games, n_cols)</em>
+Training data with the feature merged in.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.data.train.train.preprocess_raw_games">
+<span class="sig-prename descclassname"><span class="pre">src.data.train.train.</span></span><span class="sig-name descname"><span class="pre">preprocess_raw_games</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">games</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/train/train.html#preprocess_raw_games"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.train.train.preprocess_raw_games" title="Link to this definition"></a></dt>
+<dd><p>Reduce the raw games dataframe.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>games</strong> – <em>pd.DataFrame of shape (n_games, n_cols)</em>
+Raw games dataframe.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>pd.DataFrame of shape (n_games, n_cols)</em>
+Processed games dataframe.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.data.train.train.reduce_training_cols">
+<span class="sig-prename descclassname"><span class="pre">src.data.train.train.</span></span><span class="sig-name descname"><span class="pre">reduce_training_cols</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">games</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">games_cols</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/train/train.html#reduce_training_cols"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.train.train.reduce_training_cols" title="Link to this definition"></a></dt>
+<dd><p>Reduce the games data to only the columns that will be used for
+training.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>games</strong> – <em>pd.DataFrame of shape (n_games, n_cols)</em>
+Games dataframe.</p></li>
+<li><p><strong>games_cols</strong> – <em>list of str</em>
+List of columns to keep from the games dataframe.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>pd.DataFrame of shape (n_games, n_cols)</em>
+Games dataframe with only the columns that will be used for
+training.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="src.data.train.target.html" class="btn btn-neutral float-left" title="src.data.train.target" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="src.docs.build.html" class="btn btn-neutral float-right" title="src.docs.build" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Kel Varnsen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

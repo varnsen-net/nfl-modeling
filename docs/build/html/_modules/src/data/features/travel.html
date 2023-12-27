@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.data.features.travel &mdash; SWIFT  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SWIFT
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SWIFT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.data.features.travel</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.data.features.travel</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Helper functions for building engineered features for team travel.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">json</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="get_city_coordinates">
+<a class="viewcode-back" href="../../../../api/src.data.features.travel.html#src.data.features.travel.get_city_coordinates">[docs]</a>
+<span class="k">def</span> <span class="nf">get_city_coordinates</span><span class="p">(</span><span class="n">teams</span><span class="p">,</span> <span class="n">loc_replacements</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a dataframe with the decimal latitude and longitude for every</span>
+<span class="sd">    NFL team city in the Sharpe teams data.</span>
+
+<span class="sd">    Mostly saving this just for reference. I only need to run it once.</span>
+<span class="sd">    </span>
+<span class="sd">    :param teams: *pd.DataFrame of shape (32, 2)*</span>
+<span class="sd">        The Sharpe teams data.</span>
+<span class="sd">    :param loc_replacements: *dict*</span>
+<span class="sd">        Dictionary of location replacements.</span>
+<span class="sd">    :return: *pd.DataFrame of shape (32, 3)*</span>
+<span class="sd">        Dataframe with the decimal latitude and longitude for every NFL team</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cities</span> <span class="o">=</span> <span class="n">teams</span><span class="p">[</span><span class="s1">&#39;location&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span>
+    <span class="n">cities</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">cities</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;location&#39;</span><span class="p">)</span>
+    <span class="n">cities_adj</span> <span class="o">=</span> <span class="n">cities</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">loc_replacements</span><span class="p">)</span>
+    <span class="n">lat</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">lon</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">city</span> <span class="ow">in</span> <span class="n">cities_adj</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">city</span><span class="p">)</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;https://nominatim.openstreetmap.org/search?q=</span><span class="si">{</span><span class="n">city</span><span class="si">}</span><span class="s1">&amp;format=json&#39;</span>
+        <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+        <span class="n">lat</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;lat&#39;</span><span class="p">])</span>
+        <span class="n">lon</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="s1">&#39;lon&#39;</span><span class="p">])</span>
+    <span class="n">city_coords</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;city&#39;</span><span class="p">:</span><span class="n">cities</span><span class="p">,</span> <span class="s1">&#39;lat&#39;</span><span class="p">:</span><span class="n">lat</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">:</span><span class="n">lon</span><span class="p">})</span>
+    <span class="n">city_coords</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">cities</span><span class="p">,</span> <span class="n">city_coords</span><span class="p">[[</span><span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]]],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">city_coords</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_distances">
+<a class="viewcode-back" href="../../../../api/src.data.features.travel.html#src.data.features.travel.calculate_distances">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_distances</span><span class="p">(</span><span class="n">home_coords</span><span class="p">,</span> <span class="n">away_coords</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates the distance between two arrays of lat/lon coordinate pairs.</span>
+
+<span class="sd">    :param home_coords: *np.array of shape (n, 2)*</span>
+<span class="sd">        Home lat/lon coordinates.</span>
+<span class="sd">    :param away_coords: *np.array of shape (n, 2)*</span>
+<span class="sd">        Away lat/lon coordinates.</span>
+<span class="sd">    :return: *np.array of shape (n,)*</span>
+<span class="sd">        Distances for each pair of lat/lon coordinates (km).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">R</span> <span class="o">=</span> <span class="mf">6373.0</span>
+    <span class="n">lat1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">home_coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">lon1</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">home_coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">lat2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">away_coords</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+    <span class="n">lon2</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">radians</span><span class="p">(</span><span class="n">away_coords</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+    <span class="n">dlon</span> <span class="o">=</span> <span class="n">lon2</span> <span class="o">-</span> <span class="n">lon1</span>
+    <span class="n">dlat</span> <span class="o">=</span> <span class="n">lat2</span> <span class="o">-</span> <span class="n">lat1</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">dlat</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat1</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">lat2</span><span class="p">)</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">dlon</span> <span class="o">/</span> <span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">arctan2</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">a</span><span class="p">))</span>
+    <span class="n">distance</span> <span class="o">=</span> <span class="n">R</span> <span class="o">*</span> <span class="n">c</span>
+    <span class="k">return</span> <span class="n">distance</span></div>
+
+
+
+<div class="viewcode-block" id="attach_lats_lons">
+<a class="viewcode-back" href="../../../../api/src.data.features.travel.html#src.data.features.travel.attach_lats_lons">[docs]</a>
+<span class="k">def</span> <span class="nf">attach_lats_lons</span><span class="p">(</span><span class="n">games</span><span class="p">,</span> <span class="n">city_coords</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge the city coordinates onto the games dataframe.</span>
+<span class="sd">    </span>
+<span class="sd">    :param games: *pd.DataFrame of shape (n_rows, n_cols)*</span>
+<span class="sd">        Raw games data.</span>
+<span class="sd">    :param city_coords: *pd.DataFrame of shape (32, 3)*</span>
+<span class="sd">    :return: *pd.DataFrame of shape (n, 7)*</span>
+<span class="sd">        Games data with latitude and longitude for each team.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">games</span> <span class="o">=</span> <span class="p">(</span><span class="n">games</span>
+             <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">city_coords</span><span class="p">[[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]],</span> 
+                    <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;away_team&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">)</span>
+             <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">])</span>
+             <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">city_coords</span><span class="p">[[</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="s1">&#39;lat&#39;</span><span class="p">,</span> <span class="s1">&#39;lon&#39;</span><span class="p">]],</span>
+                    <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;home_team&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;name&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;left&#39;</span><span class="p">,</span>
+                    <span class="n">suffixes</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;_away&#39;</span><span class="p">,</span> <span class="s1">&#39;_home&#39;</span><span class="p">])</span>
+             <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;name&#39;</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">games</span></div>
+
+
+
+<div class="viewcode-block" id="get_away_travel_distances">
+<a class="viewcode-back" href="../../../../api/src.data.features.travel.html#src.data.features.travel.get_away_travel_distances">[docs]</a>
+<span class="k">def</span> <span class="nf">get_away_travel_distances</span><span class="p">(</span><span class="n">games</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the distance traveled by the away team for each game.</span>
+<span class="sd">    </span>
+<span class="sd">    :param games: *pd.DataFrame of shape (n_rows, n_cols)*</span>
+<span class="sd">        Raw games data.</span>
+<span class="sd">    :param name: *str*</span>
+<span class="sd">        Name of the travel feature.</span>
+<span class="sd">    :return: *pd.DataFrame of shape (n_rows, 3)*</span>
+<span class="sd">        Dataframe with the travel distances for each game.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">away_colname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;away_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">home_colname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;home_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">home_coords</span> <span class="o">=</span> <span class="n">games</span><span class="p">[[</span><span class="s1">&#39;lat_home&#39;</span><span class="p">,</span> <span class="s1">&#39;lon_home&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">away_coords</span> <span class="o">=</span> <span class="n">games</span><span class="p">[[</span><span class="s1">&#39;lat_away&#39;</span><span class="p">,</span> <span class="s1">&#39;lon_away&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">games</span><span class="p">[</span><span class="n">away_colname</span><span class="p">]</span> <span class="o">=</span> <span class="n">calculate_distances</span><span class="p">(</span><span class="n">home_coords</span><span class="p">,</span> <span class="n">away_coords</span><span class="p">)</span>
+    <span class="n">games</span><span class="p">[</span><span class="n">home_colname</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">away_travel_distances</span> <span class="o">=</span> <span class="p">(</span><span class="n">games</span><span class="p">[[</span><span class="s1">&#39;game_id&#39;</span><span class="p">,</span> <span class="n">away_colname</span><span class="p">,</span> <span class="n">home_colname</span><span class="p">]]</span>
+                             <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;game_id&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">away_travel_distances</span></div>
+
+
+
+<div class="viewcode-block" id="get_away_lon_deltas">
+<a class="viewcode-back" href="../../../../api/src.data.features.travel.html#src.data.features.travel.get_away_lon_deltas">[docs]</a>
+<span class="k">def</span> <span class="nf">get_away_lon_deltas</span><span class="p">(</span><span class="n">games</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the difference in longitude between the home and away teams.</span>
+
+<span class="sd">    :param games: *pd.DataFrame of shape (n_rows, n_cols)*</span>
+<span class="sd">        Raw games data.</span>
+<span class="sd">    :param name: *str*</span>
+<span class="sd">        Name of the travel feature.</span>
+<span class="sd">    :return: *pd.DataFrame of shape (n_rows, 3)*</span>
+<span class="sd">        Dataframe with the longitude deltas for each game.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">away_colname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;away_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">home_colname</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;home_</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">games</span><span class="p">[</span><span class="n">away_colname</span><span class="p">]</span> <span class="o">=</span> <span class="n">games</span><span class="p">[</span><span class="s1">&#39;lon_home&#39;</span><span class="p">]</span> <span class="o">-</span> <span class="n">games</span><span class="p">[</span><span class="s1">&#39;lon_away&#39;</span><span class="p">]</span>
+    <span class="n">games</span><span class="p">[</span><span class="n">home_colname</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">away_lon_deltas</span> <span class="o">=</span> <span class="p">(</span><span class="n">games</span><span class="p">[[</span><span class="s1">&#39;game_id&#39;</span><span class="p">,</span> <span class="n">away_colname</span><span class="p">,</span> <span class="n">home_colname</span><span class="p">]]</span>
+                             <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;game_id&#39;</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">away_lon_deltas</span></div>
+
+
+
+<div class="viewcode-block" id="build_travel_features">
+<a class="viewcode-back" href="../../../../api/src.data.features.travel.html#src.data.features.travel.build_travel_features">[docs]</a>
+<span class="k">def</span> <span class="nf">build_travel_features</span><span class="p">(</span><span class="n">raw_games_path</span><span class="p">,</span> <span class="n">city_coords_path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build engineered features for team travel.</span>
+
+<span class="sd">    :param raw_games_path: *str*</span>
+<span class="sd">        Path to the raw games data.</span>
+<span class="sd">    :param city_coords_path: *str*</span>
+<span class="sd">        Path to the city coordinates data.</span>
+<span class="sd">    :param output_dir: *str*</span>
+<span class="sd">        Path to the output directory.</span>
+<span class="sd">    :return: *None*</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">games</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">raw_games_path</span><span class="p">)</span>
+    <span class="n">city_coords</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">city_coords_path</span><span class="p">)</span>
+    <span class="n">away_travel_distance_name</span> <span class="o">=</span> <span class="s2">&quot;travel_distance&quot;</span>
+    <span class="n">games</span> <span class="o">=</span> <span class="n">attach_lats_lons</span><span class="p">(</span><span class="n">games</span><span class="p">,</span> <span class="n">city_coords</span><span class="p">)</span>
+    <span class="n">away_travel_distances</span> <span class="o">=</span> <span class="n">get_away_travel_distances</span><span class="p">(</span><span class="n">games</span><span class="p">,</span> <span class="n">away_travel_distance_name</span><span class="p">)</span>
+    <span class="n">away_travel_distances</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">away_travel_distance_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">)</span>
+    <span class="n">away_lon_delta_name</span> <span class="o">=</span> <span class="s2">&quot;lon_delta&quot;</span>
+    <span class="n">away_lon_deltas</span> <span class="o">=</span> <span class="n">get_away_lon_deltas</span><span class="p">(</span><span class="n">games</span><span class="p">,</span> <span class="n">away_lon_delta_name</span><span class="p">)</span>
+    <span class="n">away_lon_deltas</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">output_dir</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">away_lon_delta_name</span><span class="si">}</span><span class="s2">.csv&quot;</span><span class="p">)</span>
+    <span class="k">return</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Kel Varnsen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

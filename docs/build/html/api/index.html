@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API Reference &mdash; SWIFT  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="src.config.config" href="src.config.config.html" />
+    <link rel="prev" title="Usage" href="../usage.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SWIFT
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html">src.config.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.spaces.html">src.config.spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.ancillary.depth_charts.html">src.data.ancillary.depth_charts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.build.html">src.data.build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html">src.data.features.team_stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.travel.html">src.data.features.travel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.predict.predict.html">src.data.predict.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.raw.games.html">src.data.raw.games</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.raw.plays.html">src.data.raw.plays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.train.target.html">src.data.train.target</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.train.train.html">src.data.train.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.docs.build.html">src.docs.build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.estimators.html">src.model.estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.evaluate.html">src.model.evaluate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.hyperoptimize.html">src.model.hyperoptimize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.pipeline.html">src.model.pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.predict.html">src.model.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.process.html">src.model.process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.train.html">src.model.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.plot.html">src.plot.plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.style.html">src.plot.style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.utils.html">src.utils</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SWIFT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">API Reference</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="api-reference">
+<h1>API Reference<a class="headerlink" href="#api-reference" title="Link to this heading"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="src.config.config.html">src.config.config</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html#src.config.config.CURRENT_SEASON"><code class="docutils literal notranslate"><span class="pre">CURRENT_SEASON</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html#src.config.config.CURRENT_WEEK"><code class="docutils literal notranslate"><span class="pre">CURRENT_WEEK</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html#src.config.config.CV_TEST_SIZE"><code class="docutils literal notranslate"><span class="pre">CV_TEST_SIZE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html#src.config.config.CV_TRAIN_SIZE"><code class="docutils literal notranslate"><span class="pre">CV_TRAIN_SIZE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html#src.config.config.DEFAULT_PARAM_PREFIX"><code class="docutils literal notranslate"><span class="pre">DEFAULT_PARAM_PREFIX</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html#src.config.config.EARLY_STOP_N"><code class="docutils literal notranslate"><span class="pre">EARLY_STOP_N</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html#src.config.config.FEATURE_PRECISIONS"><code class="docutils literal notranslate"><span class="pre">FEATURE_PRECISIONS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html#src.config.config.LOOKBACK_WINDOW"><code class="docutils literal notranslate"><span class="pre">LOOKBACK_WINDOW</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html#src.config.config.MAX_EVALS"><code class="docutils literal notranslate"><span class="pre">MAX_EVALS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html#src.config.config.PASSING_AGGS"><code class="docutils literal notranslate"><span class="pre">PASSING_AGGS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html#src.config.config.PATHS"><code class="docutils literal notranslate"><span class="pre">PATHS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html#src.config.config.PROJ_ROOT"><code class="docutils literal notranslate"><span class="pre">PROJ_ROOT</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html#src.config.config.RAW_DATA_URLS"><code class="docutils literal notranslate"><span class="pre">RAW_DATA_URLS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html#src.config.config.RUSHING_AGGS"><code class="docutils literal notranslate"><span class="pre">RUSHING_AGGS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html#src.config.config.SCORING_METRIC"><code class="docutils literal notranslate"><span class="pre">SCORING_METRIC</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html#src.config.config.TRAINING"><code class="docutils literal notranslate"><span class="pre">TRAINING</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.config.spaces.html">src.config.spaces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.config.spaces.html#src.config.spaces.BASELINE_PARAMS"><code class="docutils literal notranslate"><span class="pre">BASELINE_PARAMS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.spaces.html#src.config.spaces.LIGHTGBM_SPACE"><code class="docutils literal notranslate"><span class="pre">LIGHTGBM_SPACE</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.spaces.html#src.config.spaces.param"><code class="docutils literal notranslate"><span class="pre">param</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="src.config.spaces.html#src.config.spaces.param.max"><code class="docutils literal notranslate"><span class="pre">param.max</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.config.spaces.html#src.config.spaces.param.min"><code class="docutils literal notranslate"><span class="pre">param.min</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.config.spaces.html#src.config.spaces.param.name"><code class="docutils literal notranslate"><span class="pre">param.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.config.spaces.html#src.config.spaces.param.type"><code class="docutils literal notranslate"><span class="pre">param.type</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="src.config.spaces.html#src.config.spaces.param.value"><code class="docutils literal notranslate"><span class="pre">param.value</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.data.ancillary.depth_charts.html">src.data.ancillary.depth_charts</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.data.build.html">src.data.build</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.data.build.html#src.data.build.build_features"><code class="docutils literal notranslate"><span class="pre">build_features()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.build.html#src.data.build.build_train_and_test_data"><code class="docutils literal notranslate"><span class="pre">build_train_and_test_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.build.html#src.data.build.refresh_raw_data"><code class="docutils literal notranslate"><span class="pre">refresh_raw_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.build.html#src.data.build.split_data"><code class="docutils literal notranslate"><span class="pre">split_data()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.data.features.team_stats.html">src.data.features.team_stats</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html#src.data.features.team_stats.adjust_for_opponent"><code class="docutils literal notranslate"><span class="pre">adjust_for_opponent()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html#src.data.features.team_stats.aggregate_efficiency_stats"><code class="docutils literal notranslate"><span class="pre">aggregate_efficiency_stats()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html#src.data.features.team_stats.assemble_play_type_features"><code class="docutils literal notranslate"><span class="pre">assemble_play_type_features()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html#src.data.features.team_stats.build_team_stats_features"><code class="docutils literal notranslate"><span class="pre">build_team_stats_features()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html#src.data.features.team_stats.calculate_avgs"><code class="docutils literal notranslate"><span class="pre">calculate_avgs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html#src.data.features.team_stats.calculate_squad_aggs"><code class="docutils literal notranslate"><span class="pre">calculate_squad_aggs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html#src.data.features.team_stats.flatten_columns"><code class="docutils literal notranslate"><span class="pre">flatten_columns()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html#src.data.features.team_stats.flip_defense_stat_signs"><code class="docutils literal notranslate"><span class="pre">flip_defense_stat_signs()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html#src.data.features.team_stats.make_base_points_data"><code class="docutils literal notranslate"><span class="pre">make_base_points_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html#src.data.features.team_stats.make_points_features"><code class="docutils literal notranslate"><span class="pre">make_points_features()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html#src.data.features.team_stats.reframe_team_as_opponent"><code class="docutils literal notranslate"><span class="pre">reframe_team_as_opponent()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html#src.data.features.team_stats.write_cols_to_file"><code class="docutils literal notranslate"><span class="pre">write_cols_to_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.data.features.travel.html">src.data.features.travel</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.travel.html#src.data.features.travel.attach_lats_lons"><code class="docutils literal notranslate"><span class="pre">attach_lats_lons()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.travel.html#src.data.features.travel.build_travel_features"><code class="docutils literal notranslate"><span class="pre">build_travel_features()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.travel.html#src.data.features.travel.calculate_distances"><code class="docutils literal notranslate"><span class="pre">calculate_distances()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.travel.html#src.data.features.travel.get_away_lon_deltas"><code class="docutils literal notranslate"><span class="pre">get_away_lon_deltas()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.travel.html#src.data.features.travel.get_away_travel_distances"><code class="docutils literal notranslate"><span class="pre">get_away_travel_distances()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.travel.html#src.data.features.travel.get_city_coordinates"><code class="docutils literal notranslate"><span class="pre">get_city_coordinates()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.data.predict.predict.html">src.data.predict.predict</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.data.predict.predict.html#src.data.predict.predict.build_prediction_data"><code class="docutils literal notranslate"><span class="pre">build_prediction_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.predict.predict.html#src.data.predict.predict.get_most_recent_dir"><code class="docutils literal notranslate"><span class="pre">get_most_recent_dir()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.predict.predict.html#src.data.predict.predict.merge_most_recent_feature"><code class="docutils literal notranslate"><span class="pre">merge_most_recent_feature()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.data.raw.games.html">src.data.raw.games</a></li>
+<li class="toctree-l1"><a class="reference internal" href="src.data.raw.plays.html">src.data.raw.plays</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.data.raw.plays.html#src.data.raw.plays.fetch_pbp_data"><code class="docutils literal notranslate"><span class="pre">fetch_pbp_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.raw.plays.html#src.data.raw.plays.find_missing_seasons"><code class="docutils literal notranslate"><span class="pre">find_missing_seasons()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.raw.plays.html#src.data.raw.plays.refresh_plays_data"><code class="docutils literal notranslate"><span class="pre">refresh_plays_data()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.data.train.target.html">src.data.train.target</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.data.train.target.html#src.data.train.target.build_target"><code class="docutils literal notranslate"><span class="pre">build_target()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.train.target.html#src.data.train.target.make_target_col"><code class="docutils literal notranslate"><span class="pre">make_target_col()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.data.train.train.html">src.data.train.train</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.data.train.train.html#src.data.train.train.build_train"><code class="docutils literal notranslate"><span class="pre">build_train()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.train.train.html#src.data.train.train.merge_feature"><code class="docutils literal notranslate"><span class="pre">merge_feature()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.train.train.html#src.data.train.train.preprocess_raw_games"><code class="docutils literal notranslate"><span class="pre">preprocess_raw_games()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.train.train.html#src.data.train.train.reduce_training_cols"><code class="docutils literal notranslate"><span class="pre">reduce_training_cols()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.docs.build.html">src.docs.build</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.docs.build.html#src.docs.build.build_modules_markdown"><code class="docutils literal notranslate"><span class="pre">build_modules_markdown()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.docs.build.html#src.docs.build.fetch_module_docs"><code class="docutils literal notranslate"><span class="pre">fetch_module_docs()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.model.estimators.html">src.model.estimators</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.model.estimators.html#src.model.estimators.baseline_estimator"><code class="docutils literal notranslate"><span class="pre">baseline_estimator()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.estimators.html#src.model.estimators.swift_estimator"><code class="docutils literal notranslate"><span class="pre">swift_estimator()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.model.evaluate.html">src.model.evaluate</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.model.evaluate.html#src.model.evaluate.append_array_to_scores"><code class="docutils literal notranslate"><span class="pre">append_array_to_scores()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.evaluate.html#src.model.evaluate.compile_scores"><code class="docutils literal notranslate"><span class="pre">compile_scores()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.evaluate.html#src.model.evaluate.custom_cv"><code class="docutils literal notranslate"><span class="pre">custom_cv()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.evaluate.html#src.model.evaluate.custom_scorer"><code class="docutils literal notranslate"><span class="pre">custom_scorer()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.evaluate.html#src.model.evaluate.evaluate_model"><code class="docutils literal notranslate"><span class="pre">evaluate_model()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.model.hyperoptimize.html">src.model.hyperoptimize</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.model.hyperoptimize.html#src.model.hyperoptimize.crossval_objective"><code class="docutils literal notranslate"><span class="pre">crossval_objective()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.hyperoptimize.html#src.model.hyperoptimize.find_best_params"><code class="docutils literal notranslate"><span class="pre">find_best_params()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.hyperoptimize.html#src.model.hyperoptimize.fix_param_dtypes"><code class="docutils literal notranslate"><span class="pre">fix_param_dtypes()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.hyperoptimize.html#src.model.hyperoptimize.hyperoptimize"><code class="docutils literal notranslate"><span class="pre">hyperoptimize()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.hyperoptimize.html#src.model.hyperoptimize.make_param_mapping"><code class="docutils literal notranslate"><span class="pre">make_param_mapping()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.hyperoptimize.html#src.model.hyperoptimize.map_name_to_param"><code class="docutils literal notranslate"><span class="pre">map_name_to_param()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.hyperoptimize.html#src.model.hyperoptimize.map_name_to_type"><code class="docutils literal notranslate"><span class="pre">map_name_to_type()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.model.pipeline.html">src.model.pipeline</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.model.pipeline.html#src.model.pipeline.build_baseline_pipeline"><code class="docutils literal notranslate"><span class="pre">build_baseline_pipeline()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.pipeline.html#src.model.pipeline.build_swift_pipeline"><code class="docutils literal notranslate"><span class="pre">build_swift_pipeline()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.model.predict.html">src.model.predict</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.model.predict.html#src.model.predict.voting_classifier"><code class="docutils literal notranslate"><span class="pre">voting_classifier()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.model.process.html">src.model.process</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.model.process.html#src.model.process.preprocess"><code class="docutils literal notranslate"><span class="pre">preprocess()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.process.html#src.model.process.reduce_columns"><code class="docutils literal notranslate"><span class="pre">reduce_columns()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.process.html#src.model.process.set_precision"><code class="docutils literal notranslate"><span class="pre">set_precision()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.process.html#src.model.process.transform_home_away_structure"><code class="docutils literal notranslate"><span class="pre">transform_home_away_structure()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.model.train.html">src.model.train</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.model.train.html#src.model.train.create_datetime_id"><code class="docutils literal notranslate"><span class="pre">create_datetime_id()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.train.html#src.model.train.make_save_path"><code class="docutils literal notranslate"><span class="pre">make_save_path()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.plot.plot.html">src.plot.plot</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.plot.html#src.plot.plot.make_and_save_plots"><code class="docutils literal notranslate"><span class="pre">make_and_save_plots()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.plot.html#src.plot.plot.make_plot_data"><code class="docutils literal notranslate"><span class="pre">make_plot_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.plot.html#src.plot.plot.plot_confusion_matrix"><code class="docutils literal notranslate"><span class="pre">plot_confusion_matrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.plot.html#src.plot.plot.plot_test_calibration"><code class="docutils literal notranslate"><span class="pre">plot_test_calibration()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.plot.html#src.plot.plot.plot_train_calibration"><code class="docutils literal notranslate"><span class="pre">plot_train_calibration()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.plot.html#src.plot.plot.test_plot"><code class="docutils literal notranslate"><span class="pre">test_plot()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.plot.style.html">src.plot.style</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.style.html#src.plot.style.PALETTES"><code class="docutils literal notranslate"><span class="pre">PALETTES</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.style.html#src.plot.style.RCPARAMS"><code class="docutils literal notranslate"><span class="pre">RCPARAMS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.style.html#src.plot.style.TEAM_COLORS"><code class="docutils literal notranslate"><span class="pre">TEAM_COLORS</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.style.html#src.plot.style.hex_to_rgb"><code class="docutils literal notranslate"><span class="pre">hex_to_rgb()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.style.html#src.plot.style.register_colormaps"><code class="docutils literal notranslate"><span class="pre">register_colormaps()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.style.html#src.plot.style.set_plot_params"><code class="docutils literal notranslate"><span class="pre">set_plot_params()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="src.utils.html">src.utils</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="src.utils.html#src.utils.fix_game_times"><code class="docutils literal notranslate"><span class="pre">fix_game_times()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.utils.html#src.utils.get_date_n_days_out"><code class="docutils literal notranslate"><span class="pre">get_date_n_days_out()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.utils.html#src.utils.get_kickoff_hours"><code class="docutils literal notranslate"><span class="pre">get_kickoff_hours()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.utils.html#src.utils.map_team_data_to_games"><code class="docutils literal notranslate"><span class="pre">map_team_data_to_games()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.utils.html#src.utils.refresh_raw_data"><code class="docutils literal notranslate"><span class="pre">refresh_raw_data()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.utils.html#src.utils.shift_week_number"><code class="docutils literal notranslate"><span class="pre">shift_week_number()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.utils.html#src.utils.walk_features_dir"><code class="docutils literal notranslate"><span class="pre">walk_features_dir()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../usage.html" class="btn btn-neutral float-left" title="Usage" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="src.config.config.html" class="btn btn-neutral float-right" title="src.config.config" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Kel Varnsen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

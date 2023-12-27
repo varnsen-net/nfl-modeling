@@ -12,13 +12,15 @@ import pandas as pd
 def fix_game_times(games):
     """Cleans the gametime column.
 
-    - Impute missing game times based on weekday column. Games on Sunday are
+    Impute missing game times based on weekday column. Games on Sunday are
     imputed to start at 13:00. Games on Monday are imputed to start at 20:15.
-    - Replace 9:00 with 21:00.
 
-    :param pd.DataFrame games: sharpe games dataframe
-    :return: games dataframe with imputed game times
-    :rtype: pd.DataFrame
+    Replace 9:00 with 21:00.
+
+    :param games: Raw games dataframe.
+    :type games: pd.DataFrame
+    :return: Cleaned game times.
+    :rtype: pd.Series
     """
     times = games[['gametime', 'weekday']].copy()
     filter = times['gametime'].isna()

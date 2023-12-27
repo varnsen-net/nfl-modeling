@@ -26,12 +26,11 @@ from src.config.config import (TRAINING,
 def split_data(df, holdout_year):
     """Divide a full set of features into training and holdout data.
 
-    :param df: *pd.DataFrame of shape (n_samples, n_features)*
-        Full set of features data.
-    :param holdout_year: *int*
-        Starting season of holdout data (inclusive).
-    :return: *(pd.DataFrame, pd.DataFrame)*
-        Training and holdout data
+    :param df: Full set of features data.
+    :type df: pd.DataFrame of shape (n_samples, n_features)
+    :param int holdout_year: Starting season of holdout data (inclusive).
+    :return: Training and holdout data
+    :rtype: (pd.DataFrame, pd.DataFrame) 
     """
     train = df.loc[df["season"] < holdout_year]
     holdout = df.loc[df["season"] >= holdout_year]
@@ -42,17 +41,13 @@ def refresh_raw_data(games_url, raw_games_path, current_season, plays_url,
                      raw_plays_path):
     """Fetch raw data from web sources and save to local paths.
 
-    :param games_url: *str*
-        URL of raw games repository.
-    :param raw_games_path: *str*
-        Path to save raw games data.
-    :param current_season: *int*
-        Current season, e.g. 2023.
-    :param plays_url: *str*
-        URL of raw plays repository.
-    :param raw_plays_path: *str*
-        Path to save raw plays data.
-    :return: *None*
+    :param str games_url: URL to fetch raw games data.
+    :param str raw_games_path: Path to save raw games data.
+    :param int current_season: Current season of NFL.
+    :param str plays_url: URL to fetch raw play-by-play data.
+    :param str raw_plays_path: Path to save raw play-by-play data.
+    :return: None
+    :rtype: None
     """
     print('Refreshing raw games data...')
     refresh_games_data(games_url, raw_games_path)
@@ -65,15 +60,12 @@ def build_features(features_path, raw_games_path, raw_plays_path,
                    city_coords_path):
     """Build features from raw data and save to local paths.
     
-    :param features_path: *str*
-        Path to save features data.
-    :param raw_games_path: *str*
-        Path to raw games data.
-    :param raw_plays_path: *str*
-        Path to raw play-by-play data.
-    :param city_coords_path: *str*
-        Path to local city coordinates data. Required to build travel distances.
-    :return: *None*
+    :param str features_path: Path to save features data.
+    :param str raw_games_path: Path to raw games data.
+    :param str raw_plays_path: Path to raw play-by-play data.
+    :param str city_coords_path: Path to city coordinates data.
+    :return: None
+    :rtype: None
     """
     features_path = pathlib.Path(features_path)
     print('Building team stats features...')
@@ -93,19 +85,14 @@ def build_train_and_test_data(train_path, test_path, games_cols, raw_games_path,
                               features_path, holdout_year):
     """Build training and testing data from raw data and save to local paths.
     
-    :param train_path: *str*
-        Path to save training data.
-    :param test_path: *str*
-        Path to save testing data.
-    :param games_cols: *list*
-        List of columns to keep from raw games data.
-    :param raw_games_path: *str*
-        Path to raw games data.
-    :param features_path: *str*
-        Path to features data.
-    :param holdout_year: *int*
-        Starting season of holdout data (inclusive).
-    :return: *None*
+    :param str train_path: Path to save training data.
+    :param str test_path: Path to save testing data.
+    :param list games_cols: Columns to keep from raw games data.
+    :param str raw_games_path: Path to raw games data.
+    :param str features_path: Path to features data.
+    :param int holdout_year: Starting season of holdout data (inclusive).
+    :return: None
+    :rtype: None
     """
     print('Building training and test data...')
     os.makedirs(train_path, exist_ok=True)

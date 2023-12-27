@@ -10,10 +10,10 @@ from src.config.config import LOOKBACK_WINDOW, PASSING_AGGS, RUSHING_AGGS
 def flatten_columns(df):
     """Flatten the multi-level columns of an aggregation dataframe.
     
-    :param df: *pd.DataFrame of shape (n_samples, n_features)*
-        Aggregations result with multi-index columns.
-    :return: *pd.DataFrame of shape (n_samples, n_features)*
-        Aggregations with flattened columns.
+    :param df: Aggregations result with multi-index columns.
+    :type df: pd.DataFrame of shape (n_samples, n_features)
+    :return: Aggregations with flattened columns.
+    :rtype: pd.DataFrame of shape (n_samples, n_features)
     """
     df.columns = ['_'.join(col).strip() for col in df.columns.values]
     return df
@@ -22,11 +22,11 @@ def flatten_columns(df):
 def write_cols_to_file(features, output_dir):
     """Write each feature to a separate csv file.
     
-    :param features: *pd.DataFrame of shape (n_samples, n_features)*
-        Engineered features. Must have columns 'team', 'week', and 'season'.
-    :param output_dir: *str*
-        Directory to write csv files to.
-    :return: *None*
+    :param features: Engineered features. Must have columns 'team', 'week', and 'season'.
+    :type features: pd.DataFrame of shape (n_samples, n_features)
+    :param str output_dir: Directory to write csv files to.
+    :return: None
+    :rtype: None
     """
     for col in features.columns:
         if col not in ['team', 'week', 'season']:
@@ -38,10 +38,10 @@ def write_cols_to_file(features, output_dir):
 def reframe_team_as_opponent(df):
     """Transform a df index such that 'team' is now 'opponent'.
     
-    :param df: *pd.DataFrame of shape (n_samples, n_features)*
-        Dataframe with season/team/week/opponent multiindex.
-    :return: *pd.DataFrame of shape (n_samples, n_features)*
-        Dataframe with season/opponent/week multiindex.
+    :param df: Dataframe with season/team/week multiindex.
+    :type df: pd.DataFrame of shape (n_samples, n_features)
+    :return: Dataframe with season/opponent/week multiindex.
+    :rtype: pd.DataFrame of shape (n_samples, n_features)
     """
     df = df.droplevel('opponent')
     df.index = df.index.rename({'team': 'opponent'})
@@ -53,10 +53,10 @@ def make_base_points_data(games):
     """Build base points data (e.g. points for and against) for feature
     creation.
     
-    :param games: *pd.DataFrame of shape (n_games, n_features)*
-        Raw games data.
-    :return: *pd.DataFrame of shape (n_samples, 5)*
-        Points for/against indexed by season, team, and week.
+    :param games: Raw games data.
+    :type games: pd.DataFrame of shape (n_games, n_features)
+    :return: Points for/against indexed by season, team, and week.
+    :rtype: pd.DataFrame of shape (n_samples, 5)
     """
     home_teams = games[['season', 'week', 'home_team', 'away_team', 'home_score', 'away_score']]
     away_teams = games[['season', 'week', 'away_team', 'home_team', 'away_score', 'home_score']]
@@ -73,12 +73,11 @@ def calculate_avgs(points, window):
     """Calculate averages per team per week per season with expanding or
     rolling windows.
     
-    :param points: *pd.DataFrame of shape (n_samples, n_features)*
-        Points for/against indexed by season, team, and week.
-    :param window: *int*
-        Number of weeks to use for rolling averages.
-    :return: *pd.DataFrame of shape (n_samples, n_features)*
-        Points per game averages indexed by season, team, and week.
+    :param points: Points for/against indexed by season, team, and week.
+    :type points: pd.DataFrame of shape (n_samples, n_features)
+    :param int window: Number of weeks to use for rolling averages.
+    :return: Points per game averages indexed by season, team, and week.
+    :rtype: pd.DataFrame of shape (n_samples, n_features)
     """
     group = points.groupby(['season', 'team'])
     if window:
@@ -98,13 +97,12 @@ def calculate_avgs(points, window):
 def adjust_for_opponent(base, opponent):
     """Adjust base data for opponent strength.
     
-    :param base: *pd.DataFrame of shape (n_samples, n_features)*
-        Base data to adjust. Must have season/team/week/opponent multiindex.
-    :param opponent: *pd.DataFrame of shape (n_samples, n_features)*
-        Opponent data to use for adjustment. Must have season/team/week/opponent
-        multiindex.
-    :return: *pd.DataFrame of shape (n_samples, n_features)*
-        Adjusted data.
+    :param base: Base data to adjust. Must have season/team/week/opponent multiindex.
+    :type base: pd.DataFrame of shape (n_samples, n_features)
+    :param opponent: Opponent data to use for adjustment. Must have season/team/week/opponent multiindex.
+    :type opponent: pd.DataFrame of shape (n_samples, n_features)
+    :return: Adjusted data.
+    :rtype: pd.DataFrame of shape (n_samples, n_features) 
     """
     opponent = (opponent
                 .groupby(['season', 'team'])
@@ -122,12 +120,12 @@ def adjust_for_opponent(base, opponent):
 def make_points_features(games, window, output_dir):
     """Build all points features (e.g. net points).
     
-    :param games: *pd.DataFrame of shape (n_games, n_features)*
-        Raw games data.
-    :param window: *int*
-        Number of weeks to use for rolling averages.
-    :param output_dir: *str*
-        Directory to write csv files to.
+    :param games: Raw games data.
+    :type games: pd.DataFrame of shape (n_games, n_features)
+    :param int window: Number of weeks to use for rolling averages.
+    :param str output_dir: Directory to write csv files to.
+    :return: None
+    :rtype: None
     """
     base_points = make_base_points_data(games)
     net_ppg_avgs = calculate_avgs(base_points, window=None)
@@ -151,25 +149,24 @@ def calculate_squad_aggs(plays, aggregations, squad_type, play_type):
 
     Given a set of play-by-play data:
     - group all plays by team
-    - for each group, calculate the aggs for each play using all data up to
-      that play
+
+    - for each group, calculate the aggs for each play using all data up to that play
+
     - now group by team and week and take the last row for each week
-    - shift the data down one row so that the stats for each week only go up to
-      the end of the previous week
+
+    - shift the data down one row so that the stats for each week only go up to the end of the previous week
+
     - format things
 
     NOTE: aggregations must have 'week':'max' as a key-value pair
     
-    :param plays: *pd.DataFrame of shape (n_plays, n_features)*
-        Play-by-play data for a given season.
-    :param aggregations: *dict*
-        Aggregations to calculate for each feature.
-    :param squad_type: *str*
-        'posteam' or 'defteam'
-    :param play_type: *str*
-        'pass' or 'rush'
-    :return: *pd.DataFrame of shape (n_samples, n_features)*
-        Aggregated stats for each team and week.
+    :param plays: Play-by-play data.
+    :type plays: pd.DataFrame of shape (n_plays, n_features)
+    :param dict aggregations: Aggregations to calculate.
+    :param str squad_type: Squad type to aggregate by (e.g. posteam, defteam).
+    :param str play_type: Play type to aggregate by (e.g. pass, rush).
+    :return: Aggregated data.
+    :rtype: pd.DataFrame of shape (n_samples, n_features)
     """
     side = ('o' if squad_type == 'posteam' else
             'd' if squad_type == 'defteam' else
@@ -197,12 +194,12 @@ def flip_defense_stat_signs(d_stats, stats_to_flip):
     Use regex to find columns with names that contain any of the strings in
     stats_to_flip. Multiply those columns by -1.
     
-    :param d_stats: *pd.DataFrame of shape (n_samples, n_features)*
-        Aggregated defensive stats returned by calculate_squad_aggs.
-    :param stats_to_flip: *list of str*
-        List of stat names to search for.
-    :return: *pd.DataFrame of shape (n_samples, n_features)*
-        Defensive stats with flipped signs.
+    :param d_stats: Aggregated defensive stats returned by calculate_squad_aggs.
+    :type d_stats: pd.DataFrame of shape (n_samples, n_features)
+    :param list[str] stats_to_flip: Strings to use for regex matching. Each
+        element should take the form '_statname_'.
+    :return: Defensive stats with signs flipped.
+    :rtype: pd.DataFrame of shape (n_samples, n_features)
     """
     pattern = '|'.join(stats_to_flip)
     cols_to_flip = d_stats.filter(regex=pattern).columns
@@ -213,14 +210,13 @@ def flip_defense_stat_signs(d_stats, stats_to_flip):
 def assemble_play_type_features(pbp_data, type_aggs_pairs):
     """Assemble features for each play type.
     
-    :param pbp_data: *pd.DataFrame of shape (n_plays, n_features)*
-        Play-by-play data for a given season.
-    :param type_aggs_pairs: *list of tuples*
-        List of tuples of the form (play_type, aggregations) where play_type
-        is a string and aggregations is a dictionary of aggregations to
-        calculate for each feature.
-    :return: *pd.DataFrame of shape (n_samples, n_features)*
-        Aggregated stats for each team and week.
+    :param pbp_data: Play-by-play data for a given season.
+    :type pbp_data: pd.DataFrame of shape (n_plays, n_features)
+    :param list[tuple] type_aggs_pairs: List of tuples of the form
+        (play_type, aggregations) where play_type is a string and aggregations
+        is a dictionary of aggregations to calculate for each feature.
+    :return: Aggregated data for each team and week.
+    :rtype: pd.DataFrame of shape (n_samples, n_features)
     """
     full_stats = pd.DataFrame(columns=['team', 'week'])
     for play_type, aggregations in type_aggs_pairs:
@@ -239,13 +235,12 @@ def assemble_play_type_features(pbp_data, type_aggs_pairs):
 def aggregate_efficiency_stats(games, raw_plays_path, output_dir):
     """Make efficiency stats (e.g. EPA, WPA, etc.) for each team and week.
     
-    :param games: *pd.DataFrame of shape (n_games, n_features)*
-        Raw games data.
-    :param raw_plays_path: *str*
-        Path to directory containing raw play-by-play data.
-    :param output_dir: *str*
-        Path to directory where features will be saved.
-    :return: *None*
+    :param games: Game data.
+    :type games: pd.DataFrame of shape (n_games, n_features)
+    :param str raw_plays_path: Path to raw play-by-play data.
+    :param str output_dir: Path to directory to write output to.
+    :return: None
+    :rtype: None
     """
     game_id_map = pd.DataFrame()
     features = pd.DataFrame()
@@ -271,22 +266,14 @@ def aggregate_efficiency_stats(games, raw_plays_path, output_dir):
 def build_team_stats_features(raw_games_path, raw_plays_path, output_dir):
     """Build engineered features for team stats.
     
-    :param raw_games_path: *str*
-        Path to directory containing raw games data.
-    :param raw_plays_path: *str*
-        Path to directory containing raw play-by-play data.
-    :param output_dir: *str*
-        Path to directory where features will be saved.
-    :return: *None*
+    :param str raw_games_path: Path to raw game data.
+    :param str raw_plays_path: Path to raw play-by-play data.
+    :param str output_dir: Path to directory to write output to.
+    :return: None
+    :rtype: None
     """
     games = (pd.read_csv(raw_games_path)
              .dropna(subset=['result']))
     make_points_features(games, LOOKBACK_WINDOW, output_dir)
     aggregate_efficiency_stats(games, raw_plays_path, output_dir)
     return
-
-
-if __name__ == '__main__':
-    from src.config.config import PATHS
-
-    games = pd.read_csv(PATHS['raw_games']).dropna(subset=['result'])

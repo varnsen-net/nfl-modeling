@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.plot.style &mdash; SWIFT  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="src.utils" href="src.utils.html" />
+    <link rel="prev" title="src.plot.plot" href="src.plot.plot.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SWIFT
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="src.config.config.html">src.config.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.spaces.html">src.config.spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.ancillary.depth_charts.html">src.data.ancillary.depth_charts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.build.html">src.data.build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html">src.data.features.team_stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.travel.html">src.data.features.travel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.predict.predict.html">src.data.predict.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.raw.games.html">src.data.raw.games</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.raw.plays.html">src.data.raw.plays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.train.target.html">src.data.train.target</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.train.train.html">src.data.train.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.docs.build.html">src.docs.build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.estimators.html">src.model.estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.evaluate.html">src.model.evaluate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.hyperoptimize.html">src.model.hyperoptimize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.pipeline.html">src.model.pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.predict.html">src.model.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.process.html">src.model.process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.train.html">src.model.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.plot.html">src.plot.plot</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">src.plot.style</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.plot.style.PALETTES"><code class="docutils literal notranslate"><span class="pre">PALETTES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.plot.style.RCPARAMS"><code class="docutils literal notranslate"><span class="pre">RCPARAMS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.plot.style.TEAM_COLORS"><code class="docutils literal notranslate"><span class="pre">TEAM_COLORS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.plot.style.hex_to_rgb"><code class="docutils literal notranslate"><span class="pre">hex_to_rgb()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.plot.style.register_colormaps"><code class="docutils literal notranslate"><span class="pre">register_colormaps()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.plot.style.set_plot_params"><code class="docutils literal notranslate"><span class="pre">set_plot_params()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.utils.html">src.utils</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SWIFT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">src.plot.style</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/src.plot.style.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-src.plot.style">
+<span id="src-plot-style"></span><h1>src.plot.style<a class="headerlink" href="#module-src.plot.style" title="Link to this heading"></a></h1>
+<p>Helpers for setting plot style and colors.</p>
+<dl class="py data">
+<dt class="sig sig-object py" id="src.plot.style.PALETTES">
+<span class="sig-prename descclassname"><span class="pre">src.plot.style.</span></span><span class="sig-name descname"><span class="pre">PALETTES</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'avanti':</span> <span class="pre">['FB4142',</span> <span class="pre">'94376C',</span> <span class="pre">'CE75AD',</span> <span class="pre">'76BDCF',</span> <span class="pre">'9DCFF0'],</span> <span class="pre">'crystal_pepsi':</span> <span class="pre">['FFCCFF',</span> <span class="pre">'F1DAFF',</span> <span class="pre">'E3E8FF',</span> <span class="pre">'CCFFFF'],</span> <span class="pre">'hellafresh':</span> <span class="pre">['2f4858',</span> <span class="pre">'33658a',</span> <span class="pre">'86bbd8',</span> <span class="pre">'f6ae2d',</span> <span class="pre">'f26419'],</span> <span class="pre">'jazzcup':</span> <span class="pre">['392682',</span> <span class="pre">'7a3a9a',</span> <span class="pre">'3f86bc',</span> <span class="pre">'28ada8',</span> <span class="pre">'83dde0'],</span> <span class="pre">'macplus':</span> <span class="pre">['1b4247',</span> <span class="pre">'09979b',</span> <span class="pre">'75d8d5',</span> <span class="pre">'ffc0cb',</span> <span class="pre">'fe7f9d',</span> <span class="pre">'65323e'],</span> <span class="pre">'mallsoft':</span> <span class="pre">['fbcff3',</span> <span class="pre">'f7c0bb',</span> <span class="pre">'acd0f4',</span> <span class="pre">'8690ff',</span> <span class="pre">'30bfdd',</span> <span class="pre">'7fd4c1'],</span> <span class="pre">'seapunk':</span> <span class="pre">['532e57',</span> <span class="pre">'a997ab',</span> <span class="pre">'7ec488',</span> <span class="pre">'569874',</span> <span class="pre">'296656'],</span> <span class="pre">'sunset':</span> <span class="pre">['661246',</span> <span class="pre">'ae1357',</span> <span class="pre">'f9247e',</span> <span class="pre">'d7509f',</span> <span class="pre">'f9897b'],</span> <span class="pre">'vaporwave':</span> <span class="pre">['94D0FF',</span> <span class="pre">'8795E8',</span> <span class="pre">'966bff',</span> <span class="pre">'AD8CFF',</span> <span class="pre">'C774E8',</span> <span class="pre">'c774a9',</span> <span class="pre">'FF6AD5',</span> <span class="pre">'ff6a8b',</span> <span class="pre">'ff8b8b',</span> <span class="pre">'ffa58b',</span> <span class="pre">'ffde8b',</span> <span class="pre">'cdde8b',</span> <span class="pre">'8bde8b',</span> <span class="pre">'20de8b'],</span> <span class="pre">'vcool':</span> <span class="pre">['FF6AD5',</span> <span class="pre">'C774E8',</span> <span class="pre">'AD8CFF',</span> <span class="pre">'8795E8',</span> <span class="pre">'94D0FF']}</span></em><a class="headerlink" href="#src.plot.style.PALETTES" title="Link to this definition"></a></dt>
+<dd><p><em>dict</em>: Dictionary of color palettes for matplotlib.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.plot.style.RCPARAMS">
+<span class="sig-prename descclassname"><span class="pre">src.plot.style.</span></span><span class="sig-name descname"><span class="pre">RCPARAMS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'axes.facecolor':</span> <span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0),</span> <span class="pre">'figure.dpi':</span> <span class="pre">300,</span> <span class="pre">'figure.facecolor':</span> <span class="pre">'efe8db',</span> <span class="pre">'lines.linewidth':</span> <span class="pre">0.6,</span> <span class="pre">'xtick.bottom':</span> <span class="pre">True,</span> <span class="pre">'ytick.left':</span> <span class="pre">True}</span></em><a class="headerlink" href="#src.plot.style.RCPARAMS" title="Link to this definition"></a></dt>
+<dd><p><em>dict</em>: Dictionary of rcParams for matplotlib.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.plot.style.TEAM_COLORS">
+<span class="sig-prename descclassname"><span class="pre">src.plot.style.</span></span><span class="sig-name descname"><span class="pre">TEAM_COLORS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ARI':</span> <span class="pre">'97233F',</span> <span class="pre">'ATL':</span> <span class="pre">'A71930',</span> <span class="pre">'BAL':</span> <span class="pre">'00338D',</span> <span class="pre">'BUF':</span> <span class="pre">'00338D',</span> <span class="pre">'CAR':</span> <span class="pre">'0085CA',</span> <span class="pre">'CHI':</span> <span class="pre">'0B162A',</span> <span class="pre">'CIN':</span> <span class="pre">'FB4F14',</span> <span class="pre">'CLE':</span> <span class="pre">'FB4F14',</span> <span class="pre">'DAL':</span> <span class="pre">'002244',</span> <span class="pre">'DEN':</span> <span class="pre">'FB4F14',</span> <span class="pre">'DET':</span> <span class="pre">'005A8B',</span> <span class="pre">'GB':</span> <span class="pre">'203731',</span> <span class="pre">'HOU':</span> <span class="pre">'A71930',</span> <span class="pre">'IND':</span> <span class="pre">'002C5F',</span> <span class="pre">'JAX':</span> <span class="pre">'006778',</span> <span class="pre">'KC':</span> <span class="pre">'E31837',</span> <span class="pre">'LA':</span> <span class="pre">'002244',</span> <span class="pre">'LAC':</span> <span class="pre">'0073CF',</span> <span class="pre">'LV':</span> <span class="pre">'000000',</span> <span class="pre">'MIA':</span> <span class="pre">'008E97',</span> <span class="pre">'MIN':</span> <span class="pre">'4F2683',</span> <span class="pre">'NE':</span> <span class="pre">'002244',</span> <span class="pre">'NO':</span> <span class="pre">'000000',</span> <span class="pre">'NYG':</span> <span class="pre">'0B2265',</span> <span class="pre">'NYJ':</span> <span class="pre">'203731',</span> <span class="pre">'PHI':</span> <span class="pre">'004953',</span> <span class="pre">'PIT':</span> <span class="pre">'000000',</span> <span class="pre">'SEA':</span> <span class="pre">'002244',</span> <span class="pre">'SF':</span> <span class="pre">'AA0000',</span> <span class="pre">'TB':</span> <span class="pre">'D50A0A',</span> <span class="pre">'TEN':</span> <span class="pre">'002244',</span> <span class="pre">'WAS':</span> <span class="pre">'773141'}</span></em><a class="headerlink" href="#src.plot.style.TEAM_COLORS" title="Link to this definition"></a></dt>
+<dd><p><em>dict</em>: Dictionary of team colors.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.plot.style.hex_to_rgb">
+<span class="sig-prename descclassname"><span class="pre">src.plot.style.</span></span><span class="sig-name descname"><span class="pre">hex_to_rgb</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">hex_codes</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/plot/style.html#hex_to_rgb"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.plot.style.hex_to_rgb" title="Link to this definition"></a></dt>
+<dd><p>Convert a list of hex color codes to a list of normed rgb tuples.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>hex_codes</strong> – <em>list of strings</em>
+Hex color codes.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>list of tuples</em>
+RGB values.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.plot.style.register_colormaps">
+<span class="sig-prename descclassname"><span class="pre">src.plot.style.</span></span><span class="sig-name descname"><span class="pre">register_colormaps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">user_palettes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'avanti':</span> <span class="pre">['FB4142',</span> <span class="pre">'94376C',</span> <span class="pre">'CE75AD',</span> <span class="pre">'76BDCF',</span> <span class="pre">'9DCFF0'],</span> <span class="pre">'crystal_pepsi':</span> <span class="pre">['FFCCFF',</span> <span class="pre">'F1DAFF',</span> <span class="pre">'E3E8FF',</span> <span class="pre">'CCFFFF'],</span> <span class="pre">'hellafresh':</span> <span class="pre">['2f4858',</span> <span class="pre">'33658a',</span> <span class="pre">'86bbd8',</span> <span class="pre">'f6ae2d',</span> <span class="pre">'f26419'],</span> <span class="pre">'jazzcup':</span> <span class="pre">['392682',</span> <span class="pre">'7a3a9a',</span> <span class="pre">'3f86bc',</span> <span class="pre">'28ada8',</span> <span class="pre">'83dde0'],</span> <span class="pre">'macplus':</span> <span class="pre">['1b4247',</span> <span class="pre">'09979b',</span> <span class="pre">'75d8d5',</span> <span class="pre">'ffc0cb',</span> <span class="pre">'fe7f9d',</span> <span class="pre">'65323e'],</span> <span class="pre">'mallsoft':</span> <span class="pre">['fbcff3',</span> <span class="pre">'f7c0bb',</span> <span class="pre">'acd0f4',</span> <span class="pre">'8690ff',</span> <span class="pre">'30bfdd',</span> <span class="pre">'7fd4c1'],</span> <span class="pre">'seapunk':</span> <span class="pre">['532e57',</span> <span class="pre">'a997ab',</span> <span class="pre">'7ec488',</span> <span class="pre">'569874',</span> <span class="pre">'296656'],</span> <span class="pre">'sunset':</span> <span class="pre">['661246',</span> <span class="pre">'ae1357',</span> <span class="pre">'f9247e',</span> <span class="pre">'d7509f',</span> <span class="pre">'f9897b'],</span> <span class="pre">'vaporwave':</span> <span class="pre">['94D0FF',</span> <span class="pre">'8795E8',</span> <span class="pre">'966bff',</span> <span class="pre">'AD8CFF',</span> <span class="pre">'C774E8',</span> <span class="pre">'c774a9',</span> <span class="pre">'FF6AD5',</span> <span class="pre">'ff6a8b',</span> <span class="pre">'ff8b8b',</span> <span class="pre">'ffa58b',</span> <span class="pre">'ffde8b',</span> <span class="pre">'cdde8b',</span> <span class="pre">'8bde8b',</span> <span class="pre">'20de8b'],</span> <span class="pre">'vcool':</span> <span class="pre">['FF6AD5',</span> <span class="pre">'C774E8',</span> <span class="pre">'AD8CFF',</span> <span class="pre">'8795E8',</span> <span class="pre">'94D0FF']}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/plot/style.html#register_colormaps"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.plot.style.register_colormaps" title="Link to this definition"></a></dt>
+<dd><p>Register a set of hex codes as a matplotlib colormap.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>user_palettes</strong> – <em>dict</em>
+Dictionary of palettes to register.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.plot.style.set_plot_params">
+<span class="sig-prename descclassname"><span class="pre">src.plot.style.</span></span><span class="sig-name descname"><span class="pre">set_plot_params</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">font_scale</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">user_rcparams</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">{'axes.facecolor':</span> <span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0),</span> <span class="pre">'figure.dpi':</span> <span class="pre">300,</span> <span class="pre">'figure.facecolor':</span> <span class="pre">'efe8db',</span> <span class="pre">'lines.linewidth':</span> <span class="pre">0.6,</span> <span class="pre">'xtick.bottom':</span> <span class="pre">True,</span> <span class="pre">'ytick.left':</span> <span class="pre">True}</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/plot/style.html#set_plot_params"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.plot.style.set_plot_params" title="Link to this definition"></a></dt>
+<dd><p>Set plot style and parameters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>font_scale</strong> – <em>float</em>
+Font scale for plot text.</p></li>
+<li><p><strong>user_rcparams</strong> – <em>dict</em>
+Dictionary of rcParams to override.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>None</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="src.plot.plot.html" class="btn btn-neutral float-left" title="src.plot.plot" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="src.utils.html" class="btn btn-neutral float-right" title="src.utils" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Kel Varnsen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

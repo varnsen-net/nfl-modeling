@@ -2,31 +2,17 @@
 
 import numpy as np
 import pandas as pd
-import matplotlib as mpl
 import matplotlib.pyplot as plt
-from matplotlib.colors import LinearSegmentedColormap
 import seaborn as sns
 
-from src.plot.style import PALETTES, RCPARAMS, hex_to_rgb
+from src.plot.style import register_colormaps, set_plot_params
 
-
-# Register custom colormaps and set plot style
-palettes = {k : hex_to_rgb(PALETTES[k]) for k in PALETTES.keys()}
-for k in palettes.keys():
-    cmap = LinearSegmentedColormap.from_list(k, palettes[k])
-    mpl.colormaps.register(cmap)
-sns.set_theme(
-    context = 'paper',
-    style="white",
-    font_scale = 0.60,
-    rc=RCPARAMS)
-
+register_colormaps()
 
 def test_plot():
     """Test the plot style with a dummy plot.
     
-    :return: None
-    :rtype: None
+    :return: *None*
     """
     x = [1, 2, 3, 4]
     y = [1, 2, 3, 4]
@@ -37,9 +23,10 @@ def test_plot():
 def make_plot_data(scores):
     """Make data for plots.
 
-    :param pd.DataFrame scores: scores from model evaluation
-    :return: plot data
-    :rtype: tuple[pd.DataFrame]
+    :param scores: *pd.DataFrame of shape (n_splits, n_scores)*
+        Scores from model evaluation.
+    :return: *tuple of dataframes*
+        Plot data.
     """
     prob_true = scores.filter(regex='^test_prob_true_', axis=0)
     prob_pred = scores.filter(regex='^test_prob_pred_', axis=0)
@@ -55,12 +42,15 @@ def make_plot_data(scores):
 def plot_train_calibration(prob_true, prob_pred, name, save_path):
     """Plot calibration errors.
     
-    :param pd.DataFrame prob_true: true probabilities
-    :param pd.DataFrame prob_pred: predicted probabilities
-    :param str name: model name
-    :param str save_path: path to save plot
-    :return: None
-    :rtype: None
+    :param prob_true: *pd.DataFrame of shape (n_splits, n_scores)*
+        True probabilities.
+    :param prob_pred: *pd.DataFrame of shape (n_splits, n_scores)*
+        Predicted probabilities.
+    :param name: *str*
+        Name of model.
+    :param save_path: *str*
+        Path to save plots.
+    :return: *None*
     """
     fold_names = [col for col in prob_true.columns
                   if col.startswith('fold')]
@@ -105,11 +95,13 @@ def plot_train_calibration(prob_true, prob_pred, name, save_path):
 def plot_test_calibration(holdout_scores, name, save_path):
     """Plot calibration curve for holdout data.
     
-    :param dict holdout_scores: holdout scores
-    :param str name: model name
-    :param str save_path: path to save plot
-    :return: None
-    :rtype: None
+    :param holdout_scores: *dict*
+        Scores from model evaluation.
+    :param name: *str*
+        Name of model.
+    :param save_path: *str*
+        Path to save plots.
+    :return: *None*
     """
     x = [holdout_scores[f] for f in holdout_scores if f.startswith('prob_pred_')]
     y = [holdout_scores[f] for f in holdout_scores if f.startswith('prob_true_')]
@@ -137,11 +129,13 @@ def plot_test_calibration(holdout_scores, name, save_path):
 def plot_confusion_matrix(scores, name, save_path):
     """Plot normalized confusion matrix using matplotlib.
     
-    :param np.array scores: confusion matrix scores
-    :param str name: model name
-    :param str save_path: path to save plot
-    :return: None
-    :rtype: None
+    :param scores: *np.array of shape (2, 2)*
+        Confusion matrix scores.
+    :param name: *str*
+        Name of model.
+    :param save_path: *str*
+        Path to save plots.
+    :return: *None*
     """
     scores = (scores / scores.sum()).round(3)
     fig, ax = plt.subplots(nrows=1, ncols=1,
@@ -168,12 +162,15 @@ def plot_confusion_matrix(scores, name, save_path):
 def make_and_save_plots(scores, name, save_path):
     """Make and save plots.
     
-    :param pd.DataFrame scores: scores from model evaluation
-    :param str name: model name
-    :param str save_path: path to save plot
-    :return: None
-    :rtype: None
+    :param scores: *pd.DataFrame*
+        Scores from model evaluation.
+    :param name: *str*
+        Name of model.
+    :param save_path: *str*
+        Path to save plots.
+    :return: *None*
     """
+    set_plot_params()
     prob_true, prob_pred, conf_matrix_scores = make_plot_data(scores)
     plot_train_calibration(prob_true, prob_pred, name, save_path)
     plot_confusion_matrix(conf_matrix_scores, name, save_path)

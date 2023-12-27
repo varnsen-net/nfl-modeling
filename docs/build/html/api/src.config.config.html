@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.config.config &mdash; SWIFT  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../_static/doctools.js?v=888ff710"></script>
+        <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="src.config.spaces" href="src.config.spaces.html" />
+    <link rel="prev" title="API Reference" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            SWIFT
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">src.config.config</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#src.config.config.CURRENT_SEASON"><code class="docutils literal notranslate"><span class="pre">CURRENT_SEASON</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.config.config.CURRENT_WEEK"><code class="docutils literal notranslate"><span class="pre">CURRENT_WEEK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.config.config.CV_TEST_SIZE"><code class="docutils literal notranslate"><span class="pre">CV_TEST_SIZE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.config.config.CV_TRAIN_SIZE"><code class="docutils literal notranslate"><span class="pre">CV_TRAIN_SIZE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.config.config.DEFAULT_PARAM_PREFIX"><code class="docutils literal notranslate"><span class="pre">DEFAULT_PARAM_PREFIX</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.config.config.EARLY_STOP_N"><code class="docutils literal notranslate"><span class="pre">EARLY_STOP_N</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.config.config.FEATURE_PRECISIONS"><code class="docutils literal notranslate"><span class="pre">FEATURE_PRECISIONS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.config.config.LOOKBACK_WINDOW"><code class="docutils literal notranslate"><span class="pre">LOOKBACK_WINDOW</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.config.config.MAX_EVALS"><code class="docutils literal notranslate"><span class="pre">MAX_EVALS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.config.config.PASSING_AGGS"><code class="docutils literal notranslate"><span class="pre">PASSING_AGGS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.config.config.PATHS"><code class="docutils literal notranslate"><span class="pre">PATHS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.config.config.PROJ_ROOT"><code class="docutils literal notranslate"><span class="pre">PROJ_ROOT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.config.config.RAW_DATA_URLS"><code class="docutils literal notranslate"><span class="pre">RAW_DATA_URLS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.config.config.RUSHING_AGGS"><code class="docutils literal notranslate"><span class="pre">RUSHING_AGGS</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.config.config.SCORING_METRIC"><code class="docutils literal notranslate"><span class="pre">SCORING_METRIC</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.config.config.TRAINING"><code class="docutils literal notranslate"><span class="pre">TRAINING</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="src.config.spaces.html">src.config.spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.ancillary.depth_charts.html">src.data.ancillary.depth_charts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.build.html">src.data.build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html">src.data.features.team_stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.travel.html">src.data.features.travel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.predict.predict.html">src.data.predict.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.raw.games.html">src.data.raw.games</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.raw.plays.html">src.data.raw.plays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.train.target.html">src.data.train.target</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.train.train.html">src.data.train.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.docs.build.html">src.docs.build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.estimators.html">src.model.estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.evaluate.html">src.model.evaluate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.hyperoptimize.html">src.model.hyperoptimize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.pipeline.html">src.model.pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.predict.html">src.model.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.process.html">src.model.process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.model.train.html">src.model.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.plot.html">src.plot.plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.plot.style.html">src.plot.style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.utils.html">src.utils</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">SWIFT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">src.config.config</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/api/src.config.config.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-src.config.config">
+<span id="src-config-config"></span><h1>src.config.config<a class="headerlink" href="#module-src.config.config" title="Link to this heading"></a></h1>
+<dl class="py data">
+<dt class="sig sig-object py" id="src.config.config.CURRENT_SEASON">
+<span class="sig-prename descclassname"><span class="pre">src.config.config.</span></span><span class="sig-name descname"><span class="pre">CURRENT_SEASON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2023</span></em><a class="headerlink" href="#src.config.config.CURRENT_SEASON" title="Link to this definition"></a></dt>
+<dd><p><em>int</em>: Current NFL season. Used to fetch current season of play-by-play data.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.config.config.CURRENT_WEEK">
+<span class="sig-prename descclassname"><span class="pre">src.config.config.</span></span><span class="sig-name descname"><span class="pre">CURRENT_WEEK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">17</span></em><a class="headerlink" href="#src.config.config.CURRENT_WEEK" title="Link to this definition"></a></dt>
+<dd><p><em>int</em>: Current NFL week. Used to fetch current week of play-by-play data.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.config.config.CV_TEST_SIZE">
+<span class="sig-prename descclassname"><span class="pre">src.config.config.</span></span><span class="sig-name descname"><span class="pre">CV_TEST_SIZE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#src.config.config.CV_TEST_SIZE" title="Link to this definition"></a></dt>
+<dd><p><em>int</em>: Number of consecutive seasons to use for testing in grouped time-series cross validation.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.config.config.CV_TRAIN_SIZE">
+<span class="sig-prename descclassname"><span class="pre">src.config.config.</span></span><span class="sig-name descname"><span class="pre">CV_TRAIN_SIZE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#src.config.config.CV_TRAIN_SIZE" title="Link to this definition"></a></dt>
+<dd><p><em>int</em>: Number of consecutive seasons to use for training in grouped time-series cross validation.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.config.config.DEFAULT_PARAM_PREFIX">
+<span class="sig-prename descclassname"><span class="pre">src.config.config.</span></span><span class="sig-name descname"><span class="pre">DEFAULT_PARAM_PREFIX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'calibratedclassifiercv__estimator__'</span></em><a class="headerlink" href="#src.config.config.DEFAULT_PARAM_PREFIX" title="Link to this definition"></a></dt>
+<dd><p><em>str</em>: Prefix for default hyperparameters.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.config.config.EARLY_STOP_N">
+<span class="sig-prename descclassname"><span class="pre">src.config.config.</span></span><span class="sig-name descname"><span class="pre">EARLY_STOP_N</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#src.config.config.EARLY_STOP_N" title="Link to this definition"></a></dt>
+<dd><p><em>int</em>: Number of iterations without improvement to stop hyperparameter tuning.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.config.config.FEATURE_PRECISIONS">
+<span class="sig-prename descclassname"><span class="pre">src.config.config.</span></span><span class="sig-name descname"><span class="pre">FEATURE_PRECISIONS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'away_lon_delta':</span> <span class="pre">2,</span> <span class="pre">'away_travel_distance':</span> <span class="pre">0}</span></em><a class="headerlink" href="#src.config.config.FEATURE_PRECISIONS" title="Link to this definition"></a></dt>
+<dd><p><em>dict</em>: Number of decimal places to round features to.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.config.config.LOOKBACK_WINDOW">
+<span class="sig-prename descclassname"><span class="pre">src.config.config.</span></span><span class="sig-name descname"><span class="pre">LOOKBACK_WINDOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#src.config.config.LOOKBACK_WINDOW" title="Link to this definition"></a></dt>
+<dd><p><em>int</em>: Number of weeks to look back for features that only consider recent performance.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.config.config.MAX_EVALS">
+<span class="sig-prename descclassname"><span class="pre">src.config.config.</span></span><span class="sig-name descname"><span class="pre">MAX_EVALS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">100</span></em><a class="headerlink" href="#src.config.config.MAX_EVALS" title="Link to this definition"></a></dt>
+<dd><p><em>int</em>: Maximum number of hyperparameter tuning iterations.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.config.config.PASSING_AGGS">
+<span class="sig-prename descclassname"><span class="pre">src.config.config.</span></span><span class="sig-name descname"><span class="pre">PASSING_AGGS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'complete_pass':</span> <span class="pre">'mean',</span> <span class="pre">'fumble':</span> <span class="pre">'mean',</span> <span class="pre">'interception':</span> <span class="pre">'mean',</span> <span class="pre">'pass':</span> <span class="pre">'sum',</span> <span class="pre">'sack':</span> <span class="pre">'mean',</span> <span class="pre">'week':</span> <span class="pre">['max'],</span> <span class="pre">'yards_gained':</span> <span class="pre">'mean'}</span></em><a class="headerlink" href="#src.config.config.PASSING_AGGS" title="Link to this definition"></a></dt>
+<dd><p><em>dict</em>: Functions for aggregating passing features from play-by-play data.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.config.config.PATHS">
+<span class="sig-prename descclassname"><span class="pre">src.config.config.</span></span><span class="sig-name descname"><span class="pre">PATHS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'city_coordinates':</span> <span class="pre">PosixPath('/home/w3rkman/backup.varnsen/projects/nfl-analysis/data/ancillary/city-coordinates.csv'),</span> <span class="pre">'features':</span> <span class="pre">PosixPath('/home/w3rkman/backup.varnsen/projects/nfl-analysis/data/features'),</span> <span class="pre">'features_src':</span> <span class="pre">PosixPath('/home/w3rkman/backup.varnsen/projects/nfl-analysis/src/data/features'),</span> <span class="pre">'prediction':</span> <span class="pre">PosixPath('/home/w3rkman/backup.varnsen/projects/nfl-analysis/data/prediction'),</span> <span class="pre">'raw_games':</span> <span class="pre">PosixPath('/home/w3rkman/backup.varnsen/projects/nfl-analysis/data/raw/games.csv'),</span> <span class="pre">'raw_plays':</span> <span class="pre">PosixPath('/home/w3rkman/backup.varnsen/projects/nfl-analysis/data/raw/plays'),</span> <span class="pre">'results':</span> <span class="pre">PosixPath('/home/w3rkman/backup.varnsen/projects/nfl-analysis/data/results'),</span> <span class="pre">'test':</span> <span class="pre">PosixPath('/home/w3rkman/backup.varnsen/projects/nfl-analysis/data/test'),</span> <span class="pre">'train':</span> <span class="pre">PosixPath('/home/w3rkman/backup.varnsen/projects/nfl-analysis/data/train')}</span></em><a class="headerlink" href="#src.config.config.PATHS" title="Link to this definition"></a></dt>
+<dd><p><em>dict</em>: Paths to data files and directories.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.config.config.PROJ_ROOT">
+<span class="sig-prename descclassname"><span class="pre">src.config.config.</span></span><span class="sig-name descname"><span class="pre">PROJ_ROOT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">PosixPath('/home/w3rkman/backup.varnsen/projects/nfl-analysis')</span></em><a class="headerlink" href="#src.config.config.PROJ_ROOT" title="Link to this definition"></a></dt>
+<dd><p><em>pathlib.Path</em>: Root directory of the project.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.config.config.RAW_DATA_URLS">
+<span class="sig-prename descclassname"><span class="pre">src.config.config.</span></span><span class="sig-name descname"><span class="pre">RAW_DATA_URLS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'games':</span> <span class="pre">'https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv',</span> <span class="pre">'plays':</span> <span class="pre">'https://github.com/nflverse/nflverse-data/releases/download/pbp'}</span></em><a class="headerlink" href="#src.config.config.RAW_DATA_URLS" title="Link to this definition"></a></dt>
+<dd><p><em>dict</em>: URLs to raw data files.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.config.config.RUSHING_AGGS">
+<span class="sig-prename descclassname"><span class="pre">src.config.config.</span></span><span class="sig-name descname"><span class="pre">RUSHING_AGGS</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'fumble':</span> <span class="pre">'mean',</span> <span class="pre">'rush':</span> <span class="pre">'sum',</span> <span class="pre">'week':</span> <span class="pre">['max'],</span> <span class="pre">'yards_gained':</span> <span class="pre">'mean'}</span></em><a class="headerlink" href="#src.config.config.RUSHING_AGGS" title="Link to this definition"></a></dt>
+<dd><p><em>dict</em>: Functions for aggregating rushing features from play-by-play data.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.config.config.SCORING_METRIC">
+<span class="sig-prename descclassname"><span class="pre">src.config.config.</span></span><span class="sig-name descname"><span class="pre">SCORING_METRIC</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'neg_brier_score'</span></em><a class="headerlink" href="#src.config.config.SCORING_METRIC" title="Link to this definition"></a></dt>
+<dd><p><em>str</em>: Scoring metric for hyperparameter tuning.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="src.config.config.TRAINING">
+<span class="sig-prename descclassname"><span class="pre">src.config.config.</span></span><span class="sig-name descname"><span class="pre">TRAINING</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'games_cols':</span> <span class="pre">['game_id',</span> <span class="pre">'season',</span> <span class="pre">'week',</span> <span class="pre">'away_rest',</span> <span class="pre">'home_rest',</span> <span class="pre">'div_game',</span> <span class="pre">'roof',</span> <span class="pre">'surface',</span> <span class="pre">'away_team',</span> <span class="pre">'home_team'],</span> <span class="pre">'holdout_year':</span> <span class="pre">2020}</span></em><a class="headerlink" href="#src.config.config.TRAINING" title="Link to this definition"></a></dt>
+<dd><p><em>dict</em>: Parameters for training data.</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="src.config.spaces.html" class="btn btn-neutral float-right" title="src.config.spaces" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Kel Varnsen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

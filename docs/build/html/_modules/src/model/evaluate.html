@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.model.evaluate &mdash; SWIFT  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            SWIFT
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../api/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">SWIFT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.model.evaluate</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.model.evaluate</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Helper functions for evaluating models.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">mlxtend.evaluate.time_series</span> <span class="kn">import</span> <span class="n">GroupTimeSeriesSplit</span><span class="p">,</span> <span class="n">print_split_info</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_validate</span>
+<span class="kn">from</span> <span class="nn">sklearn.calibration</span> <span class="kn">import</span> <span class="n">calibration_curve</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="p">(</span><span class="n">brier_score_loss</span><span class="p">,</span>
+                             <span class="n">log_loss</span><span class="p">,</span>
+                             <span class="n">f1_score</span><span class="p">,</span>
+                             <span class="n">precision_score</span><span class="p">,</span>
+                             <span class="n">recall_score</span><span class="p">,</span>
+                             <span class="n">roc_auc_score</span><span class="p">,</span>
+                             <span class="n">confusion_matrix</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="append_array_to_scores">
+<a class="viewcode-back" href="../../../api/src.model.evaluate.html#src.model.evaluate.append_array_to_scores">[docs]</a>
+<span class="k">def</span> <span class="nf">append_array_to_scores</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">metric_array</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Append an array of scores to a scores dictionary. Elements of the</span>
+<span class="sd">    array are appended as key:value pairs.</span>
+<span class="sd">    </span>
+<span class="sd">    :param dict scores: scoring dict</span>
+<span class="sd">    :param np.array metric_array: array of scores</span>
+<span class="sd">    :param str name: name of metric</span>
+<span class="sd">    :return: dictionary of scores</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">score</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">metric_array</span><span class="p">):</span>
+        <span class="n">scores</span><span class="p">[</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span>
+    <span class="k">return</span> <span class="n">scores</span></div>
+
+
+
+<div class="viewcode-block" id="compile_scores">
+<a class="viewcode-back" href="../../../api/src.model.evaluate.html#src.model.evaluate.compile_scores">[docs]</a>
+<span class="k">def</span> <span class="nf">compile_scores</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">y_pred_proba</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Compile a dictionary of evaluation metrics.</span>
+<span class="sd">    </span>
+<span class="sd">    :param pd.Series y: target</span>
+<span class="sd">    :param pd.Series y_pred: predicted target</span>
+<span class="sd">    :param pd.Series y_pred_proba: predicted probabilities</span>
+<span class="sd">    :return: evaluation metrics</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">tn</span><span class="p">,</span> <span class="n">fp</span><span class="p">,</span> <span class="n">fn</span><span class="p">,</span> <span class="n">tp</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+    <span class="n">prob_true</span><span class="p">,</span> <span class="n">prob_pred</span> <span class="o">=</span> <span class="n">calibration_curve</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred_proba</span><span class="p">,</span> <span class="n">n_bins</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span>
+                                             <span class="n">strategy</span><span class="o">=</span><span class="s1">&#39;quantile&#39;</span><span class="p">)</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;neg_brier_score&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">brier_score_loss</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred_proba</span><span class="p">),</span>
+              <span class="s1">&#39;neg_log_loss&#39;</span><span class="p">:</span> <span class="o">-</span><span class="n">log_loss</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred_proba</span><span class="p">),</span>
+              <span class="s1">&#39;f1&#39;</span><span class="p">:</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+              <span class="s1">&#39;precision&#39;</span><span class="p">:</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+              <span class="s1">&#39;recall&#39;</span><span class="p">:</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">),</span>
+              <span class="s1">&#39;roc_auc&#39;</span><span class="p">:</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred_proba</span><span class="p">),</span>
+              <span class="s1">&#39;tn&#39;</span><span class="p">:</span> <span class="n">tn</span><span class="p">,</span>
+              <span class="s1">&#39;fp&#39;</span><span class="p">:</span> <span class="n">fp</span><span class="p">,</span>
+              <span class="s1">&#39;fn&#39;</span><span class="p">:</span> <span class="n">fn</span><span class="p">,</span>
+              <span class="s1">&#39;tp&#39;</span><span class="p">:</span> <span class="n">tp</span><span class="p">}</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">append_array_to_scores</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">prob_true</span><span class="p">,</span> <span class="s1">&#39;prob_true_bin&#39;</span><span class="p">)</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">append_array_to_scores</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">prob_pred</span><span class="p">,</span> <span class="s1">&#39;prob_pred_bin&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">scores</span></div>
+
+
+
+<div class="viewcode-block" id="custom_scorer">
+<a class="viewcode-back" href="../../../api/src.model.evaluate.html#src.model.evaluate.custom_scorer">[docs]</a>
+<span class="k">def</span> <span class="nf">custom_scorer</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Score model using a variety of metrics.</span>
+<span class="sd">    </span>
+<span class="sd">    :param sklearn.pipeline.Pipeline pipeline: pipeline to evaluate</span>
+<span class="sd">    :param pd.DataFrame X: features</span>
+<span class="sd">    :param pd.Series y: target</span>
+<span class="sd">    :return: evaluation metrics</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+    <span class="n">y_pred_proba</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">compile_scores</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">y_pred_proba</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">scores</span></div>
+
+
+
+<div class="viewcode-block" id="custom_cv">
+<a class="viewcode-back" href="../../../api/src.model.evaluate.html#src.model.evaluate.custom_cv">[docs]</a>
+<span class="k">def</span> <span class="nf">custom_cv</span><span class="p">(</span><span class="n">train_size</span><span class="p">,</span> <span class="n">test_size</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create a custom cross-validation object.</span>
+<span class="sd">    </span>
+<span class="sd">    :param int train_size: number of consecutive seasons to train on</span>
+<span class="sd">    :param int test_size: number of consecutive seasons to test on</span>
+<span class="sd">    :return: cross-validation object</span>
+<span class="sd">    :rtype: mlxtend.evaluate.time_series_split.GroupTimeSeriesSplit</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">cv_args</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;train_size&quot;</span><span class="p">:</span> <span class="n">train_size</span><span class="p">,</span>
+               <span class="s2">&quot;test_size&quot;</span><span class="p">:</span> <span class="n">test_size</span><span class="p">}</span>
+    <span class="n">custom_cv</span> <span class="o">=</span> <span class="n">GroupTimeSeriesSplit</span><span class="p">(</span><span class="o">**</span><span class="n">cv_args</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">custom_cv</span></div>
+
+
+
+<div class="viewcode-block" id="evaluate_model">
+<a class="viewcode-back" href="../../../api/src.model.evaluate.html#src.model.evaluate.evaluate_model">[docs]</a>
+<span class="k">def</span> <span class="nf">evaluate_model</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Evaluate model using a variety of metrics.</span>
+<span class="sd">    </span>
+<span class="sd">    :param sklearn.pipeline.Pipeline pipeline: pipeline to evaluate</span>
+<span class="sd">    :param pd.DataFrame X: features</span>
+<span class="sd">    :param pd.Series y: target</span>
+<span class="sd">    :param function cv: cross-validation object</span>
+<span class="sd">    :return: evaluation metrics</span>
+<span class="sd">    :rtype: pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">groups</span> <span class="o">=</span> <span class="n">X</span><span class="p">[</span><span class="s1">&#39;season&#39;</span><span class="p">]</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">cross_validate</span><span class="p">(</span><span class="n">pipeline</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv</span><span class="p">,</span> <span class="n">groups</span><span class="o">=</span><span class="n">groups</span><span class="p">,</span>
+                            <span class="n">scoring</span><span class="o">=</span><span class="n">custom_scorer</span><span class="p">,</span> <span class="n">return_estimator</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">estimators</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;estimator&#39;</span><span class="p">)</span>
+    <span class="n">scores</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span><span class="o">.</span><span class="n">T</span>
+    <span class="n">num_folds</span> <span class="o">=</span> <span class="n">cv</span><span class="o">.</span><span class="n">get_n_splits</span><span class="p">()</span>
+    <span class="n">scores</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="sa">f</span><span class="s1">&#39;fold_</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s1">&#39;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_folds</span><span class="p">)]</span>
+    <span class="n">scores</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;metric&#39;</span>
+    <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;mean&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;std&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">scores</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">scores</span><span class="p">,</span> <span class="n">estimators</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Kel Varnsen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
