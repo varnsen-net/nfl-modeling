@@ -103,7 +103,13 @@ def find_best_params(objective, space, max_evals, early_stop_n):
 
 
 def fix_param_dtypes(params, param_dtypes):
-    """Fix types for best hyperparameters returned by hyperopt."""
+    """Fix types for best hyperparameters returned by hyperopt.
+    
+    :param dict params: hyperparameters
+    :param dict param_dtypes: hyperparameter types
+    :return: hyperparameters with fixed types
+    :rtype: dict
+    """
     for key, dtype in param_dtypes.items():
         val = dtype(params.get(key))
         params.update({key: val})

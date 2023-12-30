@@ -194,7 +194,13 @@
 <div class="viewcode-block" id="fix_param_dtypes">
 <a class="viewcode-back" href="../../../api/src.model.hyperoptimize.html#src.model.hyperoptimize.fix_param_dtypes">[docs]</a>
 <span class="k">def</span> <span class="nf">fix_param_dtypes</span><span class="p">(</span><span class="n">params</span><span class="p">,</span> <span class="n">param_dtypes</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fix types for best hyperparameters returned by hyperopt.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fix types for best hyperparameters returned by hyperopt.</span>
+<span class="sd">    </span>
+<span class="sd">    :param dict params: hyperparameters</span>
+<span class="sd">    :param dict param_dtypes: hyperparameter types</span>
+<span class="sd">    :return: hyperparameters with fixed types</span>
+<span class="sd">    :rtype: dict</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="n">param_dtypes</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">val</span> <span class="o">=</span> <span class="n">dtype</span><span class="p">(</span><span class="n">params</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">key</span><span class="p">))</span>
         <span class="n">params</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="n">key</span><span class="p">:</span> <span class="n">val</span><span class="p">})</span>

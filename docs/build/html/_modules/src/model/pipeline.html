@@ -79,7 +79,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">from</span> <span class="nn">sklearn.pipeline</span> <span class="kn">import</span> <span class="n">make_pipeline</span>
-<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">FunctionTransformer</span><span class="p">,</span> <span class="n">OneHotEncoder</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">FunctionTransformer</span><span class="p">,</span> <span class="n">OneHotEncoder</span><span class="p">,</span> <span class="n">StandardScaler</span>
 <span class="kn">from</span> <span class="nn">sklearn.compose</span> <span class="kn">import</span> <span class="n">ColumnTransformer</span>
 
 <span class="kn">from</span> <span class="nn">src.model.process</span> <span class="kn">import</span> <span class="n">reduce_columns</span>
@@ -102,12 +102,11 @@
                        <span class="s1">&#39;obj_rest&#39;</span><span class="p">,</span>
                        <span class="s1">&#39;adv_rest&#39;</span><span class="p">,</span>
                        <span class="s1">&#39;obj_travel_distance&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;adv_travel_distance&#39;</span><span class="p">,</span>
-                       <span class="s1">&#39;obj_team_is_home&#39;</span><span class="p">]</span>
+                       <span class="s1">&#39;adv_travel_distance&#39;</span><span class="p">]</span>
     <span class="n">kw_args</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;columns&#39;</span><span class="p">:</span> <span class="n">feature_columns</span><span class="p">}</span>
     <span class="n">column_reducer</span> <span class="o">=</span> <span class="n">FunctionTransformer</span><span class="p">(</span><span class="n">reduce_columns</span><span class="p">,</span> <span class="n">kw_args</span><span class="o">=</span><span class="n">kw_args</span><span class="p">)</span>
     <span class="n">estimator</span> <span class="o">=</span> <span class="n">baseline_estimator</span><span class="p">(</span><span class="o">**</span><span class="n">model_params</span><span class="p">)</span>
-    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">column_reducer</span><span class="p">,</span> <span class="n">estimator</span><span class="p">)</span>
+    <span class="n">pipeline</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span><span class="n">column_reducer</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">estimator</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">pipeline</span></div>
 
 

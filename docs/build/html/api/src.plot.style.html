@@ -133,12 +133,13 @@
 <dd><p>Convert a list of hex color codes to a list of normed rgb tuples.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>hex_codes</strong> – <em>list of strings</em>
-Hex color codes.</p>
+<dd class="field-odd"><p><strong>hex_codes</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – List of hex color codes.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>list of tuples</em>
-RGB values.</p>
+<dd class="field-even"><p>List of rgb tuples.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[tuple[float]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -149,11 +150,13 @@ RGB values.</p>
 <dd><p>Register a set of hex codes as a matplotlib colormap.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>user_palettes</strong> – <em>dict</em>
-Dictionary of palettes to register.</p>
+<dd class="field-odd"><p><strong>user_palettes</strong> (<em>dict</em>) – Dictionary of color palettes.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>None</em></p>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -165,14 +168,15 @@ Dictionary of palettes to register.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>font_scale</strong> – <em>float</em>
-Font scale for plot text.</p></li>
-<li><p><strong>user_rcparams</strong> – <em>dict</em>
-Dictionary of rcParams to override.</p></li>
+<li><p><strong>font_scale</strong> (<em>float</em>) – Font scale for plot.</p></li>
+<li><p><strong>user_rcparams</strong> (<em>dict</em>) – Dictionary of rcParams for matplotlib.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>None</em></p>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>

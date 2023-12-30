@@ -90,12 +90,12 @@
 <div class="viewcode-block" id="get_most_recent_dir">
 <a class="viewcode-back" href="../../../../api/src.data.predict.predict.html#src.data.predict.predict.get_most_recent_dir">[docs]</a>
 <span class="k">def</span> <span class="nf">get_most_recent_dir</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the largest dir name.</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the largest dir name. Assumes that the dir names are integer</span>
+<span class="sd">    timestamps.</span>
 <span class="sd">    </span>
-<span class="sd">    :param path: *str*</span>
-<span class="sd">        Path to directory.</span>
-<span class="sd">    :return: *str*</span>
-<span class="sd">        Path to most recent results dir.</span>
+<span class="sd">    :param str path: Path to the parent dir to search.</span>
+<span class="sd">    :return: Path to the most recent dir.</span>
+<span class="sd">    :rtype: str</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">most_recent_dir</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">listdir</span><span class="p">(</span><span class="n">path</span><span class="p">))[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
     <span class="n">results_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">most_recent_dir</span><span class="p">)</span>
@@ -108,16 +108,14 @@
 <span class="k">def</span> <span class="nf">merge_most_recent_feature</span><span class="p">(</span><span class="n">games</span><span class="p">,</span> <span class="n">feature</span><span class="p">,</span> <span class="n">current_season</span><span class="p">,</span> <span class="n">current_week</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Merge the most recent feature to the games df.</span>
 <span class="sd">    </span>
-<span class="sd">    :param games: *pd.DataFrame of shape (n_games, n_cols)*</span>
-<span class="sd">        Raw games df.</span>
-<span class="sd">    :param feature: *pd.DataFrame of shape (n_weeks, n_cols)*</span>
-<span class="sd">        Feature df. Index should be either game_id or (season, team, week).</span>
-<span class="sd">    :param current_season: *int*</span>
-<span class="sd">        Current season.</span>
-<span class="sd">    :param current_week: *int*</span>
-<span class="sd">        Current week.</span>
-<span class="sd">    :return: *pd.DataFrame of shape (n_games, n_cols)*</span>
-<span class="sd">        Games df with feature merged.</span>
+<span class="sd">    :param games: Raw games df.</span>
+<span class="sd">    :type games: pd.DataFrame of shape (n_games, n_cols)</span>
+<span class="sd">    :param feature: Feature df. Index should be either game_id or season/team/week.</span>
+<span class="sd">    :type feature: pd.DataFrame of shape (n_weeks, n_cols)</span>
+<span class="sd">    :param int current_season: Current NFL season.</span>
+<span class="sd">    :param int current_week: Current NFL week.</span>
+<span class="sd">    :return: Games df with the most recent feature merged.</span>
+<span class="sd">    :rtype: pd.DataFrame of shape (n_games, n_cols)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">first_col</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">first_col</span> <span class="o">==</span> <span class="s1">&#39;game_id&#39;</span><span class="p">:</span>
@@ -142,12 +140,11 @@
 <span class="k">def</span> <span class="nf">build_prediction_data</span><span class="p">(</span><span class="n">upcoming</span><span class="p">,</span> <span class="n">features_path</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Build the data to make predictions on.</span>
 <span class="sd">    </span>
-<span class="sd">    :param upcoming: *pd.DataFrame of shape (n_games, n_cols)*</span>
-<span class="sd">        Upcoming games from the raw games df.</span>
-<span class="sd">    :param features_path: *str*</span>
-<span class="sd">        Path to features data.</span>
-<span class="sd">    :return: *pd.DataFrame of shape (n_games, n_cols)*</span>
-<span class="sd">        Data to make predictions on.</span>
+<span class="sd">    :param upcoming: Upcoming games df.</span>
+<span class="sd">    :type upcoming: pd.DataFrame of shape (n_games, n_cols)</span>
+<span class="sd">    :param str features_path: Path to the features dir.</span>
+<span class="sd">    :return: Data to make predictions on.</span>
+<span class="sd">    :rtype: pd.DataFrame of shape (n_games, n_cols)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">for</span> <span class="n">file_path</span> <span class="ow">in</span> <span class="n">walk_features_dir</span><span class="p">(</span><span class="n">features_path</span><span class="p">):</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
@@ -169,10 +166,12 @@
     <span class="n">prediction_data_path</span> <span class="o">=</span> <span class="n">PATHS</span><span class="p">[</span><span class="s1">&#39;prediction&#39;</span><span class="p">]</span>
 
 
-    <span class="n">games</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">raw_games_path</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">games_cols</span><span class="p">)</span>
-    <span class="n">q</span> <span class="o">=</span> <span class="s1">&#39;season == @CURRENT_SEASON and week == @CURRENT_WEEK&#39;</span>
-    <span class="n">upcoming</span> <span class="o">=</span> <span class="n">games</span><span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="n">q</span><span class="p">)</span>
+    <span class="n">games</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">raw_games_path</span><span class="p">)</span>
+    <span class="n">upcoming</span> <span class="o">=</span> <span class="p">(</span><span class="n">games</span>
+                <span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">games</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">isnull</span><span class="p">()]</span>
+                <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">games_cols</span><span class="p">))</span>
     <span class="n">prediction_data</span> <span class="o">=</span> <span class="n">build_prediction_data</span><span class="p">(</span><span class="n">upcoming</span><span class="p">,</span> <span class="n">features_path</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">prediction_data</span><span class="p">)</span>
 
 
     <span class="n">most_recent_results</span> <span class="o">=</span> <span class="n">get_most_recent_dir</span><span class="p">(</span><span class="n">results_path</span><span class="p">)</span>

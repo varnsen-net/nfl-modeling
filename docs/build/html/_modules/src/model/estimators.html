@@ -88,7 +88,13 @@
 <div class="viewcode-block" id="baseline_estimator">
 <a class="viewcode-back" href="../../../api/src.model.estimators.html#src.model.estimators.baseline_estimator">[docs]</a>
 <span class="k">def</span> <span class="nf">baseline_estimator</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a calibrated logistic regression estimator.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a calibrated logistic regression estimator.</span>
+<span class="sd">    </span>
+<span class="sd">    :param list args: positional arguments to pass to LogisticRegression</span>
+<span class="sd">    :param dict kwargs: keyword arguments to pass to LogisticRegression</span>
+<span class="sd">    :return: calibrated logistic regression estimator</span>
+<span class="sd">    :rtype: sklearn.calibration.CalibratedClassifierCV</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">estimator</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">calibrated_estimator</span> <span class="o">=</span> <span class="n">CalibratedClassifierCV</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">calibrated_estimator</span></div>
@@ -98,7 +104,13 @@
 <div class="viewcode-block" id="swift_estimator">
 <a class="viewcode-back" href="../../../api/src.model.estimators.html#src.model.estimators.swift_estimator">[docs]</a>
 <span class="k">def</span> <span class="nf">swift_estimator</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a calibrated SWIFT estimator.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Returns a calibrated SWIFT estimator.</span>
+<span class="sd">    </span>
+<span class="sd">    :param list args: positional arguments to pass to LogisticRegression</span>
+<span class="sd">    :param dict kwargs: keyword arguments to pass to LogisticRegression</span>
+<span class="sd">    :return: calibrated logistic regression estimator</span>
+<span class="sd">    :rtype: sklearn.calibration.CalibratedClassifierCV</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">estimator</span> <span class="o">=</span> <span class="n">LGBMClassifier</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="n">calibrated_estimator</span> <span class="o">=</span> <span class="n">CalibratedClassifierCV</span><span class="p">(</span><span class="n">estimator</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">calibrated_estimator</span></div>

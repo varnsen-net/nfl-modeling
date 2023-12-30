@@ -147,10 +147,9 @@
 <span class="k">def</span> <span class="nf">hex_to_rgb</span><span class="p">(</span><span class="n">hex_codes</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert a list of hex color codes to a list of normed rgb tuples.</span>
 <span class="sd">    </span>
-<span class="sd">    :param hex_codes: *list of strings*</span>
-<span class="sd">        Hex color codes.</span>
-<span class="sd">    :return: *list of tuples*</span>
-<span class="sd">        RGB values.</span>
+<span class="sd">    :param list[str] hex_codes: List of hex color codes.</span>
+<span class="sd">    :return: List of rgb tuples.</span>
+<span class="sd">    :rtype: list[tuple[float]]</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">l</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">i</span><span class="p">:</span><span class="n">i</span><span class="o">+</span><span class="mi">2</span><span class="p">],</span> <span class="mi">16</span><span class="p">)</span><span class="o">/</span><span class="mi">256</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">4</span><span class="p">)]</span>
     <span class="n">rgb_list</span> <span class="o">=</span> <span class="p">[</span><span class="nb">tuple</span><span class="p">(</span><span class="n">l</span><span class="p">(</span><span class="n">code</span><span class="p">))</span> <span class="k">for</span> <span class="n">code</span> <span class="ow">in</span> <span class="n">hex_codes</span><span class="p">]</span>
@@ -163,9 +162,9 @@
 <span class="k">def</span> <span class="nf">register_colormaps</span><span class="p">(</span><span class="n">user_palettes</span><span class="o">=</span><span class="n">PALETTES</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Register a set of hex codes as a matplotlib colormap.</span>
 <span class="sd">    </span>
-<span class="sd">    :param user_palettes: *dict*</span>
-<span class="sd">        Dictionary of palettes to register.</span>
-<span class="sd">    :return: *None*</span>
+<span class="sd">    :param dict user_palettes: Dictionary of color palettes.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    :rtype: None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">palettes</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span> <span class="p">:</span> <span class="n">hex_to_rgb</span><span class="p">(</span><span class="n">PALETTES</span><span class="p">[</span><span class="n">k</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">PALETTES</span><span class="o">.</span><span class="n">keys</span><span class="p">()}</span>
     <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">palettes</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
@@ -180,11 +179,10 @@
 <span class="k">def</span> <span class="nf">set_plot_params</span><span class="p">(</span><span class="n">font_scale</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span> <span class="n">user_rcparams</span><span class="o">=</span><span class="n">RCPARAMS</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Set plot style and parameters.</span>
 <span class="sd">    </span>
-<span class="sd">    :param font_scale: *float*</span>
-<span class="sd">        Font scale for plot text.</span>
-<span class="sd">    :param user_rcparams: *dict*</span>
-<span class="sd">        Dictionary of rcParams to override.</span>
-<span class="sd">    :return: *None*</span>
+<span class="sd">    :param float font_scale: Font scale for plot.</span>
+<span class="sd">    :param dict user_rcparams: Dictionary of rcParams for matplotlib.</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    :rtype: None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span>
         <span class="n">context</span> <span class="o">=</span> <span class="s1">&#39;paper&#39;</span><span class="p">,</span>

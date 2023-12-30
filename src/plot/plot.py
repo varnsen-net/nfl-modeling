@@ -12,7 +12,8 @@ register_colormaps()
 def test_plot():
     """Test the plot style with a dummy plot.
     
-    :return: *None*
+    :return: None
+    :rtype: None
     """
     x = [1, 2, 3, 4]
     y = [1, 2, 3, 4]
@@ -23,10 +24,10 @@ def test_plot():
 def make_plot_data(scores):
     """Make data for plots.
 
-    :param scores: *pd.DataFrame of shape (n_splits, n_scores)*
-        Scores from model evaluation.
-    :return: *tuple of dataframes*
-        Plot data.
+    :param scores: Scores from model evaluation.
+    :type scores: pd.DataFrame of shape (n_folds, n_scores)
+    :return: Data to plot.
+    :rtype: tuple[pd.DataFrame, pd.DataFrame, np.array]
     """
     prob_true = scores.filter(regex='^test_prob_true_', axis=0)
     prob_pred = scores.filter(regex='^test_prob_pred_', axis=0)
@@ -42,15 +43,14 @@ def make_plot_data(scores):
 def plot_train_calibration(prob_true, prob_pred, name, save_path):
     """Plot calibration errors.
     
-    :param prob_true: *pd.DataFrame of shape (n_splits, n_scores)*
-        True probabilities.
-    :param prob_pred: *pd.DataFrame of shape (n_splits, n_scores)*
-        Predicted probabilities.
-    :param name: *str*
-        Name of model.
-    :param save_path: *str*
-        Path to save plots.
-    :return: *None*
+    :param prob_true: True probabilities.
+    :type prob_true: pd.DataFrame of shape (n_samples, n_folds)
+    :param prob_pred: Predicted probabilities.
+    :type prob_pred: pd.DataFrame of shape (n_samples, n_folds)
+    :param str name: Name of model.
+    :param str save_path: Path to save plots.
+    :return: None
+    :rtype: None
     """
     fold_names = [col for col in prob_true.columns
                   if col.startswith('fold')]
@@ -95,13 +95,11 @@ def plot_train_calibration(prob_true, prob_pred, name, save_path):
 def plot_test_calibration(holdout_scores, name, save_path):
     """Plot calibration curve for holdout data.
     
-    :param holdout_scores: *dict*
-        Scores from model evaluation.
-    :param name: *str*
-        Name of model.
-    :param save_path: *str*
-        Path to save plots.
-    :return: *None*
+    :param dict holdout_scores: Scores for holdout data.
+    :param str name: Name of model.
+    :param str save_path: Path to save plots.
+    :return: None
+    :rtype: None
     """
     x = [holdout_scores[f] for f in holdout_scores if f.startswith('prob_pred_')]
     y = [holdout_scores[f] for f in holdout_scores if f.startswith('prob_true_')]
@@ -129,13 +127,12 @@ def plot_test_calibration(holdout_scores, name, save_path):
 def plot_confusion_matrix(scores, name, save_path):
     """Plot normalized confusion matrix using matplotlib.
     
-    :param scores: *np.array of shape (2, 2)*
-        Confusion matrix scores.
-    :param name: *str*
-        Name of model.
-    :param save_path: *str*
-        Path to save plots.
-    :return: *None*
+    :param scores: Scores from model evaluation.
+    :type scores: np.array of shape (2, 2)
+    :param str name: Name of model.
+    :param str save_path: Path to save plots.
+    :return: None
+    :rtype: None
     """
     scores = (scores / scores.sum()).round(3)
     fig, ax = plt.subplots(nrows=1, ncols=1,
@@ -162,13 +159,12 @@ def plot_confusion_matrix(scores, name, save_path):
 def make_and_save_plots(scores, name, save_path):
     """Make and save plots.
     
-    :param scores: *pd.DataFrame*
-        Scores from model evaluation.
-    :param name: *str*
-        Name of model.
-    :param save_path: *str*
-        Path to save plots.
-    :return: *None*
+    :param scores: Scores from model evaluation.
+    :type scores: pd.DataFrame of shape (n_samples, n_folds)
+    :param str name: Name of model.
+    :param str save_path: Path to save plots.
+    :return: None
+    :rtype: None
     """
     set_plot_params()
     prob_true, prob_pred, conf_matrix_scores = make_plot_data(scores)

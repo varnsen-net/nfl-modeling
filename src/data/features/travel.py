@@ -12,12 +12,10 @@ def get_city_coordinates(teams, loc_replacements):
 
     Mostly saving this just for reference. I only need to run it once.
     
-    :param teams: *pd.DataFrame of shape (32, 2)*
-        The Sharpe teams data.
-    :param loc_replacements: *dict*
-        Dictionary of location replacements.
-    :return: *pd.DataFrame of shape (32, 3)*
-        Dataframe with the decimal latitude and longitude for every NFL team
+    :param pd.DataFrame teams: df with team names and locations
+    :param dict loc_replacements: dict of location replacements
+    :return: city names, latitudes, and longitudes
+    :rtype: pd.DataFrame
     """
     cities = teams['location'].unique()
     cities = pd.Series(cities, name='location')
@@ -38,12 +36,12 @@ def get_city_coordinates(teams, loc_replacements):
 def calculate_distances(home_coords, away_coords):
     """Calculates the distance between two arrays of lat/lon coordinate pairs.
 
-    :param home_coords: *np.array of shape (n, 2)*
-        Home lat/lon coordinates.
-    :param away_coords: *np.array of shape (n, 2)*
-        Away lat/lon coordinates.
-    :return: *np.array of shape (n,)*
-        Distances for each pair of lat/lon coordinates (km).
+    :param home_coords: Home lat/lon coordinates.
+    :type home_coords: np.array of shape (n, 2)
+    :param away_coords: Away lat/lon coordinates.
+    :type away_coords: np.array of shape (n, 2)
+    :return: Distance between the two coordinates in km.
+    :rtype: np.array of shape (n, 1)
     """
     R = 6373.0
     lat1 = np.radians(home_coords[:, 0])
@@ -61,11 +59,12 @@ def calculate_distances(home_coords, away_coords):
 def attach_lats_lons(games, city_coords):
     """Merge the city coordinates onto the games dataframe.
     
-    :param games: *pd.DataFrame of shape (n_rows, n_cols)*
-        Raw games data.
-    :param city_coords: *pd.DataFrame of shape (32, 3)*
-    :return: *pd.DataFrame of shape (n, 7)*
-        Games data with latitude and longitude for each team.
+    :param games: Raw games data.
+    :type games: pd.DataFrame of shape (n_rows, n_cols)
+    :param city_coords: City coordinates data.
+    :type city_coords: pd.DataFrame of shape (n_teams, n_cols)
+    :return: Games dataframe with city coordinates attached.
+    :rtype: pd.DataFrame of shape (n_rows, n_cols)
     """
     games = (games
              .merge(city_coords[['name', 'lat', 'lon']], 
@@ -81,12 +80,11 @@ def attach_lats_lons(games, city_coords):
 def get_away_travel_distances(games, name):
     """Calculate the distance traveled by the away team for each game.
     
-    :param games: *pd.DataFrame of shape (n_rows, n_cols)*
-        Raw games data.
-    :param name: *str*
-        Name of the travel feature.
-    :return: *pd.DataFrame of shape (n_rows, 3)*
-        Dataframe with the travel distances for each game.
+    :param games: Raw games data.
+    :type games: pd.DataFrame of shape (n_rows, n_cols)
+    :param str name: Name of the travel feature.
+    :return: Dataframe with the travel distances for each game.
+    :rtype: pd.DataFrame of shape (n_rows, n_cols)
     """
     away_colname = f"away_{name}"
     home_colname = f"home_{name}"
@@ -102,12 +100,11 @@ def get_away_travel_distances(games, name):
 def get_away_lon_deltas(games, name):
     """Calculate the difference in longitude between the home and away teams.
 
-    :param games: *pd.DataFrame of shape (n_rows, n_cols)*
-        Raw games data.
-    :param name: *str*
-        Name of the travel feature.
-    :return: *pd.DataFrame of shape (n_rows, 3)*
-        Dataframe with the longitude deltas for each game.
+    :param games: Raw games data.
+    :type games: pd.DataFrame of shape (n_rows, n_cols)
+    :param str name: Name of the travel feature.
+    :return: Dataframe with the away team longitude deltas.
+    :rtype: pd.DataFrame of shape (n_rows, n_cols)
     """
     away_colname = f"away_{name}"
     home_colname = f"home_{name}"
@@ -121,13 +118,11 @@ def get_away_lon_deltas(games, name):
 def build_travel_features(raw_games_path, city_coords_path, output_dir):
     """Build engineered features for team travel.
 
-    :param raw_games_path: *str*
-        Path to the raw games data.
-    :param city_coords_path: *str*
-        Path to the city coordinates data.
-    :param output_dir: *str*
-        Path to the output directory.
-    :return: *None*
+    :param str raw_games_path: Path to the raw games data.
+    :param str city_coords_path: Path to the city coordinates data.
+    :param str output_dir: Path to the output directory.
+    :return: None
+    :rtype: None
     """
     games = pd.read_csv(raw_games_path)
     city_coords = pd.read_csv(city_coords_path)

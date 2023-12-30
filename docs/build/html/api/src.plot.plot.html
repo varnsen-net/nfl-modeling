@@ -116,16 +116,16 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scores</strong> – <em>pd.DataFrame</em>
-Scores from model evaluation.</p></li>
-<li><p><strong>name</strong> – <em>str</em>
-Name of model.</p></li>
-<li><p><strong>save_path</strong> – <em>str</em>
-Path to save plots.</p></li>
+<li><p><strong>scores</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_samples</em><em>, </em><em>n_folds</em><em>)</em>) – Scores from model evaluation.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of model.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em>) – Path to save plots.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>None</em></p>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -136,12 +136,13 @@ Path to save plots.</p></li>
 <dd><p>Make data for plots.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>scores</strong> – <em>pd.DataFrame of shape (n_splits, n_scores)</em>
-Scores from model evaluation.</p>
+<dd class="field-odd"><p><strong>scores</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_folds</em><em>, </em><em>n_scores</em><em>)</em>) – Scores from model evaluation.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>tuple of dataframes</em>
-Plot data.</p>
+<dd class="field-even"><p>Data to plot.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[pd.DataFrame, pd.DataFrame, np.array]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -153,16 +154,16 @@ Plot data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>scores</strong> – <em>np.array of shape (2, 2)</em>
-Confusion matrix scores.</p></li>
-<li><p><strong>name</strong> – <em>str</em>
-Name of model.</p></li>
-<li><p><strong>save_path</strong> – <em>str</em>
-Path to save plots.</p></li>
+<li><p><strong>scores</strong> (<em>np.array</em><em> of </em><em>shape</em><em> (</em><em>2</em><em>, </em><em>2</em><em>)</em>) – Scores from model evaluation.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of model.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em>) – Path to save plots.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>None</em></p>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -174,16 +175,16 @@ Path to save plots.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>holdout_scores</strong> – <em>dict</em>
-Scores from model evaluation.</p></li>
-<li><p><strong>name</strong> – <em>str</em>
-Name of model.</p></li>
-<li><p><strong>save_path</strong> – <em>str</em>
-Path to save plots.</p></li>
+<li><p><strong>holdout_scores</strong> (<em>dict</em>) – Scores for holdout data.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of model.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em>) – Path to save plots.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>None</em></p>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -195,18 +196,17 @@ Path to save plots.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>prob_true</strong> – <em>pd.DataFrame of shape (n_splits, n_scores)</em>
-True probabilities.</p></li>
-<li><p><strong>prob_pred</strong> – <em>pd.DataFrame of shape (n_splits, n_scores)</em>
-Predicted probabilities.</p></li>
-<li><p><strong>name</strong> – <em>str</em>
-Name of model.</p></li>
-<li><p><strong>save_path</strong> – <em>str</em>
-Path to save plots.</p></li>
+<li><p><strong>prob_true</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_samples</em><em>, </em><em>n_folds</em><em>)</em>) – True probabilities.</p></li>
+<li><p><strong>prob_pred</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_samples</em><em>, </em><em>n_folds</em><em>)</em>) – Predicted probabilities.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of model.</p></li>
+<li><p><strong>save_path</strong> (<em>str</em>) – Path to save plots.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>None</em></p>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -217,7 +217,10 @@ Path to save plots.</p></li>
 <dd><p>Test the plot style with a dummy plot.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns<span class="colon">:</span></dt>
-<dd class="field-odd"><p><em>None</em></p>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
 </dd>
 </dl>
 </dd></dl>

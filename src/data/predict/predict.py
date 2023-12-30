@@ -14,12 +14,12 @@ from src.config.config import (PATHS,
 
 
 def get_most_recent_dir(path):
-    """Get the largest dir name.
+    """Get the largest dir name. Assumes that the dir names are integer
+    timestamps.
     
-    :param path: *str*
-        Path to directory.
-    :return: *str*
-        Path to most recent results dir.
+    :param str path: Path to the parent dir to search.
+    :return: Path to the most recent dir.
+    :rtype: str
     """
     most_recent_dir = sorted(os.listdir(path))[-1]
     results_path = os.path.join(path, most_recent_dir)
@@ -29,16 +29,14 @@ def get_most_recent_dir(path):
 def merge_most_recent_feature(games, feature, current_season, current_week):
     """Merge the most recent feature to the games df.
     
-    :param games: *pd.DataFrame of shape (n_games, n_cols)*
-        Raw games df.
-    :param feature: *pd.DataFrame of shape (n_weeks, n_cols)*
-        Feature df. Index should be either game_id or (season, team, week).
-    :param current_season: *int*
-        Current season.
-    :param current_week: *int*
-        Current week.
-    :return: *pd.DataFrame of shape (n_games, n_cols)*
-        Games df with feature merged.
+    :param games: Raw games df.
+    :type games: pd.DataFrame of shape (n_games, n_cols)
+    :param feature: Feature df. Index should be either game_id or season/team/week.
+    :type feature: pd.DataFrame of shape (n_weeks, n_cols)
+    :param int current_season: Current NFL season.
+    :param int current_week: Current NFL week.
+    :return: Games df with the most recent feature merged.
+    :rtype: pd.DataFrame of shape (n_games, n_cols)
     """
     first_col = feature.columns[0]
     if first_col == 'game_id':
@@ -60,12 +58,11 @@ def merge_most_recent_feature(games, feature, current_season, current_week):
 def build_prediction_data(upcoming, features_path):
     """Build the data to make predictions on.
     
-    :param upcoming: *pd.DataFrame of shape (n_games, n_cols)*
-        Upcoming games from the raw games df.
-    :param features_path: *str*
-        Path to features data.
-    :return: *pd.DataFrame of shape (n_games, n_cols)*
-        Data to make predictions on.
+    :param upcoming: Upcoming games df.
+    :type upcoming: pd.DataFrame of shape (n_games, n_cols)
+    :param str features_path: Path to the features dir.
+    :return: Data to make predictions on.
+    :rtype: pd.DataFrame of shape (n_games, n_cols)
     """
     for file_path in walk_features_dir(features_path):
         feature = pd.read_csv(file_path)
@@ -86,10 +83,12 @@ if __name__ == "__main__":
     prediction_data_path = PATHS['prediction']
 
 
-    games = pd.read_csv(raw_games_path, usecols=games_cols)
-    q = 'season == @CURRENT_SEASON and week == @CURRENT_WEEK'
-    upcoming = games.query(q)
+    games = pd.read_csv(raw_games_path)
+    upcoming = (games
+                .loc[games['result'].isnull()]
+                .filter(games_cols))
     prediction_data = build_prediction_data(upcoming, features_path)
+    print(prediction_data)
 
 
     most_recent_results = get_most_recent_dir(results_path)

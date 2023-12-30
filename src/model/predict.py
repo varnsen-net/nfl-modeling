@@ -9,7 +9,7 @@ def voting_classifier(estimators, X, type):
     """Generate predictions for a set of fitted estimators.
 
     For soft voting, return the average of the predicted probabilities.
-    For hard voting, return the most common prediction.
+    For hard voting, return the most common class prediction.
     
     :param list estimators: fitted estimators
     :param pd.DataFrame X: features
@@ -21,5 +21,3 @@ def voting_classifier(estimators, X, type):
         return np.mean([est.predict_proba(X)[:,1] for est in estimators], axis=0)
     elif type == 'hard':
         return mode([est.predict(X) for est in estimators], axis=0)[0]
-    else:
-        return None

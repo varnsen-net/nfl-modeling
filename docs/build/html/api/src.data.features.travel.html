@@ -116,14 +116,15 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>games</strong> – <em>pd.DataFrame of shape (n_rows, n_cols)</em>
-Raw games data.</p></li>
-<li><p><strong>city_coords</strong> – <em>pd.DataFrame of shape (32, 3)</em></p></li>
+<li><p><strong>games</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_rows</em><em>, </em><em>n_cols</em><em>)</em>) – Raw games data.</p></li>
+<li><p><strong>city_coords</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_teams</em><em>, </em><em>n_cols</em><em>)</em>) – City coordinates data.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>pd.DataFrame of shape (n, 7)</em>
-Games data with latitude and longitude for each team.</p>
+<dd class="field-even"><p>Games dataframe with city coordinates attached.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame of shape (n_rows, n_cols)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -135,16 +136,16 @@ Games data with latitude and longitude for each team.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>raw_games_path</strong> – <em>str</em>
-Path to the raw games data.</p></li>
-<li><p><strong>city_coords_path</strong> – <em>str</em>
-Path to the city coordinates data.</p></li>
-<li><p><strong>output_dir</strong> – <em>str</em>
-Path to the output directory.</p></li>
+<li><p><strong>raw_games_path</strong> (<em>str</em>) – Path to the raw games data.</p></li>
+<li><p><strong>city_coords_path</strong> (<em>str</em>) – Path to the city coordinates data.</p></li>
+<li><p><strong>output_dir</strong> (<em>str</em>) – Path to the output directory.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>None</em></p>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>None</p>
 </dd>
 </dl>
 </dd></dl>
@@ -156,15 +157,15 @@ Path to the output directory.</p></li>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>home_coords</strong> – <em>np.array of shape (n, 2)</em>
-Home lat/lon coordinates.</p></li>
-<li><p><strong>away_coords</strong> – <em>np.array of shape (n, 2)</em>
-Away lat/lon coordinates.</p></li>
+<li><p><strong>home_coords</strong> (<em>np.array</em><em> of </em><em>shape</em><em> (</em><em>n</em><em>, </em><em>2</em><em>)</em>) – Home lat/lon coordinates.</p></li>
+<li><p><strong>away_coords</strong> (<em>np.array</em><em> of </em><em>shape</em><em> (</em><em>n</em><em>, </em><em>2</em><em>)</em>) – Away lat/lon coordinates.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>np.array of shape (n,)</em>
-Distances for each pair of lat/lon coordinates (km).</p>
+<dd class="field-even"><p>Distance between the two coordinates in km.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>np.array of shape (n, 1)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -176,15 +177,15 @@ Distances for each pair of lat/lon coordinates (km).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>games</strong> – <em>pd.DataFrame of shape (n_rows, n_cols)</em>
-Raw games data.</p></li>
-<li><p><strong>name</strong> – <em>str</em>
-Name of the travel feature.</p></li>
+<li><p><strong>games</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_rows</em><em>, </em><em>n_cols</em><em>)</em>) – Raw games data.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of the travel feature.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>pd.DataFrame of shape (n_rows, 3)</em>
-Dataframe with the longitude deltas for each game.</p>
+<dd class="field-even"><p>Dataframe with the away team longitude deltas.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame of shape (n_rows, n_cols)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -196,15 +197,15 @@ Dataframe with the longitude deltas for each game.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>games</strong> – <em>pd.DataFrame of shape (n_rows, n_cols)</em>
-Raw games data.</p></li>
-<li><p><strong>name</strong> – <em>str</em>
-Name of the travel feature.</p></li>
+<li><p><strong>games</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_rows</em><em>, </em><em>n_cols</em><em>)</em>) – Raw games data.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Name of the travel feature.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>pd.DataFrame of shape (n_rows, 3)</em>
-Dataframe with the travel distances for each game.</p>
+<dd class="field-even"><p>Dataframe with the travel distances for each game.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame of shape (n_rows, n_cols)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -218,15 +219,15 @@ NFL team city in the Sharpe teams data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>teams</strong> – <em>pd.DataFrame of shape (32, 2)</em>
-The Sharpe teams data.</p></li>
-<li><p><strong>loc_replacements</strong> – <em>dict</em>
-Dictionary of location replacements.</p></li>
+<li><p><strong>teams</strong> (<em>pd.DataFrame</em>) – df with team names and locations</p></li>
+<li><p><strong>loc_replacements</strong> (<em>dict</em>) – dict of location replacements</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>pd.DataFrame of shape (32, 3)</em>
-Dataframe with the decimal latitude and longitude for every NFL team</p>
+<dd class="field-even"><p>city names, latitudes, and longitudes</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame</p>
 </dd>
 </dl>
 </dd></dl>

@@ -113,15 +113,15 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>upcoming</strong> – <em>pd.DataFrame of shape (n_games, n_cols)</em>
-Upcoming games from the raw games df.</p></li>
-<li><p><strong>features_path</strong> – <em>str</em>
-Path to features data.</p></li>
+<li><p><strong>upcoming</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_games</em><em>, </em><em>n_cols</em><em>)</em>) – Upcoming games df.</p></li>
+<li><p><strong>features_path</strong> (<em>str</em>) – Path to the features dir.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>pd.DataFrame of shape (n_games, n_cols)</em>
-Data to make predictions on.</p>
+<dd class="field-even"><p>Data to make predictions on.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame of shape (n_games, n_cols)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -129,15 +129,17 @@ Data to make predictions on.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="src.data.predict.predict.get_most_recent_dir">
 <span class="sig-prename descclassname"><span class="pre">src.data.predict.predict.</span></span><span class="sig-name descname"><span class="pre">get_most_recent_dir</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/predict/predict.html#get_most_recent_dir"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.predict.predict.get_most_recent_dir" title="Link to this definition"></a></dt>
-<dd><p>Get the largest dir name.</p>
+<dd><p>Get the largest dir name. Assumes that the dir names are integer
+timestamps.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> – <em>str</em>
-Path to directory.</p>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – Path to the parent dir to search.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>str</em>
-Path to most recent results dir.</p>
+<dd class="field-even"><p>Path to the most recent dir.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
 </dd>
 </dl>
 </dd></dl>
@@ -149,19 +151,17 @@ Path to most recent results dir.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>games</strong> – <em>pd.DataFrame of shape (n_games, n_cols)</em>
-Raw games df.</p></li>
-<li><p><strong>feature</strong> – <em>pd.DataFrame of shape (n_weeks, n_cols)</em>
-Feature df. Index should be either game_id or (season, team, week).</p></li>
-<li><p><strong>current_season</strong> – <em>int</em>
-Current season.</p></li>
-<li><p><strong>current_week</strong> – <em>int</em>
-Current week.</p></li>
+<li><p><strong>games</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_games</em><em>, </em><em>n_cols</em><em>)</em>) – Raw games df.</p></li>
+<li><p><strong>feature</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_weeks</em><em>, </em><em>n_cols</em><em>)</em>) – Feature df. Index should be either game_id or season/team/week.</p></li>
+<li><p><strong>current_season</strong> (<em>int</em>) – Current NFL season.</p></li>
+<li><p><strong>current_week</strong> (<em>int</em>) – Current NFL week.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>pd.DataFrame of shape (n_games, n_cols)</em>
-Games df with feature merged.</p>
+<dd class="field-even"><p>Games df with the most recent feature merged.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame of shape (n_games, n_cols)</p>
 </dd>
 </dl>
 </dd></dl>

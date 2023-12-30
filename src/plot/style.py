@@ -71,10 +71,9 @@ RCPARAMS = {
 def hex_to_rgb(hex_codes):
     """Convert a list of hex color codes to a list of normed rgb tuples.
     
-    :param hex_codes: *list of strings*
-        Hex color codes.
-    :return: *list of tuples*
-        RGB values.
+    :param list[str] hex_codes: List of hex color codes.
+    :return: List of rgb tuples.
+    :rtype: list[tuple[float]]
     """
     l = lambda x: [int(x[i:i+2], 16)/256 for i in (0,2,4)]
     rgb_list = [tuple(l(code)) for code in hex_codes]
@@ -84,9 +83,9 @@ def hex_to_rgb(hex_codes):
 def register_colormaps(user_palettes=PALETTES):
     """Register a set of hex codes as a matplotlib colormap.
     
-    :param user_palettes: *dict*
-        Dictionary of palettes to register.
-    :return: *None*
+    :param dict user_palettes: Dictionary of color palettes.
+    :return: None
+    :rtype: None
     """
     palettes = {k : hex_to_rgb(PALETTES[k]) for k in PALETTES.keys()}
     for k in palettes.keys():
@@ -98,11 +97,10 @@ def register_colormaps(user_palettes=PALETTES):
 def set_plot_params(font_scale=0.6, user_rcparams=RCPARAMS):
     """Set plot style and parameters.
     
-    :param font_scale: *float*
-        Font scale for plot text.
-    :param user_rcparams: *dict*
-        Dictionary of rcParams to override.
-    :return: *None*
+    :param float font_scale: Font scale for plot.
+    :param dict user_rcparams: Dictionary of rcParams for matplotlib.
+    :return: None
+    :rtype: None
     """
     sns.set_theme(
         context = 'paper',
