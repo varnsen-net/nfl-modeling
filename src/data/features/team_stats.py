@@ -6,6 +6,21 @@ import numpy as np
 from src.config.config import CURRENT_SEASON, PASSING_AGGS, RUSHING_AGGS
 
 
+def reduce_plays(plays):
+    """Reduce play by play data to 'normal' game situations where playcalling
+    is less effected by game state.
+
+    :param plays: Play-by-play data.
+    :type plays: pd.DataFrame of shape (n_plays, n_features)
+    :return: Reduced play-by-play data.
+    :rtype: pd.DataFrame of shape (n_plays, n_features)
+    """
+    plays = (plays
+             .loc[plays['half_seconds_remaining'] > 120]
+             .loc[plays['score_differential'].between(-16, 16)])
+    return plays
+
+
 def flatten_columns(df):
     """Flatten the multi-level columns of an aggregation dataframe.
     
@@ -134,6 +149,7 @@ def build_team_efficiency_features(raw_plays_path):
         print(f"Processing season {season}")
         path = f"{raw_plays_path}/play_by_play_{season}.parquet"
         pbp_data = pd.read_parquet(path)
+        pbp_data = reduce_plays(pbp_data)
         type_aggs_pairs = [('pass', PASSING_AGGS),
                            ('rush', RUSHING_AGGS),]
         full_stats = assemble_play_type_features(pbp_data, type_aggs_pairs)
