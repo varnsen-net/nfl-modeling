@@ -21,7 +21,7 @@
     <script src="../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="src.data.features.team_stats" href="src.data.features.team_stats.html" />
+    <link rel="next" title="src.data.features.points" href="src.data.features.points.html" />
     <link rel="prev" title="src.data.ancillary.depth_charts" href="src.data.ancillary.depth_charts.html" /> 
 </head>
 
@@ -52,12 +52,11 @@
 <li class="toctree-l2"><a class="reference internal" href="src.config.spaces.html">src.config.spaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.ancillary.depth_charts.html">src.data.ancillary.depth_charts</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">src.data.build</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#src.data.build.build_features"><code class="docutils literal notranslate"><span class="pre">build_features()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.data.build.build_train_and_test_data"><code class="docutils literal notranslate"><span class="pre">build_train_and_test_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.data.build.refresh_raw_data"><code class="docutils literal notranslate"><span class="pre">refresh_raw_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.data.build.split_data"><code class="docutils literal notranslate"><span class="pre">split_data()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.points.html">src.data.features.points</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html">src.data.features.team_stats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.features.travel.html">src.data.features.travel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.predict.predict.html">src.data.predict.predict</a></li>
@@ -109,28 +108,6 @@
 <p>Build the full set of training and testing data from scratch.</p>
 <p>Receives a set of paths from setup.sh, then fetches raw data, builds features, and assembles training data. Then it splits holdout data by year and writes to disk.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="src.data.build.build_features">
-<span class="sig-prename descclassname"><span class="pre">src.data.build.</span></span><span class="sig-name descname"><span class="pre">build_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_games_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_plays_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">city_coords_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/build.html#build_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.build.build_features" title="Link to this definition"></a></dt>
-<dd><p>Build features from raw data and save to local paths.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>features_path</strong> (<em>str</em>) – Path to save features data.</p></li>
-<li><p><strong>raw_games_path</strong> (<em>str</em>) – Path to raw games data.</p></li>
-<li><p><strong>raw_plays_path</strong> (<em>str</em>) – Path to raw play-by-play data.</p></li>
-<li><p><strong>city_coords_path</strong> (<em>str</em>) – Path to city coordinates data.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="src.data.build.build_train_and_test_data">
 <span class="sig-prename descclassname"><span class="pre">src.data.build.</span></span><span class="sig-name descname"><span class="pre">build_train_and_test_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">test_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">games_cols</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_games_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">holdout_year</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/build.html#build_train_and_test_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.build.build_train_and_test_data" title="Link to this definition"></a></dt>
 <dd><p>Build training and testing data from raw data and save to local paths.</p>
@@ -143,29 +120,6 @@
 <li><p><strong>raw_games_path</strong> (<em>str</em>) – Path to raw games data.</p></li>
 <li><p><strong>features_path</strong> (<em>str</em>) – Path to features data.</p></li>
 <li><p><strong>holdout_year</strong> (<em>int</em>) – Starting season of holdout data (inclusive).</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="src.data.build.refresh_raw_data">
-<span class="sig-prename descclassname"><span class="pre">src.data.build.</span></span><span class="sig-name descname"><span class="pre">refresh_raw_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">games_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_games_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">current_season</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">plays_url</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_plays_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/build.html#refresh_raw_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.build.refresh_raw_data" title="Link to this definition"></a></dt>
-<dd><p>Fetch raw data from web sources and save to local paths.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>games_url</strong> (<em>str</em>) – URL to fetch raw games data.</p></li>
-<li><p><strong>raw_games_path</strong> (<em>str</em>) – Path to save raw games data.</p></li>
-<li><p><strong>current_season</strong> (<em>int</em>) – Current season of NFL.</p></li>
-<li><p><strong>plays_url</strong> (<em>str</em>) – URL to fetch raw play-by-play data.</p></li>
-<li><p><strong>raw_plays_path</strong> (<em>str</em>) – Path to save raw play-by-play data.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -204,7 +158,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="src.data.ancillary.depth_charts.html" class="btn btn-neutral float-left" title="src.data.ancillary.depth_charts" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="src.data.features.team_stats.html" class="btn btn-neutral float-right" title="src.data.features.team_stats" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="src.data.features.points.html" class="btn btn-neutral float-right" title="src.data.features.points" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

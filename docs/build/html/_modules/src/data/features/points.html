@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>src.data.features.points &mdash; SWIFT  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=19f00094" />
+
+  
+  <!--[if lt IE 9]>
+    <script src="../../../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html" class="icon icon-home">
+            SWIFT
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../api/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">SWIFT</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">src.data.features.points</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for src.data.features.points</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Helper functions for building engineered features for team points.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+
+<div class="viewcode-block" id="reframe_team_as_opponent">
+<a class="viewcode-back" href="../../../../api/src.data.features.points.html#src.data.features.points.reframe_team_as_opponent">[docs]</a>
+<span class="k">def</span> <span class="nf">reframe_team_as_opponent</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Transform a df index such that &#39;team&#39; is now &#39;opponent&#39;.</span>
+<span class="sd">    </span>
+<span class="sd">    :param df: Dataframe with season/team/week multiindex.</span>
+<span class="sd">    :type df: pd.DataFrame of shape (n_samples, n_features)</span>
+<span class="sd">    :return: Dataframe with season/opponent/week multiindex.</span>
+<span class="sd">    :rtype: pd.DataFrame of shape (n_samples, n_features)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="s1">&#39;opponent&#39;</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">rename</span><span class="p">({</span><span class="s1">&#39;team&#39;</span><span class="p">:</span> <span class="s1">&#39;opponent&#39;</span><span class="p">})</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">add_prefix</span><span class="p">(</span><span class="s1">&#39;opp_&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span></div>
+
+
+
+<div class="viewcode-block" id="make_base_points_data">
+<a class="viewcode-back" href="../../../../api/src.data.features.points.html#src.data.features.points.make_base_points_data">[docs]</a>
+<span class="k">def</span> <span class="nf">make_base_points_data</span><span class="p">(</span><span class="n">games</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build base points data (e.g. points for and against) for feature</span>
+<span class="sd">    creation.</span>
+<span class="sd">    </span>
+<span class="sd">    :param games: Raw games data.</span>
+<span class="sd">    :type games: pd.DataFrame of shape (n_games, n_features)</span>
+<span class="sd">    :return: Points for/against indexed by season, team, and week.</span>
+<span class="sd">    :rtype: pd.DataFrame of shape (n_samples, 5)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">home_teams</span> <span class="o">=</span> <span class="n">games</span><span class="p">[[</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">,</span> <span class="s1">&#39;home_team&#39;</span><span class="p">,</span> <span class="s1">&#39;away_team&#39;</span><span class="p">,</span> <span class="s1">&#39;home_score&#39;</span><span class="p">,</span> <span class="s1">&#39;away_score&#39;</span><span class="p">]]</span>
+    <span class="n">away_teams</span> <span class="o">=</span> <span class="n">games</span><span class="p">[[</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">,</span> <span class="s1">&#39;away_team&#39;</span><span class="p">,</span> <span class="s1">&#39;home_team&#39;</span><span class="p">,</span> <span class="s1">&#39;away_score&#39;</span><span class="p">,</span> <span class="s1">&#39;home_score&#39;</span><span class="p">]]</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">home_teams</span><span class="p">,</span> <span class="n">away_teams</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">points</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">,</span> <span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;opponent&#39;</span><span class="p">,</span> <span class="s1">&#39;points_for&#39;</span><span class="p">,</span> <span class="s1">&#39;points_against&#39;</span><span class="p">]</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="p">(</span><span class="n">points</span>
+              <span class="o">.</span><span class="n">astype</span><span class="p">({</span><span class="s1">&#39;points_for&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s1">&#39;points_against&#39;</span><span class="p">:</span> <span class="nb">int</span><span class="p">})</span>
+              <span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">,</span> <span class="s1">&#39;opponent&#39;</span><span class="p">])</span>
+              <span class="o">.</span><span class="n">sort_index</span><span class="p">())</span>
+    <span class="k">return</span> <span class="n">points</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_avgs">
+<a class="viewcode-back" href="../../../../api/src.data.features.points.html#src.data.features.points.calculate_avgs">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_avgs</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">window</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate averages per team per week per season with expanding or</span>
+<span class="sd">    rolling windows.</span>
+<span class="sd">    </span>
+<span class="sd">    :param points: Points for/against indexed by season, team, and week.</span>
+<span class="sd">    :type points: pd.DataFrame of shape (n_samples, n_features)</span>
+<span class="sd">    :param int window: Number of weeks to use for rolling averages.</span>
+<span class="sd">    :return: Points per game averages indexed by season, team, and week.</span>
+<span class="sd">    :rtype: pd.DataFrame of shape (n_samples, n_features)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">group</span> <span class="o">=</span> <span class="n">points</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;team&#39;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">window</span><span class="p">:</span>
+        <span class="n">avgs</span> <span class="o">=</span> <span class="p">(</span><span class="n">group</span>
+                <span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="n">window</span><span class="o">=</span><span class="n">window</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                <span class="o">.</span><span class="n">add_suffix</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;_avg_</span><span class="si">{</span><span class="n">window</span><span class="si">}</span><span class="s2">wk&quot;</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">avgs</span> <span class="o">=</span> <span class="p">(</span><span class="n">group</span>
+                <span class="o">.</span><span class="n">expanding</span><span class="p">()</span>
+                <span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+                <span class="o">.</span><span class="n">add_suffix</span><span class="p">(</span><span class="s1">&#39;_avg&#39;</span><span class="p">))</span>
+    <span class="n">avgs</span> <span class="o">=</span> <span class="n">avgs</span><span class="o">.</span><span class="n">droplevel</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">avgs</span></div>
+
+
+
+<div class="viewcode-block" id="adjust_for_opponent">
+<a class="viewcode-back" href="../../../../api/src.data.features.points.html#src.data.features.points.adjust_for_opponent">[docs]</a>
+<span class="k">def</span> <span class="nf">adjust_for_opponent</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">opponent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Adjust base data for opponent strength.</span>
+<span class="sd">    </span>
+<span class="sd">    :param base: Base data to adjust. Must have season/team/week/opponent multiindex.</span>
+<span class="sd">    :type base: pd.DataFrame of shape (n_samples, n_features)</span>
+<span class="sd">    :param opponent: Opponent data to use for adjustment. Must have season/team/week/opponent multiindex.</span>
+<span class="sd">    :type opponent: pd.DataFrame of shape (n_samples, n_features)</span>
+<span class="sd">    :return: Adjusted data.</span>
+<span class="sd">    :rtype: pd.DataFrame of shape (n_samples, n_features) </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">opponent</span> <span class="o">=</span> <span class="p">(</span><span class="n">opponent</span>
+                <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;team&#39;</span><span class="p">])</span>
+                <span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span>
+    <span class="n">opponent</span> <span class="o">=</span> <span class="n">reframe_team_as_opponent</span><span class="p">(</span><span class="n">opponent</span><span class="p">)</span>
+    <span class="n">merged</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">opponent</span><span class="p">,</span> <span class="n">left_index</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">right_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">base_cols</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">opp_cols</span> <span class="o">=</span> <span class="n">opponent</span><span class="o">.</span><span class="n">columns</span>
+    <span class="n">adjusted</span> <span class="o">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="n">base_cols</span><span class="p">]</span> <span class="o">-</span> <span class="n">merged</span><span class="o">.</span><span class="n">loc</span><span class="p">[:,</span><span class="n">opp_cols</span><span class="p">]</span><span class="o">.</span><span class="n">values</span>
+    <span class="n">adjusted</span> <span class="o">=</span> <span class="n">adjusted</span><span class="o">.</span><span class="n">add_prefix</span><span class="p">(</span><span class="s1">&#39;opp_adj_&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">adjusted</span></div>
+
+
+
+<div class="viewcode-block" id="build_points_features">
+<a class="viewcode-back" href="../../../../api/src.data.features.points.html#src.data.features.points.build_points_features">[docs]</a>
+<span class="k">def</span> <span class="nf">build_points_features</span><span class="p">(</span><span class="n">raw_games_path</span><span class="p">,</span> <span class="n">window</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build all points features (e.g. net points).</span>
+<span class="sd">    </span>
+<span class="sd">    :param str raw_games_path: Path to raw games data.</span>
+<span class="sd">    :param int window: Number of weeks to use for rolling averages.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">games</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">raw_games_path</span><span class="p">)</span>
+    <span class="n">games</span> <span class="o">=</span> <span class="n">games</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">subset</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">])</span>
+    <span class="n">base_points</span> <span class="o">=</span> <span class="n">make_base_points_data</span><span class="p">(</span><span class="n">games</span><span class="p">)</span>
+    <span class="n">net_ppg_avgs</span> <span class="o">=</span> <span class="n">calculate_avgs</span><span class="p">(</span><span class="n">base_points</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span>
+    <span class="n">net_ppg_avgs</span> <span class="o">=</span> <span class="n">net_ppg_avgs</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,[</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">]]</span>
+    <span class="n">adj_points</span> <span class="o">=</span> <span class="n">adjust_for_opponent</span><span class="p">(</span><span class="n">base_points</span><span class="p">,</span> <span class="n">net_ppg_avgs</span><span class="p">)</span>
+    <span class="n">adj_points</span><span class="p">[</span><span class="s1">&#39;opp_adj_points_net&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">adj_points</span><span class="p">[</span><span class="s1">&#39;opp_adj_points_for&#39;</span><span class="p">]</span>
+                                        <span class="o">-</span> <span class="n">adj_points</span><span class="p">[</span><span class="s1">&#39;opp_adj_points_against&#39;</span><span class="p">])</span>
+    <span class="n">adj_points</span> <span class="o">=</span> <span class="n">calculate_avgs</span><span class="p">(</span><span class="n">adj_points</span><span class="p">,</span> <span class="n">window</span><span class="p">)</span>
+    <span class="n">adj_points</span> <span class="o">=</span> <span class="p">(</span><span class="n">adj_points</span>
+                  <span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                  <span class="o">.</span><span class="n">droplevel</span><span class="p">(</span><span class="s1">&#39;opponent&#39;</span><span class="p">)</span>
+                  <span class="o">.</span><span class="n">swaplevel</span><span class="p">(</span><span class="s1">&#39;week&#39;</span><span class="p">,</span> <span class="s1">&#39;team&#39;</span><span class="p">)</span>
+                  <span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+                  <span class="o">.</span><span class="n">sort_values</span><span class="p">([</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">])</span>
+                  <span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">adj_points</span></div>
+
+
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Kel Varnsen.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

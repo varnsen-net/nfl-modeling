@@ -52,6 +52,7 @@
 <li class="toctree-l2"><a class="reference internal" href="src.config.spaces.html">src.config.spaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.ancillary.depth_charts.html">src.data.ancillary.depth_charts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.build.html">src.data.build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.points.html">src.data.features.points</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html">src.data.features.team_stats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.features.travel.html">src.data.features.travel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.predict.predict.html">src.data.predict.predict</a></li>
@@ -108,7 +109,7 @@
 <span id="src-model-process"></span><h1>src.model.process<a class="headerlink" href="#module-src.model.process" title="Link to this heading"></a></h1>
 <p>Helper functions for processing training data in a scikit pipeline.</p>
 <p>Instead of creating bespoke classes that inherit from scikit, we’ll rely on the FunctionTransformer to make them compatible with scikit pipelines. <a class="reference external" href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html">https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html</a></p>
-<p>The preprocess function is reserved for model-agnostic transformations that should be done at the start of a pipeline.</p>
+<p>The preprocess function is reserved for model-agnostic transformations that should be done before building the scikit pipelines.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="src.model.process.preprocess">
 <span class="sig-prename descclassname"><span class="pre">src.model.process.</span></span><span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">X</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/model/process.html#preprocess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.model.process.preprocess" title="Link to this definition"></a></dt>

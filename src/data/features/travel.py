@@ -77,60 +77,53 @@ def attach_lats_lons(games, city_coords):
     return games
 
 
-def get_away_travel_distances(games, name):
+def get_travel_distances(games):
     """Calculate the distance traveled by the away team for each game.
     
     :param games: Raw games data.
     :type games: pd.DataFrame of shape (n_rows, n_cols)
-    :param str name: Name of the travel feature.
     :return: Dataframe with the travel distances for each game.
     :rtype: pd.DataFrame of shape (n_rows, n_cols)
     """
-    away_colname = f"away_{name}"
-    home_colname = f"home_{name}"
-    home_coords = games[['lat_home', 'lon_home']].values
-    away_coords = games[['lat_away', 'lon_away']].values
-    games[away_colname] = calculate_distances(home_coords, away_coords)
-    games[home_colname] = 0
-    away_travel_distances = (games[['game_id', away_colname, home_colname]]
-                             .set_index('game_id'))
-    return away_travel_distances
+    travel_distances = games[['game_id']].set_index('game_id')
+    away_distances = calculate_distances(games[['lat_home', 'lon_home']].values,
+                                         games[['lat_away', 'lon_away']].values)
+    travel_distances['away_travel_distance'] = away_distances
+    travel_distances['home_travel_distance'] = 0
+    return travel_distances
 
 
-def get_away_lon_deltas(games, name):
-    """Calculate the difference in longitude between the home and away teams.
+def get_coord_deltas(games):
+    """Calculate the difference in longitude and latitude between the home and
+    away teams.
 
     :param games: Raw games data.
     :type games: pd.DataFrame of shape (n_rows, n_cols)
-    :param str name: Name of the travel feature.
     :return: Dataframe with the away team longitude deltas.
     :rtype: pd.DataFrame of shape (n_rows, n_cols)
     """
-    away_colname = f"away_{name}"
-    home_colname = f"home_{name}"
-    games[away_colname] = games['lon_home'] - games['lon_away']
-    games[home_colname] = 0
-    away_lon_deltas = (games[['game_id', away_colname, home_colname]]
-                             .set_index('game_id'))
-    return away_lon_deltas
+    travel_deltas = games[['game_id']].set_index('game_id')
+    away_lon_delta = games['lon_home'] - games['lon_away']
+    away_lat_delta = games['lat_home'] - games['lat_away']
+    travel_deltas['away_lon_delta'] = away_lon_delta.values
+    travel_deltas['away_lat_delta'] = away_lat_delta.values
+    travel_deltas['home_lon_delta'] = 0
+    travel_deltas['home_lat_delta'] = 0
+    return travel_deltas
 
 
-def build_travel_features(raw_games_path, city_coords_path, output_dir):
+def build_travel_features(raw_games_path, city_coords_path):
     """Build engineered features for team travel.
 
     :param str raw_games_path: Path to the raw games data.
     :param str city_coords_path: Path to the city coordinates data.
-    :param str output_dir: Path to the output directory.
-    :return: None
-    :rtype: None
+    :return: Dataframe with the engineered travel features.
+    :rtype: pd.DataFrame of shape (n_rows, n_cols)
     """
     games = pd.read_csv(raw_games_path)
     city_coords = pd.read_csv(city_coords_path)
-    away_travel_distance_name = "travel_distance"
     games = attach_lats_lons(games, city_coords)
-    away_travel_distances = get_away_travel_distances(games, away_travel_distance_name)
-    away_travel_distances.to_csv(f"{output_dir}/{away_travel_distance_name}.csv")
-    away_lon_delta_name = "lon_delta"
-    away_lon_deltas = get_away_lon_deltas(games, away_lon_delta_name)
-    away_lon_deltas.to_csv(f"{output_dir}/{away_lon_delta_name}.csv")
-    return
+    travel_distances = get_travel_distances(games)
+    lon_deltas = get_coord_deltas(games)
+    travel_features = pd.concat([travel_distances, lon_deltas], axis=1)
+    return travel_features

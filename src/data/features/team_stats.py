@@ -3,8 +3,7 @@
 import pandas as pd
 import numpy as np
 
-from src.utils import map_team_data_to_games
-from src.config.config import LOOKBACK_WINDOW, PASSING_AGGS, RUSHING_AGGS
+from src.config.config import CURRENT_SEASON, PASSING_AGGS, RUSHING_AGGS
 
 
 def flatten_columns(df):
@@ -32,115 +31,6 @@ def write_cols_to_file(features, output_dir):
         if col not in ['team', 'week', 'season']:
             data = features[['season', 'team', 'week', col]]
             data.to_csv(f"{output_dir}/{col}.csv", index=False)
-    return
-
-
-def reframe_team_as_opponent(df):
-    """Transform a df index such that 'team' is now 'opponent'.
-    
-    :param df: Dataframe with season/team/week multiindex.
-    :type df: pd.DataFrame of shape (n_samples, n_features)
-    :return: Dataframe with season/opponent/week multiindex.
-    :rtype: pd.DataFrame of shape (n_samples, n_features)
-    """
-    df = df.droplevel('opponent')
-    df.index = df.index.rename({'team': 'opponent'})
-    df = df.add_prefix('opp_')
-    return df
-
-
-def make_base_points_data(games):
-    """Build base points data (e.g. points for and against) for feature
-    creation.
-    
-    :param games: Raw games data.
-    :type games: pd.DataFrame of shape (n_games, n_features)
-    :return: Points for/against indexed by season, team, and week.
-    :rtype: pd.DataFrame of shape (n_samples, 5)
-    """
-    home_teams = games[['season', 'week', 'home_team', 'away_team', 'home_score', 'away_score']]
-    away_teams = games[['season', 'week', 'away_team', 'home_team', 'away_score', 'home_score']]
-    points = pd.DataFrame(np.append(home_teams, away_teams, axis=0))
-    points.columns = ['season', 'week', 'team', 'opponent', 'points_for', 'points_against']
-    points = (points
-              .astype({'points_for': int, 'points_against': int})
-              .set_index(['season', 'team', 'week', 'opponent'])
-              .sort_index())
-    return points
-
-
-def calculate_avgs(points, window):
-    """Calculate averages per team per week per season with expanding or
-    rolling windows.
-    
-    :param points: Points for/against indexed by season, team, and week.
-    :type points: pd.DataFrame of shape (n_samples, n_features)
-    :param int window: Number of weeks to use for rolling averages.
-    :return: Points per game averages indexed by season, team, and week.
-    :rtype: pd.DataFrame of shape (n_samples, n_features)
-    """
-    group = points.groupby(['season', 'team'])
-    if window:
-        avgs = (group
-                .rolling(window=window)
-                .mean()
-                .add_suffix(f"_avg_{window}wk"))
-    else:
-        avgs = (group
-                .expanding()
-                .mean()
-                .add_suffix('_avg'))
-    avgs = avgs.droplevel([0,1])
-    return avgs
-
-
-def adjust_for_opponent(base, opponent):
-    """Adjust base data for opponent strength.
-    
-    :param base: Base data to adjust. Must have season/team/week/opponent multiindex.
-    :type base: pd.DataFrame of shape (n_samples, n_features)
-    :param opponent: Opponent data to use for adjustment. Must have season/team/week/opponent multiindex.
-    :type opponent: pd.DataFrame of shape (n_samples, n_features)
-    :return: Adjusted data.
-    :rtype: pd.DataFrame of shape (n_samples, n_features) 
-    """
-    opponent = (opponent
-                .groupby(['season', 'team'])
-                .shift(1)
-                .fillna(0))
-    opponent = reframe_team_as_opponent(opponent)
-    merged = pd.merge(base, opponent, left_index=True, right_index=True)
-    base_cols = base.columns
-    opp_cols = opponent.columns
-    adjusted = merged.loc[:,base_cols] - merged.loc[:,opp_cols].values
-    adjusted = adjusted.add_prefix('opp_adj_')
-    return adjusted
-
-
-def make_points_features(games, window, output_dir):
-    """Build all points features (e.g. net points).
-    
-    :param games: Raw games data.
-    :type games: pd.DataFrame of shape (n_games, n_features)
-    :param int window: Number of weeks to use for rolling averages.
-    :param str output_dir: Directory to write csv files to.
-    :return: None
-    :rtype: None
-    """
-    base_points = make_base_points_data(games)
-    net_ppg_avgs = calculate_avgs(base_points, window=None)
-    net_ppg_avgs = net_ppg_avgs.iloc[:,[1,0]]
-    adj_points = adjust_for_opponent(base_points, net_ppg_avgs)
-    adj_points['opp_adj_points_net'] = (adj_points['opp_adj_points_for']
-                                        - adj_points['opp_adj_points_against'])
-    adj_points = calculate_avgs(adj_points, window=None)
-    adj_points = (adj_points
-                  .round(1)
-                  .droplevel('opponent')
-                  .swaplevel('week', 'team')
-                  .reset_index()
-                  .sort_values(['season', 'team', 'week']))
-    write_cols_to_file(adj_points, output_dir)
     return
 
 
@@ -232,19 +122,15 @@ def assemble_play_type_features(pbp_data, type_aggs_pairs):
     return full_stats
 
 
-def aggregate_efficiency_stats(games, raw_plays_path, output_dir):
+def build_team_efficiency_features(raw_plays_path):
     """Make efficiency stats (e.g. EPA, WPA, etc.) for each team and week.
     
-    :param games: Game data.
-    :type games: pd.DataFrame of shape (n_games, n_features)
     :param str raw_plays_path: Path to raw play-by-play data.
-    :param str output_dir: Path to directory to write output to.
     :return: None
     :rtype: None
     """
-    game_id_map = pd.DataFrame()
     features = pd.DataFrame()
-    for season in list(range(1999, 2024)):
+    for season in list(range(1999, CURRENT_SEASON + 1)):
         print(f"Processing season {season}")
         path = f"{raw_plays_path}/play_by_play_{season}.parquet"
         pbp_data = pd.read_parquet(path)
@@ -253,27 +139,5 @@ def aggregate_efficiency_stats(games, raw_plays_path, output_dir):
         full_stats = assemble_play_type_features(pbp_data, type_aggs_pairs)
         full_stats['season'] = season
         features = pd.concat([features, full_stats])
-        id_map = pbp_data.groupby(['game_id']).agg({'away_team': 'first',
-                                                    'home_team': 'first',
-                                                    'week': 'first'})
-        id_map = id_map.reset_index()
-        id_map['season'] = season
-        game_id_map = pd.concat([game_id_map, id_map])
-    write_cols_to_file(features, output_dir)
-    return
-
-
-def build_team_stats_features(raw_games_path, raw_plays_path, output_dir):
-    """Build engineered features for team stats.
-    
-    :param str raw_games_path: Path to raw game data.
-    :param str raw_plays_path: Path to raw play-by-play data.
-    :param str output_dir: Path to directory to write output to.
-    :return: None
-    :rtype: None
-    """
-    games = (pd.read_csv(raw_games_path)
-             .dropna(subset=['result']))
-    make_points_features(games, LOOKBACK_WINDOW, output_dir)
-    aggregate_efficiency_stats(games, raw_plays_path, output_dir)
-    return
+    features = features.set_index(['season', 'team', 'week']).sort_index()
+    return features

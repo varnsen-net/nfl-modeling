@@ -80,7 +80,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
-<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">map_team_data_to_games</span><span class="p">,</span> <span class="n">walk_features_dir</span>
+<span class="kn">from</span> <span class="nn">src.utils</span> <span class="kn">import</span> <span class="n">map_features_to_games</span><span class="p">,</span> <span class="n">walk_features_dir</span>
 <span class="kn">from</span> <span class="nn">src.config.config</span> <span class="kn">import</span> <span class="p">(</span><span class="n">PATHS</span><span class="p">,</span>
                                <span class="n">TRAINING</span><span class="p">,</span>
                                <span class="n">CURRENT_SEASON</span><span class="p">,</span>
@@ -122,15 +122,12 @@
         <span class="n">games</span> <span class="o">=</span> <span class="n">games</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;game_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">games</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">feature_name</span> <span class="o">=</span> <span class="n">feature</span><span class="o">.</span><span class="n">columns</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
         <span class="n">feature</span> <span class="o">=</span> <span class="p">(</span><span class="n">feature</span>
                    <span class="o">.</span><span class="n">query</span><span class="p">(</span><span class="s1">&#39;season == @current_season&#39;</span><span class="p">)</span>
                    <span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;team&#39;</span><span class="p">)</span>
                    <span class="o">.</span><span class="n">tail</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-                   <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">week</span><span class="o">=</span><span class="n">current_week</span><span class="p">)</span>
-                   <span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">]))</span>
-        <span class="n">feature</span> <span class="o">=</span> <span class="n">map_team_data_to_games</span><span class="p">(</span><span class="n">games</span><span class="p">,</span> <span class="n">feature</span><span class="p">,</span> <span class="n">feature_name</span><span class="p">)</span>
-        <span class="n">games</span> <span class="o">=</span> <span class="n">games</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">feature</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s1">&#39;game_id&#39;</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+                   <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">week</span><span class="o">=</span><span class="n">current_week</span><span class="p">))</span>
+        <span class="n">games</span> <span class="o">=</span> <span class="n">map_features_to_games</span><span class="p">(</span><span class="n">games</span><span class="p">,</span> <span class="n">feature</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">games</span></div>
 
 

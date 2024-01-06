@@ -52,6 +52,7 @@
 <li class="toctree-l2"><a class="reference internal" href="src.config.spaces.html">src.config.spaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.ancillary.depth_charts.html">src.data.ancillary.depth_charts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.build.html">src.data.build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.points.html">src.data.features.points</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html">src.data.features.team_stats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.features.travel.html">src.data.features.travel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.predict.predict.html">src.data.predict.predict</a></li>
@@ -114,9 +115,9 @@
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>games_cols</strong> (<em>list</em>) – columns to keep</p></li>
-<li><p><strong>raw_games_path</strong> (<em>str</em>) – path to raw games data</p></li>
-<li><p><strong>features_path</strong> (<em>str</em>) – path to features directory</p></li>
+<li><p><strong>games_cols</strong> (<em>list</em>) – Columns to keep.</p></li>
+<li><p><strong>raw_games_path</strong> (<em>str</em>) – Path to raw games data.</p></li>
+<li><p><strong>features_path</strong> (<em>str</em>) – Path to features directory.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
@@ -130,17 +131,17 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="src.data.train.train.merge_feature">
-<span class="sig-prename descclassname"><span class="pre">src.data.train.train.</span></span><span class="sig-name descname"><span class="pre">merge_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/train/train.html#merge_feature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.train.train.merge_feature" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">src.data.train.train.</span></span><span class="sig-name descname"><span class="pre">merge_feature</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">train</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">features</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/train/train.html#merge_feature"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.train.train.merge_feature" title="Link to this definition"></a></dt>
 <dd><p>Merge a feature into the training data.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>train</strong> (<em>pd.DataFrame</em>) – training data</p></li>
-<li><p><strong>feature</strong> (<em>pd.DataFrame</em>) – feature data</p></li>
+<li><p><strong>train</strong> (<em>pd.DataFrame</em>) – Training data.</p></li>
+<li><p><strong>features</strong> (<em>pd.DataFrame</em>) – Feature data.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>training data with feature merged in</p>
+<dd class="field-even"><p>Training data with feature merged in.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
@@ -154,10 +155,10 @@
 <dd><p>Reduce the games dataframe.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>games</strong> (<em>pd.DataFrame</em>) – raw games dataframe</p>
+<dd class="field-odd"><p><strong>games</strong> (<em>pd.DataFrame</em>) – Raw games dataframe.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>reduced games data</p>
+<dd class="field-even"><p>Reduced games data.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
@@ -173,12 +174,12 @@ training.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>games</strong> (<em>pd.DataFrame</em>) – games data</p></li>
-<li><p><strong>games_cols</strong> (<em>list</em>) – columns to keep</p></li>
+<li><p><strong>games</strong> (<em>pd.DataFrame</em>) – Games data.</p></li>
+<li><p><strong>games_cols</strong> (<em>list</em>) – Columns to keep.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>games data with reduced columns</p>
+<dd class="field-even"><p>Games data with reduced columns.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>

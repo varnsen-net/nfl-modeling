@@ -51,6 +51,7 @@
 <li class="toctree-l2"><a class="reference internal" href="src.config.spaces.html">src.config.spaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.ancillary.depth_charts.html">src.data.ancillary.depth_charts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.build.html">src.data.build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.points.html">src.data.features.points</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html">src.data.features.team_stats</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.features.travel.html">src.data.features.travel</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.predict.predict.html">src.data.predict.predict</a></li>
@@ -71,7 +72,7 @@
 <li class="toctree-l3"><a class="reference internal" href="#src.utils.fix_game_times"><code class="docutils literal notranslate"><span class="pre">fix_game_times()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.utils.get_date_n_days_out"><code class="docutils literal notranslate"><span class="pre">get_date_n_days_out()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.utils.get_kickoff_hours"><code class="docutils literal notranslate"><span class="pre">get_kickoff_hours()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.utils.map_team_data_to_games"><code class="docutils literal notranslate"><span class="pre">map_team_data_to_games()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.utils.map_features_to_games"><code class="docutils literal notranslate"><span class="pre">map_features_to_games()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.utils.refresh_raw_data"><code class="docutils literal notranslate"><span class="pre">refresh_raw_data()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.utils.shift_week_number"><code class="docutils literal notranslate"><span class="pre">shift_week_number()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.utils.walk_features_dir"><code class="docutils literal notranslate"><span class="pre">walk_features_dir()</span></code></a></li>
@@ -164,10 +165,9 @@ imputed to start at 13:00. Games on Monday are imputed to start at 20:15.</p>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="src.utils.map_team_data_to_games">
-<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">map_team_data_to_games</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">games</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">feature_name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/utils.html#map_team_data_to_games"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.map_team_data_to_games" title="Link to this definition"></a></dt>
-<dd><p>Map a pandas series of team stats with a season/week/team multiindex
-to game_ids in the games data.</p>
+<dt class="sig sig-object py" id="src.utils.map_features_to_games">
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">map_features_to_games</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">games</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stats</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/utils.html#map_features_to_games"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.map_features_to_games" title="Link to this definition"></a></dt>
+<dd><p>Map a dataframe of features with season/week/team columns</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -206,21 +206,20 @@ to game_ids in the games data.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="src.utils.shift_week_number">
-<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">shift_week_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dropna</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/utils.html#shift_week_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.shift_week_number" title="Link to this definition"></a></dt>
-<dd><p>Shifts the week index of a season/team/week multiindex.</p>
+<span class="sig-prename descclassname"><span class="pre">src.utils.</span></span><span class="sig-name descname"><span class="pre">shift_week_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">n</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/utils.html#shift_week_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.utils.shift_week_number" title="Link to this definition"></a></dt>
+<dd><p>Shifts the week number of a df with season/team/week columns.</p>
 <p>Aggregations are nearly always calculated up to the <em>end</em> of a week.
 Shifting is useful when you want your stats to align with the week before
 or the week after (consistent with the bye weeks).</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – dataframe with season/team/week multiindex</p></li>
-<li><p><strong>n</strong> (<em>int</em>) – number of rows to shift</p></li>
-<li><p><strong>dropna</strong> (<em>bool</em>) – whether to drop rows with missing values</p></li>
+<li><p><strong>df</strong> (<em>pd.DataFrame</em>) – Dataframe with season/team/week cols</p></li>
+<li><p><strong>n</strong> (<em>int</em>) – Number of rows to shift.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>dataframe with shifted season/team index</p>
+<dd class="field-even"><p>Dataframe with shifted weeks.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>

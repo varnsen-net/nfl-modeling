@@ -52,14 +52,15 @@
 <li class="toctree-l2"><a class="reference internal" href="src.config.spaces.html">src.config.spaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.ancillary.depth_charts.html">src.data.ancillary.depth_charts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.build.html">src.data.build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.points.html">src.data.features.points</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.features.team_stats.html">src.data.features.team_stats</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">src.data.features.travel</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#src.data.features.travel.attach_lats_lons"><code class="docutils literal notranslate"><span class="pre">attach_lats_lons()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.data.features.travel.build_travel_features"><code class="docutils literal notranslate"><span class="pre">build_travel_features()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.data.features.travel.calculate_distances"><code class="docutils literal notranslate"><span class="pre">calculate_distances()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.data.features.travel.get_away_lon_deltas"><code class="docutils literal notranslate"><span class="pre">get_away_lon_deltas()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.data.features.travel.get_away_travel_distances"><code class="docutils literal notranslate"><span class="pre">get_away_travel_distances()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.data.features.travel.get_city_coordinates"><code class="docutils literal notranslate"><span class="pre">get_city_coordinates()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.data.features.travel.get_coord_deltas"><code class="docutils literal notranslate"><span class="pre">get_coord_deltas()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.data.features.travel.get_travel_distances"><code class="docutils literal notranslate"><span class="pre">get_travel_distances()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.predict.predict.html">src.data.predict.predict</a></li>
@@ -131,21 +132,20 @@
 
 <dl class="py function">
 <dt class="sig sig-object py" id="src.data.features.travel.build_travel_features">
-<span class="sig-prename descclassname"><span class="pre">src.data.features.travel.</span></span><span class="sig-name descname"><span class="pre">build_travel_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_games_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">city_coords_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/travel.html#build_travel_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.travel.build_travel_features" title="Link to this definition"></a></dt>
+<span class="sig-prename descclassname"><span class="pre">src.data.features.travel.</span></span><span class="sig-name descname"><span class="pre">build_travel_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_games_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">city_coords_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/travel.html#build_travel_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.travel.build_travel_features" title="Link to this definition"></a></dt>
 <dd><p>Build engineered features for team travel.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>raw_games_path</strong> (<em>str</em>) – Path to the raw games data.</p></li>
 <li><p><strong>city_coords_path</strong> (<em>str</em>) – Path to the city coordinates data.</p></li>
-<li><p><strong>output_dir</strong> (<em>str</em>) – Path to the output directory.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
+<dd class="field-even"><p>Dataframe with the engineered travel features.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
+<dd class="field-odd"><p>pd.DataFrame of shape (n_rows, n_cols)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -171,46 +171,6 @@
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="src.data.features.travel.get_away_lon_deltas">
-<span class="sig-prename descclassname"><span class="pre">src.data.features.travel.</span></span><span class="sig-name descname"><span class="pre">get_away_lon_deltas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">games</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/travel.html#get_away_lon_deltas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.travel.get_away_lon_deltas" title="Link to this definition"></a></dt>
-<dd><p>Calculate the difference in longitude between the home and away teams.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>games</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_rows</em><em>, </em><em>n_cols</em><em>)</em>) – Raw games data.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – Name of the travel feature.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Dataframe with the away team longitude deltas.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.DataFrame of shape (n_rows, n_cols)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="src.data.features.travel.get_away_travel_distances">
-<span class="sig-prename descclassname"><span class="pre">src.data.features.travel.</span></span><span class="sig-name descname"><span class="pre">get_away_travel_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">games</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/travel.html#get_away_travel_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.travel.get_away_travel_distances" title="Link to this definition"></a></dt>
-<dd><p>Calculate the distance traveled by the away team for each game.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>games</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_rows</em><em>, </em><em>n_cols</em><em>)</em>) – Raw games data.</p></li>
-<li><p><strong>name</strong> (<em>str</em>) – Name of the travel feature.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Dataframe with the travel distances for each game.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.DataFrame of shape (n_rows, n_cols)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="src.data.features.travel.get_city_coordinates">
 <span class="sig-prename descclassname"><span class="pre">src.data.features.travel.</span></span><span class="sig-name descname"><span class="pre">get_city_coordinates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">teams</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loc_replacements</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/travel.html#get_city_coordinates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.travel.get_city_coordinates" title="Link to this definition"></a></dt>
 <dd><p>Returns a dataframe with the decimal latitude and longitude for every
@@ -228,6 +188,41 @@ NFL team city in the Sharpe teams data.</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>pd.DataFrame</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.data.features.travel.get_coord_deltas">
+<span class="sig-prename descclassname"><span class="pre">src.data.features.travel.</span></span><span class="sig-name descname"><span class="pre">get_coord_deltas</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">games</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/travel.html#get_coord_deltas"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.travel.get_coord_deltas" title="Link to this definition"></a></dt>
+<dd><p>Calculate the difference in longitude and latitude between the home and
+away teams.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>games</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_rows</em><em>, </em><em>n_cols</em><em>)</em>) – Raw games data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe with the away team longitude deltas.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame of shape (n_rows, n_cols)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="src.data.features.travel.get_travel_distances">
+<span class="sig-prename descclassname"><span class="pre">src.data.features.travel.</span></span><span class="sig-name descname"><span class="pre">get_travel_distances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">games</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/travel.html#get_travel_distances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.travel.get_travel_distances" title="Link to this definition"></a></dt>
+<dd><p>Calculate the distance traveled by the away team for each game.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>games</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_rows</em><em>, </em><em>n_cols</em><em>)</em>) – Raw games data.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Dataframe with the travel distances for each game.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pd.DataFrame of shape (n_rows, n_cols)</p>
 </dd>
 </dl>
 </dd></dl>

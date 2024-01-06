@@ -22,7 +22,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="src.data.features.travel" href="src.data.features.travel.html" />
-    <link rel="prev" title="src.data.build" href="src.data.build.html" /> 
+    <link rel="prev" title="src.data.features.points" href="src.data.features.points.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -52,18 +52,13 @@
 <li class="toctree-l2"><a class="reference internal" href="src.config.spaces.html">src.config.spaces</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.ancillary.depth_charts.html">src.data.ancillary.depth_charts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="src.data.build.html">src.data.build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="src.data.features.points.html">src.data.features.points</a></li>
 <li class="toctree-l2 current"><a class="current reference internal" href="#">src.data.features.team_stats</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#src.data.features.team_stats.adjust_for_opponent"><code class="docutils literal notranslate"><span class="pre">adjust_for_opponent()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.data.features.team_stats.aggregate_efficiency_stats"><code class="docutils literal notranslate"><span class="pre">aggregate_efficiency_stats()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.data.features.team_stats.assemble_play_type_features"><code class="docutils literal notranslate"><span class="pre">assemble_play_type_features()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.data.features.team_stats.build_team_stats_features"><code class="docutils literal notranslate"><span class="pre">build_team_stats_features()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.data.features.team_stats.calculate_avgs"><code class="docutils literal notranslate"><span class="pre">calculate_avgs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#src.data.features.team_stats.build_team_efficiency_features"><code class="docutils literal notranslate"><span class="pre">build_team_efficiency_features()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.data.features.team_stats.calculate_squad_aggs"><code class="docutils literal notranslate"><span class="pre">calculate_squad_aggs()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.data.features.team_stats.flatten_columns"><code class="docutils literal notranslate"><span class="pre">flatten_columns()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.data.features.team_stats.flip_defense_stat_signs"><code class="docutils literal notranslate"><span class="pre">flip_defense_stat_signs()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.data.features.team_stats.make_base_points_data"><code class="docutils literal notranslate"><span class="pre">make_base_points_data()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.data.features.team_stats.make_points_features"><code class="docutils literal notranslate"><span class="pre">make_points_features()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="#src.data.features.team_stats.reframe_team_as_opponent"><code class="docutils literal notranslate"><span class="pre">reframe_team_as_opponent()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="#src.data.features.team_stats.write_cols_to_file"><code class="docutils literal notranslate"><span class="pre">write_cols_to_file()</span></code></a></li>
 </ul>
 </li>
@@ -116,47 +111,6 @@
 <span id="src-data-features-team-stats"></span><h1>src.data.features.team_stats<a class="headerlink" href="#module-src.data.features.team_stats" title="Link to this heading"></a></h1>
 <p>Helper functions for building engineered features for team stats.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="src.data.features.team_stats.adjust_for_opponent">
-<span class="sig-prename descclassname"><span class="pre">src.data.features.team_stats.</span></span><span class="sig-name descname"><span class="pre">adjust_for_opponent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">opponent</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/team_stats.html#adjust_for_opponent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.team_stats.adjust_for_opponent" title="Link to this definition"></a></dt>
-<dd><p>Adjust base data for opponent strength.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>base</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – Base data to adjust. Must have season/team/week/opponent multiindex.</p></li>
-<li><p><strong>opponent</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – Opponent data to use for adjustment. Must have season/team/week/opponent multiindex.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Adjusted data.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.DataFrame of shape (n_samples, n_features)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="src.data.features.team_stats.aggregate_efficiency_stats">
-<span class="sig-prename descclassname"><span class="pre">src.data.features.team_stats.</span></span><span class="sig-name descname"><span class="pre">aggregate_efficiency_stats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">games</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_plays_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/team_stats.html#aggregate_efficiency_stats"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.team_stats.aggregate_efficiency_stats" title="Link to this definition"></a></dt>
-<dd><p>Make efficiency stats (e.g. EPA, WPA, etc.) for each team and week.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>games</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_games</em><em>, </em><em>n_features</em><em>)</em>) – Game data.</p></li>
-<li><p><strong>raw_plays_path</strong> (<em>str</em>) – Path to raw play-by-play data.</p></li>
-<li><p><strong>output_dir</strong> (<em>str</em>) – Path to directory to write output to.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="src.data.features.team_stats.assemble_play_type_features">
 <span class="sig-prename descclassname"><span class="pre">src.data.features.team_stats.</span></span><span class="sig-name descname"><span class="pre">assemble_play_type_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pbp_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type_aggs_pairs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/team_stats.html#assemble_play_type_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.team_stats.assemble_play_type_features" title="Link to this definition"></a></dt>
 <dd><p>Assemble features for each play type.</p>
@@ -179,43 +133,18 @@ is a dictionary of aggregations to calculate for each feature.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="src.data.features.team_stats.build_team_stats_features">
-<span class="sig-prename descclassname"><span class="pre">src.data.features.team_stats.</span></span><span class="sig-name descname"><span class="pre">build_team_stats_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_games_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raw_plays_path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/team_stats.html#build_team_stats_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.team_stats.build_team_stats_features" title="Link to this definition"></a></dt>
-<dd><p>Build engineered features for team stats.</p>
+<dt class="sig sig-object py" id="src.data.features.team_stats.build_team_efficiency_features">
+<span class="sig-prename descclassname"><span class="pre">src.data.features.team_stats.</span></span><span class="sig-name descname"><span class="pre">build_team_efficiency_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raw_plays_path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/team_stats.html#build_team_efficiency_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.team_stats.build_team_efficiency_features" title="Link to this definition"></a></dt>
+<dd><p>Make efficiency stats (e.g. EPA, WPA, etc.) for each team and week.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>raw_games_path</strong> (<em>str</em>) – Path to raw game data.</p></li>
-<li><p><strong>raw_plays_path</strong> (<em>str</em>) – Path to raw play-by-play data.</p></li>
-<li><p><strong>output_dir</strong> (<em>str</em>) – Path to directory to write output to.</p></li>
-</ul>
+<dd class="field-odd"><p><strong>raw_plays_path</strong> (<em>str</em>) – Path to raw play-by-play data.</p>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
 <dd class="field-even"><p>None</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="src.data.features.team_stats.calculate_avgs">
-<span class="sig-prename descclassname"><span class="pre">src.data.features.team_stats.</span></span><span class="sig-name descname"><span class="pre">calculate_avgs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/team_stats.html#calculate_avgs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.team_stats.calculate_avgs" title="Link to this definition"></a></dt>
-<dd><p>Calculate averages per team per week per season with expanding or
-rolling windows.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>points</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – Points for/against indexed by season, team, and week.</p></li>
-<li><p><strong>window</strong> (<em>int</em>) – Number of weeks to use for rolling averages.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Points per game averages indexed by season, team, and week.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.DataFrame of shape (n_samples, n_features)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -293,62 +222,6 @@ element should take the form ‘_statname_’.</p></li>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="src.data.features.team_stats.make_base_points_data">
-<span class="sig-prename descclassname"><span class="pre">src.data.features.team_stats.</span></span><span class="sig-name descname"><span class="pre">make_base_points_data</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">games</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/team_stats.html#make_base_points_data"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.team_stats.make_base_points_data" title="Link to this definition"></a></dt>
-<dd><p>Build base points data (e.g. points for and against) for feature
-creation.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>games</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_games</em><em>, </em><em>n_features</em><em>)</em>) – Raw games data.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Points for/against indexed by season, team, and week.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.DataFrame of shape (n_samples, 5)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="src.data.features.team_stats.make_points_features">
-<span class="sig-prename descclassname"><span class="pre">src.data.features.team_stats.</span></span><span class="sig-name descname"><span class="pre">make_points_features</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">games</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">window</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/team_stats.html#make_points_features"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.team_stats.make_points_features" title="Link to this definition"></a></dt>
-<dd><p>Build all points features (e.g. net points).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>games</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_games</em><em>, </em><em>n_features</em><em>)</em>) – Raw games data.</p></li>
-<li><p><strong>window</strong> (<em>int</em>) – Number of weeks to use for rolling averages.</p></li>
-<li><p><strong>output_dir</strong> (<em>str</em>) – Directory to write csv files to.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="src.data.features.team_stats.reframe_team_as_opponent">
-<span class="sig-prename descclassname"><span class="pre">src.data.features.team_stats.</span></span><span class="sig-name descname"><span class="pre">reframe_team_as_opponent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">df</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/team_stats.html#reframe_team_as_opponent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.team_stats.reframe_team_as_opponent" title="Link to this definition"></a></dt>
-<dd><p>Transform a df index such that ‘team’ is now ‘opponent’.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>df</strong> (<em>pd.DataFrame</em><em> of </em><em>shape</em><em> (</em><em>n_samples</em><em>, </em><em>n_features</em><em>)</em>) – Dataframe with season/team/week multiindex.</p>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>Dataframe with season/opponent/week multiindex.</p>
-</dd>
-<dt class="field-odd">Return type<span class="colon">:</span></dt>
-<dd class="field-odd"><p>pd.DataFrame of shape (n_samples, n_features)</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
 <dt class="sig sig-object py" id="src.data.features.team_stats.write_cols_to_file">
 <span class="sig-prename descclassname"><span class="pre">src.data.features.team_stats.</span></span><span class="sig-name descname"><span class="pre">write_cols_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">features</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_dir</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/src/data/features/team_stats.html#write_cols_to_file"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#src.data.features.team_stats.write_cols_to_file" title="Link to this definition"></a></dt>
 <dd><p>Write each feature to a separate csv file.</p>
@@ -374,7 +247,7 @@ creation.</p>
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="src.data.build.html" class="btn btn-neutral float-left" title="src.data.build" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="src.data.features.points.html" class="btn btn-neutral float-left" title="src.data.features.points" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="src.data.features.travel.html" class="btn btn-neutral float-right" title="src.data.features.travel" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

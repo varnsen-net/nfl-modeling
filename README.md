@@ -50,7 +50,7 @@ SWIFT does everything possible to avoid data leakage. It should never get a glim
 
 ## Future tasks
 - ~~Auto-generate API docs with Sphinx~~
-- Complete documentation for all modules and functions
+- ~~Complete documentation for all modules and functions~~
 - Tidy up some bits of rushed code
 - Complete unit tests
 - Expand model evaluation to include tracking optimal hyperparameters

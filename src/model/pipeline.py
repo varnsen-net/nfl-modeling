@@ -1,6 +1,4 @@
-"""Helper functions for building scikit-learn pipelines.
-
-The base pipeline consists of a single preprocessor applicable to any training/test dataset. All other pipeline functions should build on top of that base and return a complete pipeline with an estimator."""
+"""Helper functions for building scikit-learn pipelines."""
 
 import numpy as np
 import pandas as pd

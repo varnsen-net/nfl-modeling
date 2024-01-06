@@ -140,30 +140,24 @@
 
 
 
-<div class="viewcode-block" id="map_team_data_to_games">
-<a class="viewcode-back" href="../../api/src.utils.html#src.utils.map_team_data_to_games">[docs]</a>
-<span class="k">def</span> <span class="nf">map_team_data_to_games</span><span class="p">(</span><span class="n">games</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">feature_name</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Map a pandas series of team stats with a season/week/team multiindex</span>
-<span class="sd">    to game_ids in the games data.</span>
+<div class="viewcode-block" id="map_features_to_games">
+<a class="viewcode-back" href="../../api/src.utils.html#src.utils.map_features_to_games">[docs]</a>
+<span class="k">def</span> <span class="nf">map_features_to_games</span><span class="p">(</span><span class="n">games</span><span class="p">,</span> <span class="n">stats</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Map a dataframe of features with season/week/team columns</span>
 <span class="sd">    </span>
 <span class="sd">    :param pd.DataFrame games: raw games dataframe</span>
 <span class="sd">    :param pd.Series stats: series of team stats with season/week/team index</span>
 <span class="sd">    :return: dataframe with game_id, away_team_stat, home_team_stat</span>
 <span class="sd">    :rtype: pd.DataFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">merged</span> <span class="o">=</span> <span class="p">(</span><span class="n">games</span>
-              <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">,</span>
-                     <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">,</span> <span class="s1">&#39;away_team&#39;</span><span class="p">],</span>
-                     <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">,</span> <span class="s1">&#39;team&#39;</span><span class="p">])</span>
-              <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">feature_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;away_</span><span class="si">{</span><span class="n">feature_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">})</span>
-              <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">,</span>
-                     <span class="n">left_on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">,</span> <span class="s1">&#39;home_team&#39;</span><span class="p">],</span>
-                     <span class="n">right_on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">,</span> <span class="s1">&#39;team&#39;</span><span class="p">])</span>
-              <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">feature_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;home_</span><span class="si">{</span><span class="n">feature_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">}))</span>
-    <span class="n">remapped_stats</span> <span class="o">=</span> <span class="p">(</span><span class="n">merged</span>
-                      <span class="p">[[</span><span class="s1">&#39;game_id&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;away_</span><span class="si">{</span><span class="n">feature_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;home_</span><span class="si">{</span><span class="n">feature_name</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">]]</span>
-                      <span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;game_id&#39;</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">remapped_stats</span></div>
+    <span class="n">away_stats</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">add_prefix</span><span class="p">(</span><span class="s1">&#39;away_&#39;</span><span class="p">)</span>
+    <span class="n">home_stats</span> <span class="o">=</span> <span class="n">stats</span><span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">add_prefix</span><span class="p">(</span><span class="s1">&#39;home_&#39;</span><span class="p">)</span>
+    <span class="n">games</span> <span class="o">=</span> <span class="p">(</span><span class="n">games</span>
+             <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">away_stats</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">,</span>
+                    <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;away_team&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">])</span>
+             <span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">home_stats</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s1">&#39;inner&#39;</span><span class="p">,</span>
+                    <span class="n">on</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;home_team&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">games</span></div>
 
 
 
@@ -203,27 +197,25 @@
 
 <div class="viewcode-block" id="shift_week_number">
 <a class="viewcode-back" href="../../api/src.utils.html#src.utils.shift_week_number">[docs]</a>
-<span class="k">def</span> <span class="nf">shift_week_number</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">dropna</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Shifts the week index of a season/team/week multiindex.</span>
+<span class="k">def</span> <span class="nf">shift_week_number</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">n</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Shifts the week number of a df with season/team/week columns.</span>
 <span class="sd">    </span>
 <span class="sd">    Aggregations are nearly always calculated up to the *end* of a week.</span>
 <span class="sd">    Shifting is useful when you want your stats to align with the week before</span>
 <span class="sd">    or the week after (consistent with the bye weeks).</span>
 
-<span class="sd">    :param pd.DataFrame df: dataframe with season/team/week multiindex</span>
-<span class="sd">    :param int n: number of rows to shift</span>
-<span class="sd">    :param bool dropna: whether to drop rows with missing values</span>
-<span class="sd">    :return: dataframe with shifted season/team index</span>
+<span class="sd">    :param pd.DataFrame df: Dataframe with season/team/week cols</span>
+<span class="sd">    :param int n: Number of rows to shift.</span>
+<span class="sd">    :return: Dataframe with shifted weeks.</span>
 <span class="sd">    :rtype: pd.DataFrame</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">df</span> <span class="o">=</span> <span class="p">(</span><span class="n">df</span>
+          <span class="o">.</span><span class="n">set_index</span><span class="p">([</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">])</span>
           <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;team&#39;</span><span class="p">])</span>
-          <span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">n</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">dropna</span><span class="p">:</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+          <span class="o">.</span><span class="n">shift</span><span class="p">(</span><span class="n">n</span><span class="p">)</span>
+          <span class="o">.</span><span class="n">reset_index</span><span class="p">())</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
     <span class="k">return</span> <span class="n">df</span></div>
-
-
 
 </pre></div>
 

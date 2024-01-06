@@ -11,8 +11,9 @@ import pandas as pd
 
 from src.data.raw.games import refresh_games_data
 from src.data.raw.plays import refresh_plays_data
-from src.data.features.team_stats import build_team_stats_features
 from src.data.features.travel import build_travel_features
+from src.data.features.points import build_points_features
+from src.data.features.team_stats import build_team_efficiency_features
 from src.data.train.train import build_train
 from src.data.train.target import build_target
 
@@ -37,50 +38,6 @@ def split_data(df, holdout_year):
     return train, holdout
 
 
-def refresh_raw_data(games_url, raw_games_path, current_season, plays_url,
-                     raw_plays_path):
-    """Fetch raw data from web sources and save to local paths.
-
-    :param str games_url: URL to fetch raw games data.
-    :param str raw_games_path: Path to save raw games data.
-    :param int current_season: Current season of NFL.
-    :param str plays_url: URL to fetch raw play-by-play data.
-    :param str raw_plays_path: Path to save raw play-by-play data.
-    :return: None
-    :rtype: None
-    """
-    print('Refreshing raw games data...')
-    refresh_games_data(games_url, raw_games_path)
-    print('Refreshing raw play-by-play data...')
-    refresh_plays_data(current_season, plays_url, raw_plays_path)
-    return
-
-
-def build_features(features_path, raw_games_path, raw_plays_path,
-                   city_coords_path):
-    """Build features from raw data and save to local paths.
-    
-    :param str features_path: Path to save features data.
-    :param str raw_games_path: Path to raw games data.
-    :param str raw_plays_path: Path to raw play-by-play data.
-    :param str city_coords_path: Path to city coordinates data.
-    :return: None
-    :rtype: None
-    """
-    features_path = pathlib.Path(features_path)
-    print('Building team stats features...')
-    output_dir = features_path / 'team_stats'
-    os.makedirs(output_dir, exist_ok=True)
-    build_team_stats_features(raw_games_path, raw_plays_path, output_dir)
-
-    print('Building travel features...')
-    output_dir = features_path / 'travel'
-    os.makedirs(output_dir, exist_ok=True)
-    build_travel_features(raw_games_path, city_coords_path, output_dir)
-
-    return
-
-
 def build_train_and_test_data(train_path, test_path, games_cols, raw_games_path,
                               features_path, holdout_year):
     """Build training and testing data from raw data and save to local paths.
@@ -94,9 +51,6 @@ def build_train_and_test_data(train_path, test_path, games_cols, raw_games_path,
     :return: None
     :rtype: None
     """
-    print('Building training and test data...')
-    os.makedirs(train_path, exist_ok=True)
-    os.makedirs(test_path, exist_ok=True)
     full_train = build_train(games_cols, raw_games_path, features_path)
     full_target = build_target(raw_games_path, full_train)
     train, train_holdout = split_data(full_train, holdout_year)
@@ -121,17 +75,32 @@ if __name__ == '__main__':
     games_url = RAW_DATA_URLS['games']
     plays_url = RAW_DATA_URLS['plays']
 
+    os.makedirs(features_path, exist_ok=True)
+    os.makedirs(train_path, exist_ok=True)
+    os.makedirs(test_path, exist_ok=True)
 
-    # Refresh raw data
-    refresh_raw_data(games_url, raw_games_path, CURRENT_SEASON, plays_url,
-                     raw_plays_path)
+    print('Refreshing raw games data...')
+    refresh_games_data(games_url, raw_games_path)
 
+    print('Refreshing raw play-by-play data...')
+    refresh_plays_data(CURRENT_SEASON, plays_url, raw_plays_path)
 
-    # Build features
-    build_features(features_path, raw_games_path, raw_plays_path,
-                   city_coords_path)
+    # TODO throw these calls into a dictionary or something
+    print('Building travel features...')
+    travel_features = build_travel_features(raw_games_path, city_coords_path)
+    output_path = features_path / 'travel.csv'
+    travel_features.to_csv(output_path)
 
+    print('Building points features...')
+    points_features = build_points_features(raw_games_path, window=None)
+    output_path = features_path / 'points.csv'
+    points_features.to_csv(output_path)
 
-    # Build training and test data
+    print('Building team efficiency features...')
+    team_efficiency_features = build_team_efficiency_features(raw_plays_path)
+    output_path = features_path / 'team_efficiency.csv'
+    team_efficiency_features.to_csv(output_path)
+
+    print('Building training and test data...')
     build_train_and_test_data(train_path, test_path, games_cols, raw_games_path,
                               features_path, holdout_year)

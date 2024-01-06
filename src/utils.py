@@ -57,28 +57,22 @@ def walk_features_dir(features_path):
                 yield file_path
 
 
-def map_team_data_to_games(games, stats, feature_name):
-    """Map a pandas series of team stats with a season/week/team multiindex
-    to game_ids in the games data.
+def map_features_to_games(games, stats):
+    """Map a dataframe of features with season/week/team columns
     
     :param pd.DataFrame games: raw games dataframe
     :param pd.Series stats: series of team stats with season/week/team index
     :return: dataframe with game_id, away_team_stat, home_team_stat
     :rtype: pd.DataFrame
     """
-    merged = (games
-              .merge(stats, how='inner',
-                     left_on=['season', 'week', 'away_team'],
-                     right_on=['season', 'week', 'team'])
-              .rename(columns={f'{feature_name}': f'away_{feature_name}'})
-              .merge(stats, how='inner',
-                     left_on=['season', 'week', 'home_team'],
-                     right_on=['season', 'week', 'team'])
-              .rename(columns={f'{feature_name}': f'home_{feature_name}'}))
-    remapped_stats = (merged
-                      [['game_id', f'away_{feature_name}', f'home_{feature_name}']]
-                      .set_index('game_id'))
-    return remapped_stats
+    away_stats = stats.set_index(['season', 'week']).add_prefix('away_')
+    home_stats = stats.set_index(['season', 'week']).add_prefix('home_')
+    games = (games
+             .merge(away_stats, how='inner',
+                    on=['season', 'away_team', 'week'])
+             .merge(home_stats, how='inner',
+                    on=['season', 'home_team', 'week']))
+    return games
 
 
 def refresh_raw_data(url, save_path):
@@ -109,24 +103,22 @@ def get_date_n_days_out(n):
     return formatted_date
 
 
-def shift_week_number(df, n, dropna=True):
-    """Shifts the week index of a season/team/week multiindex.
+def shift_week_number(df, n):
+    """Shifts the week number of a df with season/team/week columns.
     
     Aggregations are nearly always calculated up to the *end* of a week.
     Shifting is useful when you want your stats to align with the week before
     or the week after (consistent with the bye weeks).
 
-    :param pd.DataFrame df: dataframe with season/team/week multiindex
-    :param int n: number of rows to shift
-    :param bool dropna: whether to drop rows with missing values
-    :return: dataframe with shifted season/team index
+    :param pd.DataFrame df: Dataframe with season/team/week cols
+    :param int n: Number of rows to shift.
+    :return: Dataframe with shifted weeks.
     :rtype: pd.DataFrame
     """
     df = (df
+          .set_index(['season', 'team', 'week'])
           .groupby(['season', 'team'])
-          .shift(n))
-    if dropna:
-        df = df.dropna()
+          .shift(n)
+          .reset_index())
+    df = df.dropna()
     return df
-
-

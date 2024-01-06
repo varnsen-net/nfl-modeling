@@ -85,8 +85,9 @@
 
 <span class="kn">from</span> <span class="nn">src.data.raw.games</span> <span class="kn">import</span> <span class="n">refresh_games_data</span>
 <span class="kn">from</span> <span class="nn">src.data.raw.plays</span> <span class="kn">import</span> <span class="n">refresh_plays_data</span>
-<span class="kn">from</span> <span class="nn">src.data.features.team_stats</span> <span class="kn">import</span> <span class="n">build_team_stats_features</span>
 <span class="kn">from</span> <span class="nn">src.data.features.travel</span> <span class="kn">import</span> <span class="n">build_travel_features</span>
+<span class="kn">from</span> <span class="nn">src.data.features.points</span> <span class="kn">import</span> <span class="n">build_points_features</span>
+<span class="kn">from</span> <span class="nn">src.data.features.team_stats</span> <span class="kn">import</span> <span class="n">build_team_efficiency_features</span>
 <span class="kn">from</span> <span class="nn">src.data.train.train</span> <span class="kn">import</span> <span class="n">build_train</span>
 <span class="kn">from</span> <span class="nn">src.data.train.target</span> <span class="kn">import</span> <span class="n">build_target</span>
 
@@ -114,56 +115,6 @@
 
 
 
-<div class="viewcode-block" id="refresh_raw_data">
-<a class="viewcode-back" href="../../../api/src.data.build.html#src.data.build.refresh_raw_data">[docs]</a>
-<span class="k">def</span> <span class="nf">refresh_raw_data</span><span class="p">(</span><span class="n">games_url</span><span class="p">,</span> <span class="n">raw_games_path</span><span class="p">,</span> <span class="n">current_season</span><span class="p">,</span> <span class="n">plays_url</span><span class="p">,</span>
-                     <span class="n">raw_plays_path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fetch raw data from web sources and save to local paths.</span>
-
-<span class="sd">    :param str games_url: URL to fetch raw games data.</span>
-<span class="sd">    :param str raw_games_path: Path to save raw games data.</span>
-<span class="sd">    :param int current_season: Current season of NFL.</span>
-<span class="sd">    :param str plays_url: URL to fetch raw play-by-play data.</span>
-<span class="sd">    :param str raw_plays_path: Path to save raw play-by-play data.</span>
-<span class="sd">    :return: None</span>
-<span class="sd">    :rtype: None</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Refreshing raw games data...&#39;</span><span class="p">)</span>
-    <span class="n">refresh_games_data</span><span class="p">(</span><span class="n">games_url</span><span class="p">,</span> <span class="n">raw_games_path</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Refreshing raw play-by-play data...&#39;</span><span class="p">)</span>
-    <span class="n">refresh_plays_data</span><span class="p">(</span><span class="n">current_season</span><span class="p">,</span> <span class="n">plays_url</span><span class="p">,</span> <span class="n">raw_plays_path</span><span class="p">)</span>
-    <span class="k">return</span></div>
-
-
-
-<div class="viewcode-block" id="build_features">
-<a class="viewcode-back" href="../../../api/src.data.build.html#src.data.build.build_features">[docs]</a>
-<span class="k">def</span> <span class="nf">build_features</span><span class="p">(</span><span class="n">features_path</span><span class="p">,</span> <span class="n">raw_games_path</span><span class="p">,</span> <span class="n">raw_plays_path</span><span class="p">,</span>
-                   <span class="n">city_coords_path</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build features from raw data and save to local paths.</span>
-<span class="sd">    </span>
-<span class="sd">    :param str features_path: Path to save features data.</span>
-<span class="sd">    :param str raw_games_path: Path to raw games data.</span>
-<span class="sd">    :param str raw_plays_path: Path to raw play-by-play data.</span>
-<span class="sd">    :param str city_coords_path: Path to city coordinates data.</span>
-<span class="sd">    :return: None</span>
-<span class="sd">    :rtype: None</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">features_path</span> <span class="o">=</span> <span class="n">pathlib</span><span class="o">.</span><span class="n">Path</span><span class="p">(</span><span class="n">features_path</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Building team stats features...&#39;</span><span class="p">)</span>
-    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">features_path</span> <span class="o">/</span> <span class="s1">&#39;team_stats&#39;</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">build_team_stats_features</span><span class="p">(</span><span class="n">raw_games_path</span><span class="p">,</span> <span class="n">raw_plays_path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span>
-
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Building travel features...&#39;</span><span class="p">)</span>
-    <span class="n">output_dir</span> <span class="o">=</span> <span class="n">features_path</span> <span class="o">/</span> <span class="s1">&#39;travel&#39;</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">build_travel_features</span><span class="p">(</span><span class="n">raw_games_path</span><span class="p">,</span> <span class="n">city_coords_path</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">)</span>
-
-    <span class="k">return</span></div>
-
-
-
 <div class="viewcode-block" id="build_train_and_test_data">
 <a class="viewcode-back" href="../../../api/src.data.build.html#src.data.build.build_train_and_test_data">[docs]</a>
 <span class="k">def</span> <span class="nf">build_train_and_test_data</span><span class="p">(</span><span class="n">train_path</span><span class="p">,</span> <span class="n">test_path</span><span class="p">,</span> <span class="n">games_cols</span><span class="p">,</span> <span class="n">raw_games_path</span><span class="p">,</span>
@@ -179,9 +130,6 @@
 <span class="sd">    :return: None</span>
 <span class="sd">    :rtype: None</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Building training and test data...&#39;</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">train_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">test_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">full_train</span> <span class="o">=</span> <span class="n">build_train</span><span class="p">(</span><span class="n">games_cols</span><span class="p">,</span> <span class="n">raw_games_path</span><span class="p">,</span> <span class="n">features_path</span><span class="p">)</span>
     <span class="n">full_target</span> <span class="o">=</span> <span class="n">build_target</span><span class="p">(</span><span class="n">raw_games_path</span><span class="p">,</span> <span class="n">full_train</span><span class="p">)</span>
     <span class="n">train</span><span class="p">,</span> <span class="n">train_holdout</span> <span class="o">=</span> <span class="n">split_data</span><span class="p">(</span><span class="n">full_train</span><span class="p">,</span> <span class="n">holdout_year</span><span class="p">)</span>
@@ -207,18 +155,33 @@
     <span class="n">games_url</span> <span class="o">=</span> <span class="n">RAW_DATA_URLS</span><span class="p">[</span><span class="s1">&#39;games&#39;</span><span class="p">]</span>
     <span class="n">plays_url</span> <span class="o">=</span> <span class="n">RAW_DATA_URLS</span><span class="p">[</span><span class="s1">&#39;plays&#39;</span><span class="p">]</span>
 
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">features_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">train_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">test_path</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
-    <span class="c1"># Refresh raw data</span>
-    <span class="n">refresh_raw_data</span><span class="p">(</span><span class="n">games_url</span><span class="p">,</span> <span class="n">raw_games_path</span><span class="p">,</span> <span class="n">CURRENT_SEASON</span><span class="p">,</span> <span class="n">plays_url</span><span class="p">,</span>
-                     <span class="n">raw_plays_path</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Refreshing raw games data...&#39;</span><span class="p">)</span>
+    <span class="n">refresh_games_data</span><span class="p">(</span><span class="n">games_url</span><span class="p">,</span> <span class="n">raw_games_path</span><span class="p">)</span>
 
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Refreshing raw play-by-play data...&#39;</span><span class="p">)</span>
+    <span class="n">refresh_plays_data</span><span class="p">(</span><span class="n">CURRENT_SEASON</span><span class="p">,</span> <span class="n">plays_url</span><span class="p">,</span> <span class="n">raw_plays_path</span><span class="p">)</span>
 
-    <span class="c1"># Build features</span>
-    <span class="n">build_features</span><span class="p">(</span><span class="n">features_path</span><span class="p">,</span> <span class="n">raw_games_path</span><span class="p">,</span> <span class="n">raw_plays_path</span><span class="p">,</span>
-                   <span class="n">city_coords_path</span><span class="p">)</span>
+    <span class="c1"># TODO throw these calls into a dictionary or something</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Building travel features...&#39;</span><span class="p">)</span>
+    <span class="n">travel_features</span> <span class="o">=</span> <span class="n">build_travel_features</span><span class="p">(</span><span class="n">raw_games_path</span><span class="p">,</span> <span class="n">city_coords_path</span><span class="p">)</span>
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">features_path</span> <span class="o">/</span> <span class="s1">&#39;travel.csv&#39;</span>
+    <span class="n">travel_features</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
 
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Building points features...&#39;</span><span class="p">)</span>
+    <span class="n">points_features</span> <span class="o">=</span> <span class="n">build_points_features</span><span class="p">(</span><span class="n">raw_games_path</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">features_path</span> <span class="o">/</span> <span class="s1">&#39;points.csv&#39;</span>
+    <span class="n">points_features</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
 
-    <span class="c1"># Build training and test data</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Building team efficiency features...&#39;</span><span class="p">)</span>
+    <span class="n">team_efficiency_features</span> <span class="o">=</span> <span class="n">build_team_efficiency_features</span><span class="p">(</span><span class="n">raw_plays_path</span><span class="p">)</span>
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">features_path</span> <span class="o">/</span> <span class="s1">&#39;team_efficiency.csv&#39;</span>
+    <span class="n">team_efficiency_features</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Building training and test data...&#39;</span><span class="p">)</span>
     <span class="n">build_train_and_test_data</span><span class="p">(</span><span class="n">train_path</span><span class="p">,</span> <span class="n">test_path</span><span class="p">,</span> <span class="n">games_cols</span><span class="p">,</span> <span class="n">raw_games_path</span><span class="p">,</span>
                               <span class="n">features_path</span><span class="p">,</span> <span class="n">holdout_year</span><span class="p">)</span>
 </pre></div>

@@ -2,7 +2,7 @@
 
 Instead of creating bespoke classes that inherit from scikit, we'll rely on the FunctionTransformer to make them compatible with scikit pipelines. https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html
 
-The preprocess function is reserved for model-agnostic transformations that should be done at the start of a pipeline.
+The preprocess function is reserved for model-agnostic transformations that should be done before building the scikit pipelines.
 """
 
 import numpy as np
@@ -58,18 +58,18 @@ def transform_home_away_structure(X, y):
     """
     home_obj_idxs = X[::2].index
     home_obj_games = X.loc[home_obj_idxs]
-    away_obj_games = X.drop(home_obj_idxs)
-    home_obj_y = y.loc[home_obj_idxs]
-    away_obj_y = y.drop(home_obj_idxs)
-    
     home_obj_games.columns = (home_obj_games.columns
                               .str.replace("^home", "obj", regex=True)
                               .str.replace("^away", "adv", regex=True))
     home_obj_games['obj_team_is_home'] = 1
+    home_obj_y = y.loc[home_obj_idxs]
+
+    away_obj_games = X.drop(home_obj_idxs)
     away_obj_games.columns = (away_obj_games.columns
                               .str.replace("^away", "obj", regex=True)
                               .str.replace("^home", "adv", regex=True))
     away_obj_games['obj_team_is_home'] = 0
+    away_obj_y = y.drop(home_obj_idxs)
     away_obj_y = 1 - away_obj_y
 
     X_transformed = pd.concat([home_obj_games, away_obj_games]).sort_index()

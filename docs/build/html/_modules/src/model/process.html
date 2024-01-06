@@ -76,7 +76,7 @@
 
 <span class="sd">Instead of creating bespoke classes that inherit from scikit, we&#39;ll rely on the FunctionTransformer to make them compatible with scikit pipelines. https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.FunctionTransformer.html</span>
 
-<span class="sd">The preprocess function is reserved for model-agnostic transformations that should be done at the start of a pipeline.</span>
+<span class="sd">The preprocess function is reserved for model-agnostic transformations that should be done before building the scikit pipelines.</span>
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -143,18 +143,18 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">home_obj_idxs</span> <span class="o">=</span> <span class="n">X</span><span class="p">[::</span><span class="mi">2</span><span class="p">]</span><span class="o">.</span><span class="n">index</span>
     <span class="n">home_obj_games</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">home_obj_idxs</span><span class="p">]</span>
-    <span class="n">away_obj_games</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">home_obj_idxs</span><span class="p">)</span>
-    <span class="n">home_obj_y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">home_obj_idxs</span><span class="p">]</span>
-    <span class="n">away_obj_y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">home_obj_idxs</span><span class="p">)</span>
-    
     <span class="n">home_obj_games</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">(</span><span class="n">home_obj_games</span><span class="o">.</span><span class="n">columns</span>
                               <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;^home&quot;</span><span class="p">,</span> <span class="s2">&quot;obj&quot;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                               <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;^away&quot;</span><span class="p">,</span> <span class="s2">&quot;adv&quot;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
     <span class="n">home_obj_games</span><span class="p">[</span><span class="s1">&#39;obj_team_is_home&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">home_obj_y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">home_obj_idxs</span><span class="p">]</span>
+
+    <span class="n">away_obj_games</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">home_obj_idxs</span><span class="p">)</span>
     <span class="n">away_obj_games</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">(</span><span class="n">away_obj_games</span><span class="o">.</span><span class="n">columns</span>
                               <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;^away&quot;</span><span class="p">,</span> <span class="s2">&quot;obj&quot;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
                               <span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;^home&quot;</span><span class="p">,</span> <span class="s2">&quot;adv&quot;</span><span class="p">,</span> <span class="n">regex</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
     <span class="n">away_obj_games</span><span class="p">[</span><span class="s1">&#39;obj_team_is_home&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">away_obj_y</span> <span class="o">=</span> <span class="n">y</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">home_obj_idxs</span><span class="p">)</span>
     <span class="n">away_obj_y</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">away_obj_y</span>
 
     <span class="n">X_transformed</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">home_obj_games</span><span class="p">,</span> <span class="n">away_obj_games</span><span class="p">])</span><span class="o">.</span><span class="n">sort_index</span><span class="p">()</span>

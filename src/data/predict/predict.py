@@ -6,7 +6,7 @@ import joblib
 import numpy as np
 import pandas as pd
 
-from src.utils import map_team_data_to_games, walk_features_dir
+from src.utils import map_features_to_games, walk_features_dir
 from src.config.config import (PATHS,
                                TRAINING,
                                CURRENT_SEASON,
@@ -43,15 +43,12 @@ def merge_most_recent_feature(games, feature, current_season, current_week):
         games = games.merge(feature, on='game_id', how='inner')
         return games
     else:
-        feature_name = feature.columns[-1]
         feature = (feature
                    .query('season == @current_season')
                    .groupby('team')
                    .tail(1)
-                   .assign(week=current_week)
-                   .set_index(['season', 'team', 'week']))
-        feature = map_team_data_to_games(games, feature, feature_name)
-        games = games.merge(feature, on='game_id', how='inner')
+                   .assign(week=current_week))
+        games = map_features_to_games(games, feature)
         return games
 
 

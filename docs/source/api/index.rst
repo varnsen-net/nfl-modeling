@@ -8,6 +8,7 @@ API Reference
    src.config.spaces
    src.data.ancillary.depth_charts
    src.data.build
+   src.data.features.points
    src.data.features.team_stats
    src.data.features.travel
    src.data.predict.predict
