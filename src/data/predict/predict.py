@@ -65,10 +65,13 @@ def build_prediction_data(upcoming, features_path):
         feature = pd.read_csv(file_path)
         upcoming = merge_most_recent_feature(upcoming, feature,
                                              CURRENT_SEASON, CURRENT_WEEK)
+    upcoming = (upcoming
+                .drop(columns=['away_team', 'home_team', 'season', 'week'])
+                .set_index('game_id')
+                .sort_index())
     upcoming.columns = (upcoming.columns
                         .str.replace('home', 'obj')
                         .str.replace('away', 'adv'))
-    upcoming['obj_team_is_home'] = 1
     return upcoming
 
 
@@ -85,8 +88,6 @@ if __name__ == "__main__":
                 .loc[games['result'].isnull()]
                 .filter(games_cols))
     prediction_data = build_prediction_data(upcoming, features_path)
-    print(prediction_data)
-
 
     most_recent_results = get_most_recent_dir(results_path)
     model = joblib.load(os.path.join(most_recent_results, 'baseline_model.pkl'))
@@ -97,14 +98,11 @@ if __name__ == "__main__":
     predictions = model.predict_proba(prediction_data)
     prediction_data[['swift_away_win_prob', 'swift_home_win_prob']] = predictions
 
-
     prediction_data.columns = (prediction_data.columns
                                .str.replace('obj', 'home')
                                .str.replace('adv', 'away'))
-    prediction_data = prediction_data.drop(columns='home_team_is_home')
     prediction_data = prediction_data.round(3)
-
 
     os.makedirs(prediction_data_path, exist_ok=True)
     filename = f'{CURRENT_SEASON}_week_{CURRENT_WEEK}_predictions.csv'
-    prediction_data.to_csv(f'{prediction_data_path}/{filename}', index=False)
+    prediction_data.to_csv(f'{prediction_data_path}/{filename}')

@@ -25,12 +25,12 @@ RAW_DATA_URLS = {
 
 CURRENT_SEASON = 2023
 """*int*: Current NFL season. Used to fetch current season of play-by-play data."""
-CURRENT_WEEK = 18
+CURRENT_WEEK = 19
 """*int*: Current NFL week. Used to fetch current week of play-by-play data."""
 TRAINING = {
     "holdout_year": 2020,
     "games_cols": ["game_id", "season", "week", "away_rest", "home_rest",
-                   "div_game", "roof", "surface", "away_team", "home_team"]
+                   "away_team", "home_team"]
 }
 """*dict*: Parameters for training data."""
 SCORING_METRIC = 'neg_brier_score'

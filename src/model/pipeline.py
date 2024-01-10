@@ -17,10 +17,8 @@ def build_baseline_pipeline(model_params={}):
     :return: baseline pipeline
     :rtype: sklearn.pipeline.Pipeline
     """
-    feature_columns = ['obj_adj_points_for_avg',
-                       'adv_adj_points_for_avg',
-                       'obj_adj_points_against_avg',
-                       'adv_adj_points_against_avg',
+    feature_columns = ['obj_adj_points_net_avg',
+                       'adv_adj_points_net_avg',
                        'obj_rest',
                        'adv_rest',
                        'obj_travel_distance',
@@ -39,9 +37,6 @@ def build_swift_pipeline(model_params={}):
     :return: swift pipeline
     :rtype: sklearn.pipeline.Pipeline
     """
-    transformers = [('onehot', OneHotEncoder(handle_unknown='ignore'), ['roof', 'surface'])]
-    preprocessor = ColumnTransformer(transformers=transformers,
-                                     remainder='passthrough')
     estimator = swift_estimator(**model_params)
-    pipeline = make_pipeline(preprocessor, estimator)
+    pipeline = make_pipeline(estimator)
     return pipeline

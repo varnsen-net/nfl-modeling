@@ -56,52 +56,57 @@ if __name__ == "__main__":
     train_path = PATHS['train']
     test_path = PATHS['test']
     results_path = PATHS['results']
+    save_path = make_save_path(results_path)
 
-    train = pd.read_csv(f"{train_path}/train.csv", index_col=0)
-    target = pd.read_csv(f"{train_path}/target.csv", index_col=0)
-    train, target = transform_home_away_structure(train, target)
-    X = preprocess(train, FEATURE_PRECISIONS)
-    y = target['target']
+    X_train = pd.read_csv(f"{train_path}/train.csv", index_col=0)
+    y_train = pd.read_csv(f"{train_path}/target.csv", index_col=0)
+    X_train, y_train = transform_home_away_structure(X_train, y_train)
+    X_train = preprocess(X_train, FEATURE_PRECISIONS)
+    y_train = y_train['target']
+
+    X_test = pd.read_csv(f"{test_path}/test.csv", index_col=0)
+    y_test = pd.read_csv(f"{test_path}/target.csv", index_col=0)
+    X_test, y_test = transform_home_away_structure(X_test, y_test)
+    X_test = preprocess(X_test, FEATURE_PRECISIONS)
+    y_test = y_test['target']
+
     cv = custom_cv(CV_TRAIN_SIZE, CV_TEST_SIZE)
 
     # evaluate baseline model
-    baseline = build_baseline_pipeline(BASELINE_PARAMS)
-    scores, _ = evaluate_model(baseline, X, y, cv)
-    save_path = make_save_path(results_path)
     name = 'baseline'
+    print(f"Evaluating {name} on training and holdout data...")
+    baseline = build_baseline_pipeline(BASELINE_PARAMS)
+    scores, bl_estimators = evaluate_model(baseline, X_train, y_train, cv)
     scores.to_csv(f"{save_path}/{name}_scores.csv")
     make_and_save_plots(scores, name, save_path)
+    y_pred = voting_classifier(bl_estimators, X_test, 'hard')
+    y_pred_proba = voting_classifier(bl_estimators, X_test, 'soft')
+    scores = compile_scores(y_test, y_pred, y_pred_proba)
+    plot_test_calibration(scores, name, save_path)
 
     # evaluate swift
+    name = 'swift'
+    print(f"Evaluating {name} on training and holdout data...")
     swift = build_swift_pipeline()
-    best_params = hyperoptimize(swift, X, y, cv,
+    best_params = hyperoptimize(swift, X_train, y_train, cv,
                                 scoring=SCORING_METRIC,
                                 space=LIGHTGBM_SPACE,
                                 max_evals=MAX_EVALS,
                                 early_stop_n=EARLY_STOP_N)
     print(f"Best params: {best_params}")
     swift.set_params(**best_params)
-    scores, estimators = evaluate_model(swift, X, y, cv)
-    name = 'swift'
+    scores, sw_estimators = evaluate_model(swift, X_train, y_train, cv)
     scores.to_csv(f"{save_path}/{name}_scores.csv")
     make_and_save_plots(scores, name, save_path)
-
-    # evaluate swift on holdout data
-    print(f"Evaluating {name} on holdout data...")
-    test = pd.read_csv(f"{test_path}/test.csv", index_col=0)
-    target = pd.read_csv(f"{test_path}/target.csv", index_col=0)
-    test, target = transform_home_away_structure(test, target)
-    X_test = preprocess(test, FEATURE_PRECISIONS)
-    y_test = target['target']
-    y_pred = voting_classifier(estimators, X_test, 'hard')
-    y_pred_proba = voting_classifier(estimators, X_test, 'soft')
+    y_pred = voting_classifier(sw_estimators, X_test, 'hard')
+    y_pred_proba = voting_classifier(sw_estimators, X_test, 'soft')
     scores = compile_scores(y_test, y_pred, y_pred_proba)
     plot_test_calibration(scores, name, save_path)
 
     # train models on all data and save
     print(f"Training {name} on all data...")
-    X_full = pd.concat([X, X_test])
-    y_full = pd.concat([y, y_test])
+    X_full = pd.concat([X_train, X_test])
+    y_full = pd.concat([y_train, y_test])
     baseline.fit(X_full, y_full)
     joblib.dump(baseline, f"{save_path}/baseline_model.pkl")
     swift.fit(X_full, y_full)

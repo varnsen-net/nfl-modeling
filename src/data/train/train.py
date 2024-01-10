@@ -76,6 +76,6 @@ def build_train(games_cols, raw_games_path, features_path):
         feature = pd.read_csv(file_path)
         train = merge_feature(train, feature)
     train = (train
-             .drop(columns=['away_team', 'home_team'])
+             .drop(columns=['away_team', 'home_team', 'week'])
              .sort_values('game_id'))
     return train

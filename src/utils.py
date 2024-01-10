@@ -58,11 +58,12 @@ def walk_features_dir(features_path):
 
 
 def map_features_to_games(games, stats):
-    """Map a dataframe of features with season/week/team columns
+    """Map a dataframe of stats with season/week/team columns to a dataframe
+    of games with season/week/away_team/home_team columns.
     
-    :param pd.DataFrame games: raw games dataframe
-    :param pd.Series stats: series of team stats with season/week/team index
-    :return: dataframe with game_id, away_team_stat, home_team_stat
+    :param pd.DataFrame games: Raw games dataframe.
+    :param pd.DataFrame stats: Dataframe of team stats with season/week/team cols.
+    :return: games dataframe with stats columns.
     :rtype: pd.DataFrame
     """
     away_stats = stats.set_index(['season', 'week']).add_prefix('away_')
