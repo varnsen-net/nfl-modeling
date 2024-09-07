@@ -6,32 +6,46 @@ Working model: SWIFT
 
 import pandas as pd
 import numpy as np
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import FunctionTransformer, OneHotEncoder, StandardScaler
+from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LogisticRegression
 from lightgbm import LGBMClassifier
 from sklearn.calibration import CalibratedClassifierCV
 
+from src.model.process import reduce_columns
 
-def baseline_estimator(*args, **kwargs):
-    """Returns a calibrated logistic regression estimator.
+
+def build_baseline_pipeline(model_params={}):
+    """Build a baseline model pipeline.
     
-    :param list args: positional arguments to pass to LogisticRegression
-    :param dict kwargs: keyword arguments to pass to LogisticRegression
-    :return: calibrated logistic regression estimator
-    :rtype: sklearn.calibration.CalibratedClassifierCV
+    :param dict model_params: estimator parameters
+    :return: baseline pipeline
+    :rtype: sklearn.pipeline.Pipeline
     """
-    estimator = LogisticRegression(*args, **kwargs)
+    feature_columns = ['obj_adj_points_net_avg',
+                       'adv_adj_points_net_avg',
+                       'obj_rest',
+                       'adv_rest',
+                       'obj_travel_distance',
+                       'adv_travel_distance']
+    kw_args = {'columns': feature_columns}
+    column_reducer = FunctionTransformer(reduce_columns, kw_args=kw_args)
+    estimator = LogisticRegression(**model_params)
     calibrated_estimator = CalibratedClassifierCV(estimator, cv=5)
-    return calibrated_estimator
+    pipeline = make_pipeline(column_reducer, StandardScaler(),
+                             calibrated_estimator)
+    return pipeline
 
 
-def swift_estimator(*args, **kwargs):
-    """Returns a calibrated SWIFT estimator.
+def build_swift_pipeline(model_params={}):
+    """Build a pipeline for a model that is actually good.
     
-    :param list args: positional arguments to pass to LogisticRegression
-    :param dict kwargs: keyword arguments to pass to LogisticRegression
-    :return: calibrated logistic regression estimator
-    :rtype: sklearn.calibration.CalibratedClassifierCV
+    :param dict model_params: estimator parameters
+    :return: swift pipeline
+    :rtype: sklearn.pipeline.Pipeline
     """
-    estimator = LGBMClassifier(*args, **kwargs)
+    estimator = LGBMClassifier(**model_params)
     calibrated_estimator = CalibratedClassifierCV(estimator, cv=5)
-    return calibrated_estimator
+    pipeline = make_pipeline(calibrated_estimator)
+    return pipeline

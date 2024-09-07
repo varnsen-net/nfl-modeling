@@ -28,7 +28,7 @@ CURRENT_SEASON = 2023
 CURRENT_WEEK = 19
 """*int*: Current NFL week. Used to fetch current week of play-by-play data."""
 TRAINING = {
-    "holdout_year": 2020,
+    "holdout_year": 2021,
     "games_cols": ["game_id", "season", "week", "away_rest", "home_rest",
                    "away_team", "home_team"]
 }

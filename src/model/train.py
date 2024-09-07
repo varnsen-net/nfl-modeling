@@ -11,7 +11,7 @@ from sklearn.preprocessing import FunctionTransformer
 from sklearn.model_selection import GroupKFold
 
 from src.model.process import preprocess, transform_home_away_structure
-from src.model.pipeline import build_baseline_pipeline, build_swift_pipeline
+from src.model.estimators import build_baseline_pipeline, build_swift_pipeline
 from src.model.hyperoptimize import hyperoptimize
 from src.model.evaluate import custom_cv, evaluate_model, compile_scores
 from src.model.predict import voting_classifier
