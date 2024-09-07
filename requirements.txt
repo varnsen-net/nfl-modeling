@@ -54,4 +54,4 @@ threadpoolctl==3.2.0
 tomli==2.0.1
 tqdm==4.66.3
 tzdata==2023.3
-urllib3==2.0.7
+urllib3==2.2.2
