@@ -6,8 +6,6 @@ Welcome to the repo for SWIFT, a machine learning model designed to produce well
 
 Current status: trains a LightGBM classifier and tunes hyperparameters with the hyperopt library.
 
-Gonna take some time off from active development in this repo for a few months. Good luck with your playoff bets!
-
 ## Getting started
 Simply `bash run.sh` and you're off to the races!
 

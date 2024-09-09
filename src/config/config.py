@@ -23,9 +23,9 @@ RAW_DATA_URLS = {
 """*dict*: URLs to raw data files."""
 
 
-CURRENT_SEASON = 2023
+CURRENT_SEASON = 2024
 """*int*: Current NFL season. Used to fetch current season of play-by-play data."""
-CURRENT_WEEK = 19
+CURRENT_WEEK = 1
 """*int*: Current NFL week. Used to fetch current week of play-by-play data."""
 TRAINING = {
     "holdout_year": 2021,

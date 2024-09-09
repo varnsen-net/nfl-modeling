@@ -34,3 +34,12 @@ LIGHTGBM_SPACE = [
     param('eval_metric', 'binary_logloss', None, None, str),
 ]
 """*list[namedtuple]*: LightGBM hyperparameter space."""
+
+
+SVC_SPACE = [
+    param('nu', hp.uniform, 0.01, 0.99, float),
+    param('gamma', hp.loguniform, -6.0, 0.1, float),
+    param('kernel', 'rbf', None, None, str),
+    param('probability', True, None, None, bool),
+]
+"""*list[namedtuple]*: SVC hyperparameter space."""

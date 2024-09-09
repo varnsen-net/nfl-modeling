@@ -11,6 +11,7 @@ from sklearn.preprocessing import FunctionTransformer, OneHotEncoder, StandardSc
 from sklearn.compose import ColumnTransformer
 from sklearn.linear_model import LogisticRegression
 from lightgbm import LGBMClassifier
+from sklearn.svm import NuSVC
 from sklearn.calibration import CalibratedClassifierCV
 
 from src.model.process import reduce_columns
@@ -38,8 +39,8 @@ def build_baseline_pipeline(model_params={}):
     return pipeline
 
 
-def build_swift_pipeline(model_params={}):
-    """Build a pipeline for a model that is actually good.
+def build_lgbm_pipeline(model_params={}):
+    """Build an LGBM pipeline.
     
     :param dict model_params: estimator parameters
     :return: swift pipeline
@@ -48,4 +49,26 @@ def build_swift_pipeline(model_params={}):
     estimator = LGBMClassifier(**model_params)
     calibrated_estimator = CalibratedClassifierCV(estimator, cv=5)
     pipeline = make_pipeline(calibrated_estimator)
+    return pipeline
+
+
+def build_svc_pipeline(model_params={}):
+    """Build an SVC pipeline.
+    
+    :param dict model_params: estimator parameters
+    :return: swift pipeline
+    :rtype: sklearn.pipeline.Pipeline
+    """
+    feature_columns = ['obj_adj_points_net_avg',
+                       'adv_adj_points_net_avg',
+                       'obj_rest',
+                       'adv_rest',
+                       'obj_travel_distance',
+                       'adv_travel_distance']
+    kw_args = {'columns': feature_columns}
+    column_reducer = FunctionTransformer(reduce_columns, kw_args=kw_args)
+    estimator = NuSVC(**model_params)
+    calibrated_estimator = CalibratedClassifierCV(estimator, cv=5)
+    pipeline = make_pipeline(column_reducer, StandardScaler(),
+                             calibrated_estimator)
     return pipeline

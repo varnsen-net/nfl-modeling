@@ -11,7 +11,9 @@ from sklearn.preprocessing import FunctionTransformer
 from sklearn.model_selection import GroupKFold
 
 from src.model.process import preprocess, transform_home_away_structure
-from src.model.estimators import build_baseline_pipeline, build_swift_pipeline
+from src.model.estimators import (build_baseline_pipeline,
+                                  build_lgbm_pipeline,
+                                  build_svc_pipeline)
 from src.model.hyperoptimize import hyperoptimize
 from src.model.evaluate import custom_cv, evaluate_model, compile_scores
 from src.model.predict import voting_classifier
@@ -24,7 +26,7 @@ from src.config.config import (PATHS,
                                SCORING_METRIC,
                                MAX_EVALS,
                                EARLY_STOP_N)
-from src.config.spaces import BASELINE_PARAMS, LIGHTGBM_SPACE
+from src.config.spaces import BASELINE_PARAMS, LIGHTGBM_SPACE, SVC_SPACE
 
 
 def create_datetime_id():
@@ -51,6 +53,34 @@ def make_save_path(results_path):
     return save_path
 
 
+def evaluate_train_save(model_name, model, X_train, y_train, X_test, y_test,
+                        cv, save_path, hyperopt=False, scoring_metric=None,
+                        space=None, max_evals=None, early_stop_n=None):
+    """"""
+    print(f"Evaluating {model_name} on training and holdout data...")
+    if hyperopt:
+        best_params = hyperoptimize(model, X_train, y_train, cv,
+                                    scoring=scoring_metric,
+                                    space=space,
+                                    max_evals=max_evals,
+                                    early_stop_n=early_stop_n)
+        print(f"Best params: {best_params}")
+        model.set_params(**best_params)
+    scores, _ = evaluate_model(model, X_train, y_train, cv)
+    scores.to_csv(f"{save_path}/{model_name}_scores.csv")
+    make_and_save_plots(scores, model_name, save_path)
+    model.fit(X_train, y_train)
+    y_pred = model.predict(X_test)
+    y_pred_proba = model.predict_proba(X_test)[:, 1]
+    scores = compile_scores(y_test, y_pred, y_pred_proba)
+    plot_test_calibration(scores, model_name, save_path)
+    print(f"Training {name} on all data...")
+    X_full = pd.concat([X_train, X_test])
+    y_full = pd.concat([y_train, y_test])
+    model.fit(X_full, y_full)
+    joblib.dump(model, f"{save_path}/{model_name}_model.pkl")
+
+
 if __name__ == "__main__":
     features_path = PATHS['features']
     train_path = PATHS['train']
@@ -74,40 +104,23 @@ if __name__ == "__main__":
 
     # evaluate baseline model
     name = 'baseline'
-    print(f"Evaluating {name} on training and holdout data...")
     baseline = build_baseline_pipeline(BASELINE_PARAMS)
-    scores, bl_estimators = evaluate_model(baseline, X_train, y_train, cv)
-    scores.to_csv(f"{save_path}/{name}_scores.csv")
-    make_and_save_plots(scores, name, save_path)
-    y_pred = voting_classifier(bl_estimators, X_test, 'hard')
-    y_pred_proba = voting_classifier(bl_estimators, X_test, 'soft')
-    scores = compile_scores(y_test, y_pred, y_pred_proba)
-    plot_test_calibration(scores, name, save_path)
+    evaluate_train_save(name, baseline, X_train, y_train, X_test, y_test,
+                        cv, save_path)
 
-    # evaluate swift
-    name = 'swift'
-    print(f"Evaluating {name} on training and holdout data...")
-    swift = build_swift_pipeline()
-    best_params = hyperoptimize(swift, X_train, y_train, cv,
-                                scoring=SCORING_METRIC,
-                                space=LIGHTGBM_SPACE,
-                                max_evals=MAX_EVALS,
-                                early_stop_n=EARLY_STOP_N)
-    print(f"Best params: {best_params}")
-    swift.set_params(**best_params)
-    scores, sw_estimators = evaluate_model(swift, X_train, y_train, cv)
-    scores.to_csv(f"{save_path}/{name}_scores.csv")
-    make_and_save_plots(scores, name, save_path)
-    y_pred = voting_classifier(sw_estimators, X_test, 'hard')
-    y_pred_proba = voting_classifier(sw_estimators, X_test, 'soft')
-    scores = compile_scores(y_test, y_pred, y_pred_proba)
-    plot_test_calibration(scores, name, save_path)
+    # evaluate svc
+    name = 'svc'
+    svc = build_svc_pipeline()
+    evaluate_train_save(name, svc, X_train, y_train, X_test, y_test,
+                        cv, save_path, hyperopt=True, scoring_metric=SCORING_METRIC,
+                        space=SVC_SPACE, max_evals=MAX_EVALS,
+                        early_stop_n=7)
 
-    # train models on all data and save
-    print(f"Training {name} on all data...")
-    X_full = pd.concat([X_train, X_test])
-    y_full = pd.concat([y_train, y_test])
-    baseline.fit(X_full, y_full)
-    joblib.dump(baseline, f"{save_path}/baseline_model.pkl")
-    swift.fit(X_full, y_full)
-    joblib.dump(swift, f"{save_path}/swift_model.pkl")
+    # evaluate lightgbm
+    name = 'lightgbm'
+    lightgbm = build_lgbm_pipeline()
+    evaluate_train_save(name, lightgbm, X_train, y_train, X_test, y_test,
+                        cv, save_path, hyperopt=True, scoring_metric=SCORING_METRIC,
+                        space=LIGHTGBM_SPACE, max_evals=MAX_EVALS,
+                        early_stop_n=EARLY_STOP_N)
+
