@@ -61,10 +61,16 @@ def build_svc_pipeline(model_params={}):
     """
     feature_columns = ['obj_adj_points_net_avg',
                        'adv_adj_points_net_avg',
+                       'obj_adj_points_for_avg',
+                       'adv_adj_points_for_avg',
+                       'obj_adj_points_against_avg',
+                       'adv_adj_points_against_avg',
                        'obj_rest',
                        'adv_rest',
                        'obj_travel_distance',
-                       'adv_travel_distance']
+                       'adv_travel_distance',
+                       'obj_qb_start_share',
+                       'adv_qb_start_share']
     kw_args = {'columns': feature_columns}
     column_reducer = FunctionTransformer(reduce_columns, kw_args=kw_args)
     estimator = NuSVC(**model_params)

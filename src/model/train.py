@@ -114,7 +114,7 @@ if __name__ == "__main__":
     evaluate_train_save(name, svc, X_train, y_train, X_test, y_test,
                         cv, save_path, hyperopt=True, scoring_metric=SCORING_METRIC,
                         space=SVC_SPACE, max_evals=MAX_EVALS,
-                        early_stop_n=7)
+                        early_stop_n=EARLY_STOP_N)
 
     # evaluate lightgbm
     name = 'lightgbm'

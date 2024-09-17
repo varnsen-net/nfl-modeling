@@ -25,17 +25,17 @@ RAW_DATA_URLS = {
 
 CURRENT_SEASON = 2024
 """*int*: Current NFL season. Used to fetch current season of play-by-play data."""
-CURRENT_WEEK = 1
+CURRENT_WEEK = 3
 """*int*: Current NFL week. Used to fetch current week of play-by-play data."""
 TRAINING = {
-    "holdout_year": 2021,
+    "holdout_year_start": 2021,
     "games_cols": ["game_id", "season", "week", "away_rest", "home_rest",
                    "away_team", "home_team"]
 }
 """*dict*: Parameters for training data."""
 SCORING_METRIC = 'neg_brier_score'
 """*str*: Scoring metric for hyperparameter tuning."""
-CV_TRAIN_SIZE = 7
+CV_TRAIN_SIZE = 13
 """*int*: Number of consecutive seasons to use for training in grouped time-series cross validation."""
 CV_TEST_SIZE = 3
 """*int*: Number of consecutive seasons to use for testing in grouped time-series cross validation."""

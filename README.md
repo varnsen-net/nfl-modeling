@@ -52,10 +52,10 @@ SWIFT does everything possible to avoid data leakage. It should never get a glim
 - ~~Auto-generate API docs with Sphinx~~
 - ~~Complete documentation for all modules and functions~~
 - ~~Engineer 'normal' gametime features, i.e. when score and remaining time do not affect play-calling~~
+- ~~Account for quarterback injuries~~
 - Tidy up some bits of rushed code
 - Complete unit tests
 - Expand model evaluation to include tracking optimal hyperparameters
 - Write bespoke time series cross validation windows that look forward **and** backward
-- Account for quarterback injuries
 - Create engineered features for drive efficiency
 - Add a mixed-effects logreg model that controls for season

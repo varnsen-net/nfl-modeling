@@ -24,22 +24,22 @@ from src.config.config import (TRAINING,
                                PATHS)
 
 
-def split_data(df, holdout_year):
+def split_data(df, holdout_year_start):
     """Divide a full set of features into training and holdout data.
 
     :param df: Full set of features data.
     :type df: pd.DataFrame of shape (n_samples, n_features)
-    :param int holdout_year: Starting season of holdout data (inclusive).
+    :param int holdout_year_start: Starting season of holdout data (inclusive).
     :return: Training and holdout data
     :rtype: (pd.DataFrame, pd.DataFrame) 
     """
-    train = df.loc[df["season"] < holdout_year]
-    holdout = df.loc[df["season"] >= holdout_year]
+    train = df.loc[df["season"] < holdout_year_start]
+    holdout = df.loc[df["season"] >= holdout_year_start]
     return train, holdout
 
 
 def build_train_and_test_data(train_path, test_path, games_cols, raw_games_path,
-                              features_path, holdout_year):
+                              features_path, holdout_year_start):
     """Build training and testing data from raw data and save to local paths.
     
     :param str train_path: Path to save training data.
@@ -47,13 +47,13 @@ def build_train_and_test_data(train_path, test_path, games_cols, raw_games_path,
     :param list games_cols: Columns to keep from raw games data.
     :param str raw_games_path: Path to raw games data.
     :param str features_path: Path to features data.
-    :param int holdout_year: Starting season of holdout data (inclusive).
+    :param int holdout_year_start: Starting season of holdout data (inclusive).
     :return: None
     :rtype: None
     """
     full_train = build_train(games_cols, raw_games_path, features_path)
     full_target = build_target(raw_games_path, full_train)
-    train, train_holdout = split_data(full_train, holdout_year)
+    train, train_holdout = split_data(full_train, holdout_year_start)
     target = full_target.loc[full_target["game_id"].isin(train["game_id"])]
     target_holdout = full_target.loc[full_target["game_id"].isin(train_holdout["game_id"])]
     train.to_csv(f'{train_path}/train.csv', index=False)
@@ -71,7 +71,7 @@ if __name__ == '__main__':
     train_path = PATHS['train']
     test_path = PATHS['test']
     games_cols = TRAINING['games_cols']
-    holdout_year = TRAINING['holdout_year']
+    holdout_year_start = TRAINING['holdout_year_start']
     games_url = RAW_DATA_URLS['games']
     plays_url = RAW_DATA_URLS['plays']
 
@@ -103,4 +103,4 @@ if __name__ == '__main__':
 
     print('Building training and test data...')
     build_train_and_test_data(train_path, test_path, games_cols, raw_games_path,
-                              features_path, holdout_year)
+                              features_path, holdout_year_start)

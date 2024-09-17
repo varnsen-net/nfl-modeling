@@ -130,11 +130,31 @@ def assemble_play_type_features(pbp_data, type_aggs_pairs):
                                        'posteam', play_type)
         d_stats = calculate_squad_aggs(plays, aggregations,
                                        'defteam', play_type)
-        d_stats = flip_defense_stat_signs(d_stats, ['_epa_', '_wpa_'])
         merged = o_stats.merge(d_stats, on=['team', 'week'])
         full_stats = full_stats.merge(merged, on=['team', 'week'],
                                       how='outer')
     return full_stats
+
+
+def calculate_qb_start_share(pbp_data):
+    """Calculate the share of games started by each QB for each team and week.
+    
+    :param pbp_data: Play-by-play data for a given season.
+    :type pbp_data: pd.DataFrame of shape (n_plays, n_features)
+    :return: QB start share data.
+    :rtype: pd.DataFrame of shape (n_samples, n_features)
+    """
+    psr_data = (pbp_data
+                .query('play_type == "pass"')
+                .groupby(['posteam', 'week'])
+                .first()
+                ['passer_player_name']
+                .rename('passer')
+                .to_frame()
+                .assign(games_played=lambda x: x.groupby('posteam').cumcount())
+                .reset_index()
+                )
+    return psr_data.groupby('passer').cumcount() / psr_data['games_played']
 
 
 def build_team_efficiency_features(raw_plays_path):
@@ -153,6 +173,7 @@ def build_team_efficiency_features(raw_plays_path):
         type_aggs_pairs = [('pass', PASSING_AGGS),
                            ('rush', RUSHING_AGGS),]
         full_stats = assemble_play_type_features(pbp_data, type_aggs_pairs)
+        full_stats['qb_start_share'] = calculate_qb_start_share(pbp_data)
         full_stats['season'] = season
         features = pd.concat([features, full_stats])
     features = features.set_index(['season', 'team', 'week']).sort_index()
