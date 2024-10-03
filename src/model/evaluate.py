@@ -71,16 +71,18 @@ def custom_scorer(pipeline, X, y):
     return scores
 
 
-def custom_cv(train_size, test_size):
+def custom_cv(train_size, test_size, shift_size):
     """Create a custom cross-validation object.
     
     :param int train_size: number of consecutive seasons to train on
     :param int test_size: number of consecutive seasons to test on
+    :param int shift_size: number of seasons to shift for the next fold
     :return: cross-validation object
     :rtype: mlxtend.evaluate.time_series_split.GroupTimeSeriesSplit
     """
     cv_args = {"train_size": train_size,
-               "test_size": test_size}
+               "test_size": test_size,
+               "shift_size": shift_size}
     custom_cv = GroupTimeSeriesSplit(**cv_args)
     return custom_cv
 

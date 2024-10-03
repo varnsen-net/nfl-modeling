@@ -23,6 +23,7 @@ from src.config.config import (PATHS,
                                FEATURE_PRECISIONS,
                                CV_TRAIN_SIZE,
                                CV_TEST_SIZE,
+                               CV_SHIFT_SIZE,
                                SCORING_METRIC,
                                MAX_EVALS,
                                EARLY_STOP_N)
@@ -100,7 +101,7 @@ if __name__ == "__main__":
     X_test = preprocess(X_test, FEATURE_PRECISIONS)
     y_test = y_test['target']
 
-    cv = custom_cv(CV_TRAIN_SIZE, CV_TEST_SIZE)
+    cv = custom_cv(CV_TRAIN_SIZE, CV_TEST_SIZE, CV_SHIFT_SIZE)
 
     # evaluate baseline model
     name = 'baseline'

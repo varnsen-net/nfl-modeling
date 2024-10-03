@@ -157,6 +157,17 @@ def calculate_qb_start_share(pbp_data):
     return psr_data.groupby('passer').cumcount() / psr_data['games_played']
 
 
+def calculate_run_pass_balance(features):
+    """"""
+    features['o_run_pass_balance'] = (features['o_pass_pass_sum'] /
+                                      features['o_rush_rush_sum'])
+    features = features.drop(columns=['o_pass_pass_sum',
+                                      'o_rush_rush_sum',
+                                      'd_pass_pass_sum',
+                                      'd_rush_rush_sum'])
+    return features
+
+
 def build_team_efficiency_features(raw_plays_path):
     """Make efficiency stats (e.g. EPA, WPA, etc.) for each team and week.
     
@@ -176,5 +187,6 @@ def build_team_efficiency_features(raw_plays_path):
         full_stats['qb_start_share'] = calculate_qb_start_share(pbp_data)
         full_stats['season'] = season
         features = pd.concat([features, full_stats])
+    features = calculate_run_pass_balance(features)
     features = features.set_index(['season', 'team', 'week']).sort_index()
     return features
