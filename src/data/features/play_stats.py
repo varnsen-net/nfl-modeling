@@ -15,7 +15,7 @@ def extract_play_results(raw_plays):
     """
     return (raw_plays
             .groupby(['posteam', 'week', 'defteam'])
-            [['success', 'yards_gained']]
+            ['yards_gained']
             .agg(['sum', 'count']))
 
 
