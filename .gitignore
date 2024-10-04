@@ -9,3 +9,4 @@ external
 temp.py
 tmp.html
 *.parquet
+.DS_Store

@@ -41,9 +41,9 @@ CV_TEST_SIZE = 3
 """*int*: Number of consecutive seasons to use for testing in grouped time-series cross validation."""
 CV_SHIFT_SIZE = 2
 """*int*: Number of seasons to shift for each CV fold."""
-MAX_EVALS = 100
+MAX_EVALS = 15
 """*int*: Maximum number of hyperparameter tuning iterations."""
-EARLY_STOP_N = 10
+EARLY_STOP_N = 90
 """*int*: Number of iterations without improvement to stop hyperparameter tuning."""
 DEFAULT_PARAM_PREFIX = 'calibratedclassifiercv__estimator__'
 """*str*: Prefix for default hyperparameters."""
@@ -58,18 +58,3 @@ FEATURE_PRECISIONS = {
     "away_travel_distance": 0,
 }
 """*dict*: Number of decimal places to round features to."""
-
-
-PASSING_AGGS = {'week': ['max'],
-                'pass': 'sum',
-                'yards_gained': 'mean',
-                'complete_pass': 'mean',
-                'interception': 'mean',
-                'fumble': 'mean',
-                'sack': 'mean'}
-"""*dict*: Functions for aggregating passing features from play-by-play data."""
-RUSHING_AGGS = {'week': ['max'],
-                'rush': 'sum',
-                'yards_gained': 'mean',
-                'fumble': 'mean'}
-"""*dict*: Functions for aggregating rushing features from play-by-play data."""

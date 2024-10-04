@@ -13,7 +13,6 @@ from src.data.raw.games import refresh_games_data
 from src.data.raw.plays import refresh_plays_data
 from src.data.features.travel import build_travel_features
 from src.data.features.points import build_points_features
-from src.data.features.team_stats import build_team_efficiency_features
 from src.data.features.drive_stats import build_drive_features
 from src.data.features.series_stats import build_series_features
 from src.data.features.play_stats import build_play_features
@@ -113,11 +112,6 @@ if __name__ == '__main__':
     play_features = build_play_features(raw_plays_path)
     output_path = features_path / 'play_efficiency.csv'
     play_features.to_csv(output_path)
-
-    # print('Building team efficiency features...')
-    # team_efficiency_features = build_team_efficiency_features(raw_plays_path)
-    # output_path = features_path / 'team_efficiency.csv'
-    # team_efficiency_features.to_csv(output_path)
 
     print('Building training and test data...')
     build_train_and_test_data(train_path, test_path, games_cols, raw_games_path,
