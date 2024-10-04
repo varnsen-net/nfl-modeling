@@ -14,7 +14,7 @@ from lightgbm import LGBMClassifier
 from sklearn.svm import NuSVC
 from sklearn.calibration import CalibratedClassifierCV
 
-from src.model.process import reduce_columns
+from src.model.process import reduce_columns, drop_columns
 
 
 def build_baseline_pipeline(model_params={}):
@@ -33,7 +33,7 @@ def build_baseline_pipeline(model_params={}):
     kw_args = {'columns': feature_columns}
     column_reducer = FunctionTransformer(reduce_columns, kw_args=kw_args)
     estimator = LogisticRegression(**model_params)
-    calibrated_estimator = CalibratedClassifierCV(estimator, cv=5)
+    calibrated_estimator = CalibratedClassifierCV(estimator, cv=3)
     pipeline = make_pipeline(column_reducer, StandardScaler(),
                              calibrated_estimator)
     return pipeline
@@ -46,9 +46,12 @@ def build_lgbm_pipeline(model_params={}):
     :return: swift pipeline
     :rtype: sklearn.pipeline.Pipeline
     """
+    cols_to_drop = ['season']
+    kw_args = {'columns': cols_to_drop}
+    column_reducer = FunctionTransformer(drop_columns, kw_args=kw_args)
     estimator = LGBMClassifier(**model_params)
-    calibrated_estimator = CalibratedClassifierCV(estimator, cv=5)
-    pipeline = make_pipeline(calibrated_estimator)
+    calibrated_estimator = CalibratedClassifierCV(estimator, cv=3)
+    pipeline = make_pipeline(column_reducer, calibrated_estimator)
     return pipeline
 
 
@@ -59,20 +62,11 @@ def build_svc_pipeline(model_params={}):
     :return: swift pipeline
     :rtype: sklearn.pipeline.Pipeline
     """
-    feature_columns = ['obj_rest',
-                       'adv_rest',
-                       'obj_travel_distance',
-                       'adv_travel_distance',
-                       'obj_ppd_mean_pos',
-                       'adv_ppd_mean_pos',
-                       'obj_ppd_mean_def',
-                       'adv_ppd_mean_def',
-                       'obj_ppd_mean_net',
-                       'adv_ppd_mean_net',]
-    kw_args = {'columns': feature_columns}
-    column_reducer = FunctionTransformer(reduce_columns, kw_args=kw_args)
+    cols_to_drop = ['season']
+    kw_args = {'columns': cols_to_drop}
+    column_reducer = FunctionTransformer(drop_columns, kw_args=kw_args)
     estimator = NuSVC(**model_params)
-    calibrated_estimator = CalibratedClassifierCV(estimator, cv=5)
+    calibrated_estimator = CalibratedClassifierCV(estimator, cv=3)
     pipeline = make_pipeline(column_reducer, StandardScaler(),
                              calibrated_estimator)
     return pipeline

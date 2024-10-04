@@ -98,8 +98,9 @@ def build_points_features(raw_games_path, window):
     net_ppg_avgs = calculate_avgs(base_points, window)
     net_ppg_avgs = net_ppg_avgs.iloc[:,[1,0]]
     adj_points = adjust_for_opponent(base_points, net_ppg_avgs)
+    adj_points['adj_points_against'] = adj_points['adj_points_against'] * -1
     adj_points['adj_points_net'] = (adj_points['adj_points_for']
-                                    - adj_points['adj_points_against'])
+                                    + adj_points['adj_points_against'])
     adj_points = calculate_avgs(adj_points, window)
     adj_points = (adj_points
                   .round(1)

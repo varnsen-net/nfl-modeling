@@ -233,8 +233,9 @@ def build_adjusted_data_for_season(raw_df, stat_name, week_nums):
             feature_df = pd.concat([feature_df, df])
         feature_df = feature_df.sort_index()
         season_df = season_df.join(feature_df, how='outer')
+    season_df[f"{stat_name}_mean_def"] = season_df[f"{stat_name}_mean_def"] * -1
     season_df[f"{stat_name}_mean_net"] = (season_df[f"{stat_name}_mean_pos"]
-                                         - season_df[f"{stat_name}_mean_def"])
+                                         + season_df[f"{stat_name}_mean_def"])
     season_df = season_df.droplevel('defteam')
     season_df.index.names = ['team', 'week']
     return season_df

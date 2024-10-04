@@ -48,6 +48,18 @@ def reduce_columns(X, columns):
     return X[columns]
 
 
+def drop_columns(X, columns):
+    """Drop a set of columns from a training or test set.
+
+    :param pd.DataFrame X: a set of training or test data
+    :param list columns: a list of columns to drop
+    :return: a set of training or test data with columns dropped
+    :rtype: pd.DataFrame
+    """
+    return X.drop(columns=columns,
+                  errors='ignore')
+
+
 def transform_home_away_structure(X, y):
     """Convert home/away structure to object/adversary structure.
     

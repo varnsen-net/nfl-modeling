@@ -15,6 +15,7 @@ from src.data.features.travel import build_travel_features
 from src.data.features.points import build_points_features
 from src.data.features.team_stats import build_team_efficiency_features
 from src.data.features.drive_stats import build_drive_features
+from src.data.features.series_stats import build_series_features
 from src.data.train.train import build_train
 from src.data.train.target import build_target
 
@@ -101,6 +102,11 @@ if __name__ == '__main__':
     drive_features = build_drive_features(raw_plays_path)
     output_path = features_path / 'drive_efficiency.csv'
     drive_features.to_csv(output_path)
+
+    print('Building series features...')
+    series_features = build_series_features(raw_plays_path)
+    output_path = features_path / 'series_efficiency.csv'
+    series_features.to_csv(output_path)
 
     # print('Building team efficiency features...')
     # team_efficiency_features = build_team_efficiency_features(raw_plays_path)
