@@ -53,6 +53,6 @@ sphinxcontrib-serializinghtml==1.1.9
 tdqm==0.0.1
 threadpoolctl==3.2.0
 tomli==2.0.1
-tqdm==4.66.1
+tqdm==4.66.5
 tzdata==2023.3
 urllib3==2.2.2
