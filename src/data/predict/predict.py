@@ -96,7 +96,7 @@ if __name__ == "__main__":
     predictions = model.predict_proba(prediction_data)
     readable_data[['baseline_away_win_prob', 'baseline_home_win_prob']] = predictions
 
-    model = joblib.load(os.path.join(most_recent_results, 'svc_model.pkl'))
+    model = joblib.load(os.path.join(most_recent_results, 'lightgbm_model.pkl'))
     predictions = model.predict_proba(prediction_data)
     readable_data[['swift_away_win_prob', 'swift_home_win_prob']] = predictions
 
