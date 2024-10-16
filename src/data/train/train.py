@@ -18,7 +18,7 @@ def preprocess_raw_games(games):
     :rtype: pd.DataFrame
     """
     games = (games
-             .loc[games['week'] > 3]
+             .loc[games['week'] > 5]
              .loc[~((games['week'] > 16) & (games['season'] < 2021))]
              .loc[~((games['week'] > 17) & (games['season'] >= 2021))]
              .loc[games['game_type'] == 'REG']

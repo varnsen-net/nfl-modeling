@@ -93,7 +93,7 @@ if __name__ == '__main__':
     output_path = features_path / 'travel.csv'
     travel_features.to_csv(output_path)
 
-    print('Building points features...')
+    # print('Building points features...')
     points_features = build_points_features(raw_games_path, window=None)
     output_path = features_path / 'points.csv'
     points_features.to_csv(output_path)
@@ -103,10 +103,10 @@ if __name__ == '__main__':
     output_path = features_path / 'drive_efficiency.csv'
     drive_features.to_csv(output_path)
 
-    print('Building series features...')
-    series_features = build_series_features(raw_plays_path)
-    output_path = features_path / 'series_efficiency.csv'
-    series_features.to_csv(output_path)
+    # print('Building series features...')
+    # series_features = build_series_features(raw_plays_path)
+    # output_path = features_path / 'series_efficiency.csv'
+    # series_features.to_csv(output_path)
 
     print('Building play features...')
     play_features = build_play_features(raw_plays_path)

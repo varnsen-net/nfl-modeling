@@ -27,14 +27,16 @@ def build_play_features(raw_plays_path):
     :rtype: pd.DataFrame
     """
     features = pd.DataFrame()
-    stat_name = 'ypp'
+    stat_name = 'yards_play'
     for season in list(range(1999, CURRENT_SEASON + 1)):
         print(f"Processing season {season}")
         raw_plays = raw_plays_path / f"play_by_play_{season}.parquet"
         raw_plays = pd.read_parquet(raw_plays)
         query = "play_type == 'pass' or play_type == 'run'"
         raw_plays = raw_plays.query(query)
+        raw_plays = raw_plays.query('posteam != "" and posteam != "None"') # move this to a preprocessing step
         plays = extract_play_results(raw_plays)
+        plays.columns = ['value', 'count']
         max_week = plays.index.get_level_values('week').max()
         week_nums = range(1, max_week + 1)
         season_features = build_adjusted_data_for_season(plays,

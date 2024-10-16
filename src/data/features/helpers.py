@@ -5,170 +5,232 @@ import pandas as pd
 from src.config.config import CURRENT_SEASON
 
 
-def calc_cumulative_means(df, side):
-    """Calculate the cumulative means for the teams in the given dataframe.
-    
-    :param pd.DataFrame df: A dataframe with a multiindex of posteam, week,
-        and defteam, and columns sum and count.
-    :param str side: The side of the ball to calculate the cumulative means.
-        Must be either 'posteam' or 'defteam'.
-    :return: A dataframe with the cumulative means for each team.
+def create_weekly_csums(raw_data, obj_side, adv_side):
+    """Create cumulative sums for the adversary side of the ball for the raw
+    data.
+
+    Takes in a dataframe that looks like this:
+
+                              value  count
+    posteam week defteam              
+    ARI     1    WAS        9.0     12
+            2    NYG       27.0     10
+            3    DAL       30.0      9
+            4    SF        17.0      7
+    ATL     1    CAR       24.0     13
+    ...                     ...    ...
+    TEN     4    CIN       27.0      9
+    WAS     1    ARI       20.0     13
+            2    DEN       34.0     11
+            3    BUF        3.0     11
+            4    PHI       31.0     10
+
+    And returns a dataframe that looks like this:
+
+                 value               ...    count                  
+    defteam    ARI   ATL   BAL   BUF ...   SF    TB   TEN   WAS
+    week                             ...                       
+    1         20.0  10.0   9.0  16.0 ... 11.0  11.0  12.0  12.0
+    2         51.0  34.0  26.0  26.0 ... 21.0  21.0  23.0  23.0
+    3         67.0  54.0  48.0  29.0 ... 31.0  31.0  32.0  34.0
+    4        102.0  70.0  51.0  50.0 ... 38.0  42.0  41.0  44.0
+
+    :param pd.DataFrame raw_data: Raw data.
+    :param str obj_side: Side of the ball that is the object of the analysis.
+    :param str adv_side: Side of the ball that is the adversary.
+    :return: Cumulative sums of the adversary side of the ball.
     :rtype: pd.DataFrame
     """
-    return (df
-            .groupby(side)
-            .cumsum()
-            .assign(mean=lambda x: x['sum'] / x['count']))
+    return (raw_data
+            .droplevel(obj_side)
+            .unstack(adv_side)
+            .expanding()
+            .sum())
 
 
-def shift_one_week_forward(df, side):
-    """Shift the cumulative means one week forward.
+def calculate_league_avgs(adv_csums, adv_means):
+    """Calculate the league average and median absolute deviation.
 
-    :param pd.DataFrame df: A dataframe with a multiindex of posteam and week.
-    :param str side: The side of the ball to shift the cumulative means.
-        Must be either 'posteam' or 'defteam'.
-    :return: A dataframe with the cumulative means shifted one week forward.
-    :rtype: pd.DataFrame
-    """
-    return (df
-            .groupby(side)
-            .shift(1)
-            .fillna(0))
+    Takes in data that looks like this:
 
+             value                ... count                              
+    posteam    ARI    ATL    BAL  ...    TB   TEN   WAS
+    week                          ...                  
+    1         27.0   10.0   20.0  ...   9.0  13.0   9.0
+    2         68.0   33.0   43.0  ...  20.0  24.0  17.0
+    3         81.0   50.0   78.0  ...  31.0  35.0  25.0
+    4         95.0   69.0  113.0  ...  42.0  48.0  34.0
 
-def get_most_recent_means(df, side):
-    """Get the most recent cumulative means for each team.
+    And:
+
+    posteam       ARI       ATL       BAL  ...        TB       TEN       WAS
+    week                                   ...                              
+    1        2.700000  1.000000  2.000000  ...  4.111111  1.307692  2.333333
+    2        3.578947  1.736842  1.954545  ...  2.850000  1.416667  2.470588
+    3        2.700000  1.724138  2.294118  ...  2.064516  1.371429  3.200000
+    4        2.435897  1.769231  2.511111  ...  2.333333  1.604167  3.558824
     
-    :param pd.DataFrame df: A dataframe with a multiindex of posteam and week.
-    :param str side: The side of the ball to calculate the cumulative means.
-        Must be either 'posteam' or 'defteam'.
-    :return: A dataframe with the most recent cumulative means for each team.
-    :rtype: pd.DataFrame
+    :param pd.DataFrame adv_csums: Cumulative sums of the adversary side of
+        the ball.
+    :param pd.DataFrame adv_means: Mean values of the adversary side of the
+        ball.
+    :return: League average and median absolute deviation.
+    :rtype: Tuple[float, float]
     """
-    return (df
-            .groupby(side)
-            .last())
+    values_total = adv_csums['value'].iloc[-1,:].sum()
+    counts_total = adv_csums['count'].iloc[-1,:].sum()
+    league_mean = values_total / counts_total
+    league_mad = (adv_means.iloc[-1,:] - league_mean).abs().median()
+    return league_mean, league_mad
 
 
-def calc_adversary_raw_means(df, side):
-    """Calculate the raw cumulative means for the opponents of the teams in
-    the given dataframe. Will be used to adjust weekly means.
-
-    Suppose we have a df that counts points per drive for each week.
-    The input df will look like this:
+def calculate_adversary_mscores(adv_means, league_mean, league_mad, adv_side):
+    """Calculate the adversary m-scores based on league mean and median
+        absolute deviation.
     
-                           sum  count
-    posteam week defteam             
-    ARI     1    BUF      27.0     10
-            2    LA       41.0      9
-            3    DET      13.0     11
-    ATL     1    PIT      10.0     10
-            2    PHI      23.0      9
-    ...                    ...    ...
-    TEN     2    NYJ      17.0     11
-            3    GB       14.0     11
-    WAS     1    TB       21.0      9
-            2    NYG      21.0      8
-            3    CIN      38.0      8
+    Takes in data that looks like this:
+
+    posteam       ARI       ATL       BAL  ...        TB       TEN       WAS
+    week                                   ...                              
+    1        2.700000  1.000000  2.000000  ...  4.111111  1.307692  2.333333
+    2        3.578947  1.736842  1.954545  ...  2.850000  1.416667  2.470588
+    3        2.700000  1.724138  2.294118  ...  2.064516  1.371429  3.200000
+    4        2.435897  1.769231  2.511111  ...  2.333333  1.604167  3.558824
+
+    Returns data that looks like this:
+
+    posteam  week
+    ARI      1       0.000000
+             2       2.011162
+             3       4.421989
+             4       2.011162
+                       ...   
+    WAS      1       0.000000
+             2       1.005448
+             3       1.381918
+             4       3.382591
     
-    Running this function with side='defteam' will return the raw cumulative
-    mean for each team on the defensive side of the ball up to the most recent
-    week. The output will look like this:
-
-    defteam
-    ARI    2.650000
-    ATL    2.179487
-    BAL    2.045455
-    BUF    2.000000
-    CAR    2.866667
-    ...
-    SEA    1.620000
-    SF     2.000000
-    TB     1.925000
-    TEN    1.500000
-    WAS    3.312500
-
-    :param pd.DataFrame df: A dataframe with a multiindex of posteam, week,
-        and defteam, and columns sum and count.
-    :param str side: The side of the ball to calculate the cumulative means.
-        Must be either 'posteam' or 'defteam'.
-    :return: A dataframe with the most recent cumulative means for each team.
-    :rtype: pd.DataFrame
+    :param pd.DataFrame adv_means: Mean values of the adversary side of the
+        ball.
+    :param float league_mean: League average.
+    :param float league_mad: Median absolute deviation.
+    :param str adv_side: Side of the ball that the adversary is on.
+    :return: Adversary m-scores.
+    :rtype: pd.Series
     """
-    return (df
-            .sort_index(level=[side, 'week'])
-            .pipe(calc_cumulative_means, side)
-            .pipe(shift_one_week_forward, side)
-            .pipe(get_most_recent_means, side)
-            ['mean'])
+    adv_mscores = (adv_means - league_mean) / league_mad
+    adv_mscores = (adv_mscores
+                   .shift(1)
+                   .fillna(0)
+                   .stack()
+                   .reorder_levels([adv_side, 'week'])
+                   .sort_index()
+                   .rename('adv_mscore'))
+    return adv_mscores
 
 
-def calc_adjusted_means(df, adv_means, obj_side, adv_side, stat_name):
-    """Calculate the cumulative adjusted means for the teams in the given
-    dataframe.
+def calculate_adjusted_scores(raw_data, adv_mscores, league_mean, league_mad,
+                              adv_side):
+    """Convert raw values and counts into league and opponent-adjusted scores.
 
-    The input dataframe should have a multiindex of posteam, week, and defteam,
-    and columns sum, count, and game mean. For example:
-    
-                           sum  count  game_mean
-    posteam week defteam
-    ARI     1    BUF      27.0     10   2.700000
-            2    LA       41.0      9   4.555556
-            3    DET      13.0     11   1.181818
+    Takes in data that looks like this:
 
-    The input adv_means is a series with the most recent cumulative means for
-    the opponents of the teams in the given dataframe. For example:
+                          value  count
+    posteam week defteam              
+    ARI     1    BUF       27.0     10
+            2    LA        41.0      9
+            3    DET       13.0     11
+            4    WAS       14.0      9
+    ...                     ...    ...
+    WAS     1    TB        21.0      9
+            2    NYG       21.0      8
+            3    CIN       38.0      8
+            4    ARI       41.0      9
 
-    defteam
-    ARI    2.650000
-    ATL    2.179487
-    BAL    2.045455
-    BUF    2.000000
-    CAR    2.866667
-    ...
-    SEA    1.620000
-    SF     2.000000
-    TB     1.925000
-    TEN    1.500000
-    WAS    3.312500
+    And adversary m-scores that look like this:
 
-    The output will have a multiindex of posteam, week, and defteam, and columns
-    for the adjusted means for the statistic of interest. For example:
+    posteam  week
+    ARI      1       0.000000
+             2       2.011162
+             3       4.421989
+             4       2.011162
+                       ...   
+    WAS      1       0.000000
+             2       1.005448
+             3       1.381918
+             4       3.382591
 
-               stat_mean_pos
-    team week               
-    ARI  1          2.700000
-         2          0.995215
-         3          0.364921
-         4         -0.088132
-    ATL  1          1.000000
-    ...                  ...
-    TEN  4         -0.132440
-    WAS  1          2.333333
-         2          0.336898
-         3          1.250632
-         4          1.426777
+    And returns data that looks like this:
 
-    :param pd.DataFrame df: A dataframe with a multiindex of posteam, week,
-        and defteam, and columns sum, count, and game mean.
-    :param pd.Series adv_means: A series with the most recent cumulative means
-        for the opponents of the teams in the given dataframe.
-    :param str obj_side: The side of the ball to make adjustments on.
-    :param str adv_side: The side of the ball to use for adjustments.
-    :param str stat_name: The name of the statistic to calculate adjusted means.
-    :return: A dataframe with the adjusted means for the statistic of interest.
-    :rtype: pd.DataFrame
+    posteam  week  defteam
+    ARI      1     BUF        2.011162
+             2     LA         5.089524
+             3     DET       -6.574983
+             4     WAS       -3.139048
+                                ...   
+    WAS      1     TB         1.005448
+             2     NYG        0.800000
+             3     CIN        6.252101
+             4     ARI        3.718095
+
+    :param pd.DataFrame raw_data: Raw data. Should have columns 'value' and
+        'count'.
+    :param pd.Series adv_mscores: Adversary m-scores.
+    :param float league_mean: League average.
+    :param float league_mad: Median absolute deviation.
+    :param str adv_side: Side of the ball that the adversary is on.
+    :return: Adjusted scores.
+    :rtype: pd.Series
     """
-    return (df
-            .join(adv_means, on=adv_side)
-            .rename(columns={'mean': 'opp_mean'})
-            .assign(resid_mean=lambda x: x['game_mean'] - x['opp_mean'])
-            .assign(adj_sum=lambda x: x['count'] * x['resid_mean'])
-            [['count', 'adj_sum']]
+    adj_data = raw_data.join(adv_mscores, on=[adv_side, 'week'], how='left')
+    raw_rate = adj_data['value'] / adj_data['count']
+    mscores = (raw_rate - league_mean) / league_mad
+    adj_mscores = mscores - adj_data['adv_mscore']
+    return adj_mscores
+
+
+def format_adj_mscores(adj_mscores, obj_side, stat_name, week):
+    """Format adjusted m-scores for a given side of the ball.
+
+    Takes in data that looks like this:
+
+    posteam  week  defteam
+    ARI      1     BUF        2.011162
+             2     LA         5.089524
+             3     DET       -6.574983
+             4     WAS       -3.139048
+                                ...   
+    WAS      1     TB         1.005448
+             2     NYG        0.800000
+             3     CIN        6.252101
+             4     ARI        3.718095
+
+    And returns data that looks like this:
+
+                  points_drive_def
+    defteam week                  
+    ARI     5            -0.124675
+    ATL     5            -0.457409
+    BAL     5             1.795325
+                            ...
+    TB      5             1.005448
+    TEN     5             0.000000
+    WAS     5             5.881638
+
+    :param pd.Series adj_mscores: Adjusted m-scores.
+    :param str obj_side: Side of the ball that is the object of the analysis.
+    :param str stat_name: Name of the statistic.
+    :param int week: Week number to assign to the data
+    :return: Formatted adjusted m-scores.
+    :rtype: pd.Series
+    """
+    return (adj_mscores
             .groupby(obj_side)
-            .cumsum()
-            .assign(adj_mean=lambda x: x['adj_sum'] / x['count'])
-            .rename(columns={'adj_mean': f"{stat_name}_mean_{obj_side[:3]}"}))
+            .median()
+            .rename(f'{stat_name}_{obj_side[:3]}')
+            .to_frame()
+            .assign(week=week)
+            .set_index('week', append=True))
 
 
 def build_adjusted_data_for_season(raw_df, stat_name, week_nums):
@@ -223,19 +285,21 @@ def build_adjusted_data_for_season(raw_df, stat_name, week_nums):
         feature_df = pd.DataFrame()
         for w in week_nums:
             df = raw_df.query('week <= @w').copy()
-            df['game_mean'] = df['sum'] / df['count']
-            adv_means = calc_adversary_raw_means(df, adv_side)
-            df = calc_adjusted_means(df, adv_means, obj_side, adv_side,
-                                     stat_name)
-            df = (df
-                  .iloc[:, [-1]]
-                  .query('week == @w'))
-            feature_df = pd.concat([feature_df, df])
+            adv_csums = create_weekly_csums(df, obj_side, adv_side)
+            adv_means = adv_csums['value'] / adv_csums['count']
+            league_mean, league_mad = calculate_league_avgs(adv_csums, adv_means)
+
+            adv_mscores = calculate_adversary_mscores(adv_means, league_mean,
+                                                      league_mad, adv_side)
+            adj_mscores = calculate_adjusted_scores(df, adv_mscores, league_mean,
+                                                    league_mad, adv_side)
+            adj_mscores = format_adj_mscores(adj_mscores, obj_side, stat_name, w)
+            feature_df = pd.concat([feature_df, adj_mscores])
         feature_df = feature_df.sort_index()
-        season_df = season_df.join(feature_df, how='outer')
-    season_df[f"{stat_name}_mean_def"] = season_df[f"{stat_name}_mean_def"] * -1
-    season_df[f"{stat_name}_mean_net"] = (season_df[f"{stat_name}_mean_pos"]
-                                         + season_df[f"{stat_name}_mean_def"])
+        season_df = season_df.join(feature_df, how='left')
+    season_df[f"{stat_name}_def"] = season_df[f"{stat_name}_def"] * -1
+    season_df[f"{stat_name}_net"] = (season_df[f"{stat_name}_pos"]
+                                         + season_df[f"{stat_name}_def"])
     season_df = season_df.droplevel('defteam')
     season_df.index.names = ['team', 'week']
     return season_df
