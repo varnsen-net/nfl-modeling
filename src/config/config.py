@@ -41,7 +41,7 @@ CV_TEST_SIZE = 2
 """*int*: Number of consecutive seasons to use for testing in grouped time-series cross validation."""
 CV_SHIFT_SIZE = 2
 """*int*: Number of seasons to shift for each CV fold."""
-MAX_EVALS = 15
+MAX_EVALS = 25
 """*int*: Maximum number of hyperparameter tuning iterations."""
 EARLY_STOP_N = 90
 """*int*: Number of iterations without improvement to stop hyperparameter tuning."""

@@ -37,7 +37,7 @@ LIGHTGBM_SPACE = [
 
 
 SVC_SPACE = [
-    param('nu', hp.uniform, 0.01, 0.99, float),
+    param('nu', hp.uniform, 0.01, 0.95, float),
     param('gamma', hp.loguniform, -6.0, 0.1, float),
     param('kernel', 'rbf', None, None, str),
     param('probability', True, None, None, bool),

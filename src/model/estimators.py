@@ -24,7 +24,9 @@ def build_baseline_pipeline(model_params={}):
     :return: baseline pipeline
     :rtype: sklearn.pipeline.Pipeline
     """
-    feature_columns = ['obj_rest',
+    feature_columns = ['obj_adj_pythag_exp',
+                       'adv_adj_pythag_exp',
+                       'obj_rest',
                        'adv_rest',
                        'obj_travel_distance',
                        'adv_travel_distance']

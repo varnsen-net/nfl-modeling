@@ -12,7 +12,7 @@ import pandas as pd
 from src.data.raw.games import refresh_games_data
 from src.data.raw.plays import refresh_plays_data
 from src.data.features.travel import build_travel_features
-from src.data.features.points import build_points_features
+from src.data.features.game_stats import build_game_features
 from src.data.features.drive_stats import build_drive_features
 from src.data.features.series_stats import build_series_features
 from src.data.features.play_stats import build_play_features
@@ -93,25 +93,31 @@ if __name__ == '__main__':
     output_path = features_path / 'travel.csv'
     travel_features.to_csv(output_path)
 
-    # print('Building points features...')
-    points_features = build_points_features(raw_games_path, window=None)
-    output_path = features_path / 'points.csv'
-    points_features.to_csv(output_path)
+    game_features = pd.DataFrame()
+    drive_features = pd.DataFrame()
+    play_features = pd.DataFrame()
+    for season in list(range(2001, CURRENT_SEASON + 1)):
+        print(f"Processing season {season}")
+        raw_plays = raw_plays_path / f"play_by_play_{season}.parquet"
+        raw_plays = pd.read_parquet(raw_plays)
 
-    print('Building drive features...')
-    drive_features = build_drive_features(raw_plays_path)
-    output_path = features_path / 'drive_efficiency.csv'
-    drive_features.to_csv(output_path)
+        raw_plays = raw_plays.query('posteam != "" and posteam != "None"')
 
-    # print('Building series features...')
-    # series_features = build_series_features(raw_plays_path)
-    # output_path = features_path / 'series_efficiency.csv'
-    # series_features.to_csv(output_path)
+        print("Building game features...")
+        features = build_game_features(raw_plays, season)
+        game_features = pd.concat([game_features, features])
 
-    print('Building play features...')
-    play_features = build_play_features(raw_plays_path)
-    output_path = features_path / 'play_efficiency.csv'
-    play_features.to_csv(output_path)
+        print('Building drive features...')
+        features = build_drive_features(raw_plays, season)
+        drive_features = pd.concat([drive_features, features])
+
+        print('Building play features...')
+        features = build_play_features(raw_plays, season)
+        play_features = pd.concat([play_features, features])
+
+    game_features.to_csv(features_path / 'game_features.csv')
+    drive_features.to_csv(features_path / 'drive_features.csv')
+    play_features.to_csv(features_path / 'play_features.csv')
 
     print('Building training and test data...')
     build_train_and_test_data(train_path, test_path, games_cols, raw_games_path,

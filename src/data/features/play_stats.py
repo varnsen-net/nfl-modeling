@@ -19,31 +19,25 @@ def extract_play_results(raw_plays):
             .agg(['sum', 'count']))
 
 
-def build_play_features(raw_plays_path):
+def build_play_features(raw_plays, season):
     """Build features based on play-level data.
 
-    :param pathlib.Path raw_plays_path: Path to raw play-by-play data.
-    :return: Series-level features.
+    :param pd.DataFrame raw_plays: Play-by-play data.
+    :param int season: Season to build features for.
+    :return: Features.
     :rtype: pd.DataFrame
     """
     features = pd.DataFrame()
-    stat_name = 'yards_play'
-    for season in list(range(1999, CURRENT_SEASON + 1)):
-        print(f"Processing season {season}")
-        raw_plays = raw_plays_path / f"play_by_play_{season}.parquet"
-        raw_plays = pd.read_parquet(raw_plays)
-        query = "play_type == 'pass' or play_type == 'run'"
-        raw_plays = raw_plays.query(query)
-        raw_plays = raw_plays.query('posteam != "" and posteam != "None"') # move this to a preprocessing step
-        plays = extract_play_results(raw_plays)
-        plays.columns = ['value', 'count']
-        max_week = plays.index.get_level_values('week').max()
-        week_nums = range(1, max_week + 1)
-        season_features = build_adjusted_data_for_season(plays,
-                                                         stat_name,
-                                                         week_nums)
-        season_features['season'] = season
-        features = pd.concat([features, season_features])
+
+    yards = extract_play_results(raw_plays)
+    max_week = yards.index.get_level_values('week').max()
+    week_nums = range(1, max_week + 1)
+
+    stat_name = 'yards_drive'
+    season_features = build_adjusted_data_for_season(yards, stat_name,
+                                                     week_nums, 'mscores')
+    season_features['season'] = season
+    features = pd.concat([features, season_features])
     return features
 
 

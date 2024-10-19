@@ -3,25 +3,7 @@
 import numpy as np
 import pandas as pd
 
-from src.config.config import CURRENT_SEASON
 from src.data.features.helpers import build_adjusted_data_for_season
-
-
-def pipe_print(df):
-    print(df)
-    return df
-
-
-def preprocess_drive_data(drives):
-    """"""
-    start_sides = (drives['drive_start_yard_line']
-                   .str[:3]
-                   .rename('drive_start_side'))
-    # we do a concat here because the usual column assignment method caused an
-    # annoying warning about fragmented dataframes
-    drives = pd.concat([drives, start_sides], axis=1)
-    drives = drives.query('drive_start_side == posteam')
-    return drives
 
 
 def extract_drive_results(raw_plays):
@@ -31,74 +13,81 @@ def extract_drive_results(raw_plays):
     :return: Drive-level data.
     :rtype: pd.DataFrame
     """
-    return (raw_plays
-            .groupby(['posteam', 'week', 'defteam', 'fixed_drive'])
-            .first()
-            ['fixed_drive_result']
-            .map({'Touchdown': 7, 'Field goal': 3})
-            .fillna(0)
-            .groupby(['posteam', 'week', 'defteam'])
-            .agg(['sum', 'count']))
+    drives = (raw_plays
+              .groupby(['posteam', 'week', 'defteam', 'fixed_drive'])
+              .first())
+    points = (drives
+              ['fixed_drive_result']
+              .map({'Touchdown': 7, 'Field goal': 3})
+              .fillna(0)
+              .groupby(['posteam', 'week', 'defteam'])
+              .agg(['sum', 'count']))
+    penalties = (drives
+                 ['drive_yards_penalized']
+                 .groupby(['posteam', 'week', 'defteam'])
+                 .agg(['sum', 'count']))
+    return points, penalties
 
 
-def build_drive_features(raw_plays_path):
+def build_drive_features(raw_plays, season):
     """Build features based on drive-level data.
 
-    :param pathlib.Path raw_plays_path: Path to raw play-by-play data.
+    :param pd.DataFrame raw_plays: Play-by-play data.
+    :param int season: Season year.
     :return: Drive-level features.
     :rtype: pd.DataFrame
     """
     features = pd.DataFrame()
+
+    points, penalties = extract_drive_results(raw_plays)
+    max_week = points.index.get_level_values('week').max()
+    week_nums = range(1, max_week + 1)
+
     stat_name = 'points_drive'
-    for season in list(range(1999, CURRENT_SEASON + 1)):
-        print(f"Processing season {season}")
-        raw_plays = raw_plays_path / f"play_by_play_{season}.parquet"
-        raw_plays = pd.read_parquet(raw_plays)
-        raw_plays = raw_plays.query('posteam != "" and posteam != "None"') # move this to a preprocessing step
-        drives = extract_drive_results(raw_plays)
-        drives.columns = ['value', 'count']
-        max_week = drives.index.get_level_values('week').max()
-        week_nums = range(1, max_week + 1)
-        season_features = build_adjusted_data_for_season(drives,
-                                                         stat_name,
-                                                         week_nums)
-        season_features['season'] = season
-        features = pd.concat([features, season_features])
+    season_features = build_adjusted_data_for_season(points, stat_name,
+                                                     week_nums, 'mscores')
+    features = pd.concat([features, season_features])
+
+    stat_name = 'penalties_drive'
+    season_features = build_adjusted_data_for_season(penalties, stat_name,
+                                                     week_nums, 'mscores')
+    features = pd.concat([features, season_features], axis=1)
+    features['season'] = season
     return features
 
 
 if __name__ == '__main__':
     from src.config.config import PATHS
-    from src.data.features.helpers import (create_weekly_csums,
-                                           calculate_league_avgs,
+    from src.data.features.helpers import (calculate_league_averages,
                                            calculate_adversary_mscores,
-                                           calculate_adjusted_scores,
-                                           format_adj_mscores)
+                                           calculate_adjusted_values,
+                                           calculate_adjusted_mscores,
+                                           format_mscores)
 
-    raw_plays = pd.read_parquet(PATHS['raw_plays'] / 'play_by_play_2024.parquet')
+    raw_plays = pd.read_parquet(PATHS['raw_plays'] / 'play_by_play_2000.parquet')
     raw_plays = raw_plays.query('posteam != "" and posteam != "None"')
+    raw_plays = raw_plays.query('week < 7')
 
-    drives = extract_drive_results(raw_plays)
-    drives.columns = ['value', 'count']
+    drives_posteam, _ = extract_drive_results(raw_plays)
+    print(_)
+    _.columns = ['value', 'count']
+    drives_defteam = _.swaplevel(0,2).sort_index()
 
     stat_name = 'points_drive'
-    obj_side = 'posteam'
-    adv_side = 'defteam' if obj_side == 'posteam' else 'posteam'
+    for drives in [_, drives_defteam]:
+        obj_side = drives.index.names[0]
+        adv_side = drives.index.names[2]
 
-    drives = (drives
-              .droplevel(adv_side)
-              .unstack(obj_side))
-    print(drives['value'])
-    print(drives['count'])
-    values_sum = drives['value'].sum().sum()
-    counts_sum = drives['count'].sum().sum()
-    league_mean = values_sum / counts_sum
-    game_means = drives['value'] / drives['count']
-    league_mad = (game_means - league_mean).abs().median().median()
-    print(league_mean, league_mad)
-    game_mscores = (game_means - league_mean) / league_mad
-    print(game_mscores)
-    print(game_mscores['KC'])
+        unstacked = (drives
+                     .droplevel(obj_side)
+                     .unstack(adv_side))
+        league_mean, league_mad = calculate_league_averages(unstacked)
+        print(league_mean, league_mad)
+        adv_mscores = calculate_adversary_mscores(unstacked, league_mean, league_mad)
+        adj_data = calculate_adjusted_values(drives, adv_mscores, league_mean, league_mad)
+        adj_mscores = calculate_adjusted_mscores(adj_data, obj_side)
+        adj_mscores = format_mscores(adj_mscores, 6, stat_name, obj_side)
+        print(adj_mscores)
 
 
     # adv_csums = create_weekly_csums(drives, obj_side, adv_side)
