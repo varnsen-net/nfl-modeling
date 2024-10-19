@@ -92,9 +92,9 @@ if __name__ == "__main__":
     readable_data = prediction_data.copy()
 
     most_recent_results = get_most_recent_dir(results_path)
-    model = joblib.load(os.path.join(most_recent_results, 'baseline_model.pkl'))
+    model = joblib.load(os.path.join(most_recent_results, 'svc_model.pkl'))
     predictions = model.predict_proba(prediction_data)
-    readable_data[['baseline_away_win_prob', 'baseline_home_win_prob']] = predictions
+    readable_data[['svc_away_win_prob', 'svc_home_win_prob']] = predictions
 
     model = joblib.load(os.path.join(most_recent_results, 'lightgbm_model.pkl'))
     predictions = model.predict_proba(prediction_data)
