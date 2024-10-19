@@ -4,7 +4,7 @@
 
 Welcome to the repo for SWIFT, a machine learning model designed to produce well-calibrated probabilities for NFL games.
 
-Current status: trains a LightGBM classifier and tunes hyperparameters with the hyperopt library.
+Current status: trains a few models and tunes hyperparameters with the hyperopt library.
 
 ## Getting started
 Simply `bash run.sh` and you're off to the races!
@@ -32,10 +32,14 @@ A: Data leakage! These metrics are derived from all currently available NFL data
 
 ## Current engineered features
 - home/away rest
-- field stats
 - travel distances
-- opponent-adjusted points for/against
-- basic pass/rush statistics
+- pythagorean expectation
+- points per game
+- points per drive
+- penalty yards per drive
+- net yards per play 
+
+Feature engineering makes adjustments for league averages and opponent strength. Most features are expressed in terms of median absolute deviations from the adjusted team means for that stat.
 
 ## Training procedure
 SWIFT does everything possible to avoid data leakage. It should never get a glimpse into the future.
@@ -45,17 +49,17 @@ SWIFT does everything possible to avoid data leakage. It should never get a glim
 2. Train and evaluate using a grouped time series cross-validation scheme. The model trains on a block of *m* consecutive seasons, then validates on the following *n* seasons.
 3. On each training fold in the time series cv, calibrate model probabilities with a 5-fold cv.
 4. Search for optimal hyperparameters with hyperopt and minimize the average brier score.
-5. Evaluate on holdout data using the ensemble of cross-validated estimators from step 2.
-6. Train final model on full dataset.
+5. Train final model on full dataset using optimal hyperparameters.
+6. Evaluate on holdout data.
 
 ## Future tasks
 - ~~Auto-generate API docs with Sphinx~~
-- ~~Complete documentation for all modules and functions~~
-- ~~Engineer 'normal' gametime features, i.e. when score and remaining time do not affect play-calling~~
-- ~~Account for quarterback injuries~~
+- ~~Create engineered features for drive efficiency~~
+- Complete documentation for all modules and functions
+- Account for quarterback injuries
 - Tidy up some bits of rushed code
 - Complete unit tests
 - Expand model evaluation to include tracking optimal hyperparameters
 - Write bespoke time series cross validation windows that look forward **and** backward
-- Create engineered features for drive efficiency
 - Add a mixed-effects logreg model that controls for season
+- Add a regression model that predicts game score differentials
