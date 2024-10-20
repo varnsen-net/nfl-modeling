@@ -26,7 +26,7 @@ A: Probably not.
 
 A: That's not a question.
 
-**Q: How come you don't use efficiency metrics like pythagorean expectation/EPA/WPA?**
+**Q: How come you don't use efficiency metrics like EPA/WPA?**
 
 A: Data leakage! These metrics are derived from all currently available NFL data and would give the model an unfair glimpse of the future.
 
