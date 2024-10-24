@@ -37,6 +37,7 @@ A: Data leakage! These metrics are derived from all currently available NFL data
 - points per game
 - points per drive
 - penalty yards per drive
+- series success rate
 - net yards per play 
 
 Feature engineering makes adjustments for league averages and opponent strength. Most features are expressed in terms of median absolute deviations from the adjusted team means for that stat.
