@@ -27,8 +27,6 @@ def build_play_features(raw_plays, season):
     :return: Features.
     :rtype: pd.DataFrame
     """
-    features = pd.DataFrame()
-
     yards = extract_play_results(raw_plays)
     max_week = yards.index.get_level_values('week').max()
     week_nums = range(1, max_week + 1)
@@ -37,13 +35,4 @@ def build_play_features(raw_plays, season):
     season_features = build_adjusted_data_for_season(yards, stat_name,
                                                      week_nums, 'mscores')
     season_features['season'] = season
-    features = pd.concat([features, season_features])
-    return features
-
-
-
-if __name__ == '__main__':
-    from src.config.config import PATHS
-    features = build_play_features(PATHS['raw_plays'])
-    print(features)
-
+    return season_features

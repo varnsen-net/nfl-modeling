@@ -95,6 +95,7 @@ if __name__ == '__main__':
 
     game_features = pd.DataFrame()
     drive_features = pd.DataFrame()
+    series_features = pd.DataFrame()
     play_features = pd.DataFrame()
     for season in list(range(2001, CURRENT_SEASON + 1)):
         print(f"Processing season {season}")
@@ -111,12 +112,17 @@ if __name__ == '__main__':
         features = build_drive_features(raw_plays, season)
         drive_features = pd.concat([drive_features, features])
 
+        print('Building series features...')
+        features = build_series_features(raw_plays, season)
+        series_features = pd.concat([series_features, features])
+
         print('Building play features...')
         features = build_play_features(raw_plays, season)
         play_features = pd.concat([play_features, features])
 
     game_features.to_csv(features_path / 'game_features.csv')
     drive_features.to_csv(features_path / 'drive_features.csv')
+    series_features.to_csv(features_path / 'series_features.csv')
     play_features.to_csv(features_path / 'play_features.csv')
 
     print('Building training and test data...')

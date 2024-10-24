@@ -2,7 +2,6 @@
 
 import pandas as pd
 
-from src.config.config import CURRENT_SEASON
 from src.data.features.helpers import build_adjusted_data_for_season
 
 
@@ -21,28 +20,23 @@ def extract_series_results(raw_plays):
             .agg(['sum', 'count']))
 
 
-def build_series_features(raw_plays_path):
+def build_series_features(raw_plays, season):
     """Build features based on series-level data.
 
-    :param pathlib.Path raw_plays_path: Path to raw play-by-play data.
+    :param pd.DataFrame raw_plays: Play-by-play data.
+    :param int season: Season.
     :return: Series-level features.
     :rtype: pd.DataFrame
     """
-    features = pd.DataFrame()
-    stat_name = 'ssr'
-    for season in list(range(1999, CURRENT_SEASON + 1)):
-        print(f"Processing season {season}")
-        raw_plays = raw_plays_path / f"play_by_play_{season}.parquet"
-        raw_plays = pd.read_parquet(raw_plays)
-        series = extract_series_results(raw_plays)
-        max_week = series.index.get_level_values('week').max()
-        week_nums = range(1, max_week + 1)
-        season_features = build_adjusted_data_for_season(series,
-                                                         stat_name,
-                                                         week_nums)
-        season_features['season'] = season
-        features = pd.concat([features, season_features])
-    return features
+    series = extract_series_results(raw_plays)
+    max_week = series.index.get_level_values('week').max()
+    week_nums = range(1, max_week + 1)
+
+    stat_name = 'series_success'
+    season_features = build_adjusted_data_for_season(series, stat_name,
+                                                     week_nums, 'mscores')
+    season_features['season'] = season
+    return season_features
 
 
 
