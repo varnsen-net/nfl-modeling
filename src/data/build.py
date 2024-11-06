@@ -26,6 +26,19 @@ from src.config.config import (TRAINING,
                                PATHS)
 
 
+def preprocess_plays(raw_plays):
+    """Preprocess raw play-by-play data.
+
+    :param pd.DataFrame raw_plays: Raw play-by-play data.
+    :return: Preprocessed play-by-play data.
+    :rtype: pd.DataFrame
+    """
+    return (raw_plays
+            .query('posteam != "" and posteam != "None"')
+            .query('half_seconds_remaining > 120')
+            .query('score_differential.abs() <= 16'))
+
+
 def split_data(df, holdout_year_start):
     """Divide a full set of features into training and holdout data.
 
@@ -98,26 +111,27 @@ if __name__ == '__main__':
     series_features = pd.DataFrame()
     play_features = pd.DataFrame()
     for season in list(range(2001, CURRENT_SEASON + 1)):
-        print(f"Processing season {season}")
+        print(f"Building features for season {season}")
         raw_plays = raw_plays_path / f"play_by_play_{season}.parquet"
         raw_plays = pd.read_parquet(raw_plays)
 
-        raw_plays = raw_plays.query('posteam != "" and posteam != "None"')
+        print("Preprocessing...")
+        processed_plays = preprocess_plays(raw_plays)
 
         print("Building game features...")
-        features = build_game_features(raw_plays, season)
+        features = build_game_features(processed_plays, season)
         game_features = pd.concat([game_features, features])
 
         print('Building drive features...')
-        features = build_drive_features(raw_plays, season)
+        features = build_drive_features(processed_plays, season)
         drive_features = pd.concat([drive_features, features])
 
         print('Building series features...')
-        features = build_series_features(raw_plays, season)
+        features = build_series_features(processed_plays, season)
         series_features = pd.concat([series_features, features])
 
         print('Building play features...')
-        features = build_play_features(raw_plays, season)
+        features = build_play_features(processed_plays, season)
         play_features = pd.concat([play_features, features])
 
     game_features.to_csv(features_path / 'game_features.csv')
