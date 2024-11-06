@@ -198,6 +198,8 @@ def calculate_median_mscores(adj_data, obj_side):
     league_mean_adj = means.mean()
     league_mad_adj = (means - league_mean_adj).abs().median()
     median_mscores = (means - league_mean_adj) / league_mad_adj
+    if obj_side == 'defteam':
+        median_mscores = -median_mscores
     return median_mscores.to_frame('adj_mscore')
 
 
@@ -329,8 +331,6 @@ def build_adjusted_data_for_season(raw_df, stat_name, week_nums, output_type):
                 feature_df = pd.concat([feature_df, median_mscores])
         feature_df = feature_df.sort_index()
         season_df = season_df.join(feature_df, how='left')
-    season_df[f"adj_{stat_name}_net"] = (season_df[f"adj_{stat_name}_pos"]
-                                         - season_df[f"adj_{stat_name}_def"])
     season_df = season_df.droplevel('defteam')
     season_df.index.names = ['team', 'week']
     return season_df
