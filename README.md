@@ -30,13 +30,14 @@ A: That's not a question.
 
 A: Data leakage! These metrics are derived from all currently available NFL data and would give the model an unfair glimpse of the future.
 
+I do now adjust drive results based on the expected value of each drive's starting field position, but I have verified that the EV of starting field positions are stable over my entire dataset.
+
 ## Current engineered features
 - home/away rest
 - travel distances
 - pythagorean expectation
 - points per game
 - points per drive
-- penalty yards per drive
 - series success rate
 - net yards per play 
 
