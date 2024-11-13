@@ -2,7 +2,6 @@
 
 import pandas as pd
 
-from src.config.config import CURRENT_SEASON
 from src.data.features.helpers import build_adjusted_data_for_season
 
 
@@ -31,7 +30,7 @@ def build_play_features(raw_plays, season):
     max_week = yards.index.get_level_values('week').max()
     week_nums = range(1, max_week + 1)
 
-    stat_name = 'yards_drive'
+    stat_name = 'yards_play'
     season_features = build_adjusted_data_for_season(yards, stat_name,
                                                      week_nums, 'mscores')
     season_features['season'] = season

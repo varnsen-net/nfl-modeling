@@ -82,6 +82,7 @@ if __name__ == '__main__':
     raw_games_path = PATHS['raw_games']
     raw_plays_path = PATHS['raw_plays']
     city_coords_path = PATHS['city_coordinates']
+    expected_values = PATHS['expected_values']
     features_path = PATHS['features']
     train_path = PATHS['train']
     test_path = PATHS['test']
@@ -100,9 +101,13 @@ if __name__ == '__main__':
     print('Refreshing raw play-by-play data...')
     refresh_plays_data(CURRENT_SEASON, plays_url, raw_plays_path)
 
+    raw_games = pd.read_csv(raw_games_path)
+    city_coords = pd.read_csv(city_coords_path)
+    exp_value_drive = pd.read_csv(expected_values)
+
     # TODO throw these calls into a dictionary or something
     print('Building travel features...')
-    travel_features = build_travel_features(raw_games_path, city_coords_path)
+    travel_features = build_travel_features(raw_games, city_coords)
     output_path = features_path / 'travel.csv'
     travel_features.to_csv(output_path)
 
@@ -123,7 +128,7 @@ if __name__ == '__main__':
         game_features = pd.concat([game_features, features])
 
         print('Building drive features...')
-        features = build_drive_features(processed_plays, season)
+        features = build_drive_features(processed_plays, exp_value_drive, season)
         drive_features = pd.concat([drive_features, features])
 
         print('Building series features...')

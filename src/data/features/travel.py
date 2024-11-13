@@ -112,17 +112,15 @@ def get_coord_deltas(games):
     return travel_deltas
 
 
-def build_travel_features(raw_games_path, city_coords_path):
+def build_travel_features(raw_games, city_coords):
     """Build engineered features for team travel.
 
-    :param str raw_games_path: Path to the raw games data.
-    :param str city_coords_path: Path to the city coordinates data.
+    :param pd.DataFrame raw_games: Raw games data.
+    :param pd.DataFrame city_coords: City coordinates data.
     :return: Dataframe with the engineered travel features.
     :rtype: pd.DataFrame of shape (n_rows, n_cols)
     """
-    games = pd.read_csv(raw_games_path)
-    city_coords = pd.read_csv(city_coords_path)
-    games = attach_lats_lons(games, city_coords)
+    games = attach_lats_lons(raw_games, city_coords)
     travel_distances = get_travel_distances(games)
     lon_deltas = get_coord_deltas(games)
     travel_features = pd.concat([travel_distances, lon_deltas], axis=1)
