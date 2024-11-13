@@ -18,8 +18,8 @@ def extract_game_results(raw_plays):
 
 def calculate_adj_pythag_exp(adj_points):
     """"""
-    points_for_sq = adj_points['adj_points_game_pos'] ** 2.68
-    points_against_sq = adj_points['adj_points_game_def'] ** 2.68
+    points_for_sq = adj_points['adj_points_game_pos'] ** 2.77
+    points_against_sq = adj_points['adj_points_game_def'] ** 2.77
     adj_pythag_exp = points_for_sq / (points_for_sq + points_against_sq)
     adj_pythag_exp = adj_pythag_exp.to_frame('adj_pythag_exp')
     return adj_pythag_exp
