@@ -36,7 +36,7 @@ def calculate_league_averages(data):
 
 def calculate_adversary_mscores(data, league_mean, league_mad):
     """Calculate the adversary m-scores based on league mean and median
-        absolute deviation.
+    absolute deviation.
     
     Takes in data that looks like this:
 
@@ -198,8 +198,6 @@ def calculate_median_mscores(adj_data, obj_side):
     league_mean_adj = means.mean()
     league_mad_adj = (means - league_mean_adj).abs().median()
     median_mscores = (means - league_mean_adj) / league_mad_adj
-    if obj_side == 'defteam':
-        median_mscores = -median_mscores
     return median_mscores.to_frame('adj_mscore')
 
 
@@ -303,7 +301,10 @@ def build_adjusted_data_for_season(raw_df, stat_name, week_nums, output_type):
     """
     season_df = pd.DataFrame(index=raw_df.index)
     raw_df.columns = ['value', 'count']
-    raw_df_defteam = raw_df.swaplevel(0,2).sort_index()
+    raw_df_defteam = (raw_df
+                      .reset_index()
+                      .set_index(['defteam', 'week', 'posteam'])
+                      .sort_index())
 
     for df in [raw_df, raw_df_defteam]:
         obj_side = df.index.names[0]
