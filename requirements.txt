@@ -1,5 +1,6 @@
 alabaster==0.7.16
 Babel==2.14.0
+beautifulsoup4==4.12.3
 certifi==2024.8.30
 charset-normalizer==3.2.0
 cloudpickle==2.2.1
@@ -11,6 +12,7 @@ exceptiongroup==1.1.3
 fastparquet==2023.8.0
 fonttools==4.47.0
 fsspec==2023.9.2
+furo==2024.8.6
 future==0.18.3
 hyperopt==0.2.7
 idna==3.8
@@ -41,8 +43,9 @@ scipy==1.14.1
 seaborn==0.13.2
 six==1.16.0
 snowballstemmer==2.2.0
+soupsieve==2.6
 Sphinx==8.1.3
-sphinx-rtd-theme==3.0.1
+sphinx-basic-ng==1.0.0b2
 sphinxcontrib-applehelp==1.0.7
 sphinxcontrib-devhelp==2.0.0
 sphinxcontrib-htmlhelp==2.1.0
