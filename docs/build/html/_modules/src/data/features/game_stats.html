@@ -1,0 +1,584 @@
+<!doctype html>
+<html class="no-js" lang="en" data-content_root="../../../../">
+  <head><meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../../genindex.html" /><link rel="search" title="Search" href="../../../../search.html" />
+
+    <!-- Generated with Sphinx 8.1.3 and Furo 2024.08.06 -->
+        <title>src.data.features.game_stats - SWIFT documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=a746c00c" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo.css?v=354aac6f" />
+    <link rel="stylesheet" type="text/css" href="../../../../_static/styles/furo-extensions.css?v=302659d7" />
+    
+    
+
+
+<style>
+  body {
+    --color-code-background: #f8f8f8;
+  --color-code-foreground: black;
+  
+  }
+  @media not print {
+    body[data-theme="dark"] {
+      --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+    }
+    @media (prefers-color-scheme: dark) {
+      body:not([data-theme="light"]) {
+        --color-code-background: #202020;
+  --color-code-foreground: #d0d0d0;
+  
+      }
+    }
+  }
+</style></head>
+  <body>
+    
+    <script>
+      document.body.dataset.theme = localStorage.getItem("theme") || "auto";
+    </script>
+    
+
+<svg xmlns="http://www.w3.org/2000/svg" style="display: none;">
+  <symbol id="svg-toc" viewBox="0 0 24 24">
+    <title>Contents</title>
+    <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 1024 1024">
+      <path d="M408 442h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8zm-8 204c0 4.4 3.6 8 8 8h480c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8H408c-4.4 0-8 3.6-8 8v56zm504-486H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zm0 632H120c-4.4 0-8 3.6-8 8v56c0 4.4 3.6 8 8 8h784c4.4 0 8-3.6 8-8v-56c0-4.4-3.6-8-8-8zM115.4 518.9L271.7 642c5.8 4.6 14.4.5 14.4-6.9V388.9c0-7.4-8.5-11.5-14.4-6.9L115.4 505.1a8.74 8.74 0 0 0 0 13.8z"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-menu" viewBox="0 0 24 24">
+    <title>Menu</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-menu">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-arrow-right" viewBox="0 0 24 24">
+    <title>Expand</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather-chevron-right">
+      <polyline points="9 18 15 12 9 6"></polyline>
+    </svg>
+  </symbol>
+  <symbol id="svg-sun" viewBox="0 0 24 24">
+    <title>Light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="feather-sun">
+      <circle cx="12" cy="12" r="5"></circle>
+      <line x1="12" y1="1" x2="12" y2="3"></line>
+      <line x1="12" y1="21" x2="12" y2="23"></line>
+      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+      <line x1="1" y1="12" x2="3" y2="12"></line>
+      <line x1="21" y1="12" x2="23" y2="12"></line>
+      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon" viewBox="0 0 24 24">
+    <title>Dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-moon">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M12 3c.132 0 .263 0 .393 0a7.5 7.5 0 0 0 7.92 12.446a9 9 0 1 1 -8.313 -12.454z" />
+    </svg>
+  </symbol>
+  <symbol id="svg-sun-with-moon" viewBox="0 0 24 24">
+    <title>Auto light/dark, in light mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path style="opacity: 50%" d="M 5.411 14.504 C 5.471 14.504 5.532 14.504 5.591 14.504 C 3.639 16.319 4.383 19.569 6.931 20.352 C 7.693 20.586 8.512 20.551 9.25 20.252 C 8.023 23.207 4.056 23.725 2.11 21.184 C 0.166 18.642 1.702 14.949 4.874 14.536 C 5.051 14.512 5.231 14.5 5.411 14.5 L 5.411 14.504 Z"/>
+      <line x1="14.5" y1="3.25" x2="14.5" y2="1.25"/>
+      <line x1="14.5" y1="15.85" x2="14.5" y2="17.85"/>
+      <line x1="10.044" y1="5.094" x2="8.63" y2="3.68"/>
+      <line x1="19" y1="14.05" x2="20.414" y2="15.464"/>
+      <line x1="8.2" y1="9.55" x2="6.2" y2="9.55"/>
+      <line x1="20.8" y1="9.55" x2="22.8" y2="9.55"/>
+      <line x1="10.044" y1="14.006" x2="8.63" y2="15.42"/>
+      <line x1="19" y1="5.05" x2="20.414" y2="3.636"/>
+      <circle cx="14.5" cy="9.55" r="3.6"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-moon-with-sun" viewBox="0 0 24 24">
+    <title>Auto light/dark, in dark mode</title>
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round"
+      class="icon-custom-derived-from-feather-sun-and-tabler-moon">
+      <path d="M 8.282 7.007 C 8.385 7.007 8.494 7.007 8.595 7.007 C 5.18 10.184 6.481 15.869 10.942 17.24 C 12.275 17.648 13.706 17.589 15 17.066 C 12.851 22.236 5.91 23.143 2.505 18.696 C -0.897 14.249 1.791 7.786 7.342 7.063 C 7.652 7.021 7.965 7 8.282 7 L 8.282 7.007 Z"/>
+      <line style="opacity: 50%" x1="18" y1="3.705" x2="18" y2="2.5"/>
+      <line style="opacity: 50%" x1="18" y1="11.295" x2="18" y2="12.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="4.816" x2="14.464" y2="3.964"/>
+      <line style="opacity: 50%" x1="20.711" y1="10.212" x2="21.563" y2="11.063"/>
+      <line style="opacity: 50%" x1="14.205" y1="7.5" x2="13.001" y2="7.5"/>
+      <line style="opacity: 50%" x1="21.795" y1="7.5" x2="23" y2="7.5"/>
+      <line style="opacity: 50%" x1="15.316" y1="10.184" x2="14.464" y2="11.036"/>
+      <line style="opacity: 50%" x1="20.711" y1="4.789" x2="21.563" y2="3.937"/>
+      <circle style="opacity: 50%" cx="18" cy="7.5" r="2.169"/>
+    </svg>
+  </symbol>
+  <symbol id="svg-pencil" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-pencil-code">
+      <path d="M4 20h4l10.5 -10.5a2.828 2.828 0 1 0 -4 -4l-10.5 10.5v4" />
+      <path d="M13.5 6.5l4 4" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+  <symbol id="svg-eye" viewBox="0 0 24 24">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+      stroke-width="1" stroke-linecap="round" stroke-linejoin="round" class="icon-tabler-eye-code">
+      <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+      <path d="M10 12a2 2 0 1 0 4 0a2 2 0 0 0 -4 0" />
+      <path
+        d="M11.11 17.958c-3.209 -.307 -5.91 -2.293 -8.11 -5.958c2.4 -4 5.4 -6 9 -6c3.6 0 6.6 2 9 6c-.21 .352 -.427 .688 -.647 1.008" />
+      <path d="M20 21l2 -2l-2 -2" />
+      <path d="M17 17l-2 2l2 2" />
+    </svg>
+  </symbol>
+</svg>
+
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation">
+<input type="checkbox" class="sidebar-toggle" name="__toc" id="__toc">
+<label class="overlay sidebar-overlay" for="__navigation">
+  <div class="visually-hidden">Hide navigation sidebar</div>
+</label>
+<label class="overlay toc-overlay" for="__toc">
+  <div class="visually-hidden">Hide table of contents sidebar</div>
+</label>
+
+<a class="skip-to-content muted-link" href="#furo-main-content">Skip to content</a>
+
+
+
+<div class="page">
+  <header class="mobile-header">
+    <div class="header-left">
+      <label class="nav-overlay-icon" for="__navigation">
+        <div class="visually-hidden">Toggle site navigation sidebar</div>
+        <i class="icon"><svg><use href="#svg-menu"></use></svg></i>
+      </label>
+    </div>
+    <div class="header-center">
+      <a href="../../../../index.html"><div class="brand">SWIFT  documentation</div></a>
+    </div>
+    <div class="header-right">
+      <div class="theme-toggle-container theme-toggle-header">
+        <button class="theme-toggle">
+          <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+          <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+          <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+          <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+          <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+        </button>
+      </div>
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+        <div class="visually-hidden">Toggle table of contents sidebar</div>
+        <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+      </label>
+    </div>
+  </header>
+  <aside class="sidebar-drawer">
+    <div class="sidebar-container">
+      
+      <div class="sidebar-sticky"><a class="sidebar-brand" href="../../../../index.html">
+  
+  
+  <span class="sidebar-brand-text">SWIFT  documentation</span>
+  
+</a><form class="sidebar-search-container" method="get" action="../../../../search.html" role="search">
+  <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
+  <input type="hidden" name="check_keywords" value="yes">
+  <input type="hidden" name="area" value="default">
+</form>
+<div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
+  <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../../usage.html">Usage</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../../../api/index.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of API Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.config.config.html">src.config.config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.config.spaces.html">src.config.spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.data.ancillary.depth_charts.html">src.data.ancillary.depth_charts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.data.ancillary.expectations.html">src.data.ancillary.expectations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.data.build.html">src.data.build</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.data.features.drive_stats.html">src.data.features.drive_stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.data.features.game_stats.html">src.data.features.game_stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.data.features.helpers.html">src.data.features.helpers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.data.features.play_stats.html">src.data.features.play_stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.data.features.qb_stats.html">src.data.features.qb_stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.data.features.series_stats.html">src.data.features.series_stats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.data.features.travel.html">src.data.features.travel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.data.predict.predict.html">src.data.predict.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.data.raw.games.html">src.data.raw.games</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.data.raw.plays.html">src.data.raw.plays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.data.train.target.html">src.data.train.target</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.data.train.train.html">src.data.train.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.model.estimators.html">src.model.estimators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.model.evaluate.html">src.model.evaluate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.model.hyperoptimize.html">src.model.hyperoptimize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.model.predict.html">src.model.predict</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.model.process.html">src.model.process</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.model.train.html">src.model.train</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.plot.plot.html">src.plot.plot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.plot.style.html">src.plot.style</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../api/src.utils.html">src.utils</a></li>
+</ul>
+</li>
+</ul>
+
+</div>
+</div>
+
+      </div>
+      
+    </div>
+  </aside>
+  <div class="main">
+    <div class="content">
+      <div class="article-container">
+        <a href="#" class="back-to-top muted-link">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+            <path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8v12z"></path>
+          </svg>
+          <span>Back to top</span>
+        </a>
+        <div class="content-icon-container">
+          <div class="theme-toggle-container theme-toggle-content">
+            <button class="theme-toggle">
+              <div class="visually-hidden">Toggle Light / Dark / Auto color theme</div>
+              <svg class="theme-icon-when-auto-light"><use href="#svg-sun-with-moon"></use></svg>
+              <svg class="theme-icon-when-auto-dark"><use href="#svg-moon-with-sun"></use></svg>
+              <svg class="theme-icon-when-dark"><use href="#svg-moon"></use></svg>
+              <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
+            </button>
+          </div>
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+            <div class="visually-hidden">Toggle table of contents sidebar</div>
+            <i class="icon"><svg><use href="#svg-toc"></use></svg></i>
+          </label>
+        </div>
+        <article role="main" id="furo-main-content">
+          <h1>Source code for src.data.features.game_stats</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Helper functions for building engineered features for game-level statistics.&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">src.data.features.helpers</span> <span class="kn">import</span> <span class="n">build_adjusted_features</span>
+
+<div class="viewcode-block" id="extract_points_game">
+<a class="viewcode-back" href="../../../../api/src.data.features.game_stats.html#src.data.features.game_stats.extract_points_game">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_points_game</span><span class="p">(</span><span class="n">raw_plays</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract the total points per game for each team.</span>
+
+<span class="sd">    Example output:</span>
+
+<span class="sd">    .. code-block:: none</span>
+
+<span class="sd">                                     points_game  count</span>
+<span class="sd">        posteam season week defteam                    </span>
+<span class="sd">        ARI     2022   1    KC              21.0      1</span>
+<span class="sd">                       2    LV              23.0      1</span>
+<span class="sd">                       3    LA               9.0      1</span>
+<span class="sd">                       4    CAR             26.0      1</span>
+<span class="sd">                       5    PHI             17.0      1</span>
+<span class="sd">        ...                                  ...    ...</span>
+<span class="sd">        WAS     2024   7    CAR             40.0      1</span>
+<span class="sd">                       8    CHI             18.0      1</span>
+<span class="sd">                       9    NYG             27.0      1</span>
+<span class="sd">                       10   PIT             27.0      1</span>
+<span class="sd">                       11   PHI             16.0      1</span>
+
+<span class="sd">    </span>
+<span class="sd">    :param pd.DataFrame raw_plays: The raw play-by-play data.</span>
+<span class="sd">    :return: Total points per team per game.</span>
+<span class="sd">    :rtype: pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">raw_plays</span>
+            <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;posteam&#39;</span><span class="p">,</span> <span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">,</span> <span class="s1">&#39;defteam&#39;</span><span class="p">])</span>
+            <span class="o">.</span><span class="n">last</span><span class="p">()</span>
+            <span class="p">[</span><span class="s1">&#39;posteam_score&#39;</span><span class="p">]</span>
+            <span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="s2">&quot;points_game&quot;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="extract_normal_points_game">
+<a class="viewcode-back" href="../../../../api/src.data.features.game_stats.html#src.data.features.game_stats.extract_normal_points_game">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_normal_points_game</span><span class="p">(</span><span class="n">normal_plays</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract the total points per game for each team for normal-game plays.</span>
+<span class="sd">    </span>
+<span class="sd">    Normal-game implies that score and time are (presumably) not a factor in</span>
+<span class="sd">    decision-making.</span>
+
+<span class="sd">    Example output:</span>
+
+<span class="sd">    .. code-block:: none</span>
+
+<span class="sd">                                     points_normal_game  count</span>
+<span class="sd">        posteam season week defteam                           </span>
+<span class="sd">        ARI     2022   1    KC                     14.0      1</span>
+<span class="sd">                       2    LV                     21.0      1</span>
+<span class="sd">                       3    LA                      9.0      1</span>
+<span class="sd">                       4    CAR                    27.0      1</span>
+<span class="sd">                       5    PHI                    17.0      1</span>
+<span class="sd">        ...                                         ...    ...</span>
+<span class="sd">        WAS     2024   7    CAR                    30.0      1</span>
+<span class="sd">                       8    CHI                    12.0      1</span>
+<span class="sd">                       9    NYG                    27.0      1</span>
+<span class="sd">                       10   PIT                    27.0      1</span>
+<span class="sd">                       11   PHI                    17.0      1</span>
+<span class="sd">    </span>
+<span class="sd">    :param pd.DataFrame normal_plays: Play-by-play data reduced to normal-game</span>
+<span class="sd">        plays.</span>
+<span class="sd">    :return: Total points per team per game.</span>
+<span class="sd">    :rtype: pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">normal_plays</span>
+            <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;posteam&#39;</span><span class="p">,</span> <span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">,</span> <span class="s1">&#39;defteam&#39;</span><span class="p">,</span>
+                      <span class="s1">&#39;fixed_drive&#39;</span><span class="p">])</span>
+            <span class="o">.</span><span class="n">first</span><span class="p">()</span>
+            <span class="p">[</span><span class="s1">&#39;fixed_drive_result&#39;</span><span class="p">]</span>
+            <span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="s1">&#39;Touchdown&#39;</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span> <span class="s1">&#39;Field goal&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">})</span>
+            <span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;posteam&#39;</span><span class="p">,</span> <span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">,</span> <span class="s1">&#39;defteam&#39;</span><span class="p">])</span>
+            <span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">to_frame</span><span class="p">(</span><span class="s1">&#39;points_normal_game&#39;</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="mi">1</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="extract_home_away_points_game">
+<a class="viewcode-back" href="../../../../api/src.data.features.game_stats.html#src.data.features.game_stats.extract_home_away_points_game">[docs]</a>
+<span class="k">def</span> <span class="nf">extract_home_away_points_game</span><span class="p">(</span><span class="n">raw_plays</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Extract the total points per game for each team, separated by home/away.</span>
+
+<span class="sd">    This function unstacks before computing rolling sums because simply</span>
+<span class="sd">    grouping by team will make it so we can&#39;t shift the week numbers correctly</span>
+<span class="sd">    later in the pipeline.</span>
+
+<span class="sd">    Example output:</span>
+
+<span class="sd">    .. code-block:: none</span>
+
+<span class="sd">                               points_for  points_against</span>
+<span class="sd">        season home_team week                            </span>
+<span class="sd">        2022   ARI       1           21.0            44.0</span>
+<span class="sd">                         2           21.0            44.0</span>
+<span class="sd">                         3           33.0            64.0</span>
+<span class="sd">                         4           33.0            64.0</span>
+<span class="sd">                         5           50.0            84.0</span>
+<span class="sd">        ...                           ...             ...</span>
+<span class="sd">        2024   WAS       7          115.0           103.0</span>
+<span class="sd">                         8          133.0           118.0</span>
+<span class="sd">                         9          133.0           118.0</span>
+<span class="sd">                         10         160.0           146.0</span>
+<span class="sd">                         11         150.0           119.0</span>
+<span class="sd">    </span>
+<span class="sd">    :param pd.DataFrame raw_plays: The raw play-by-play data.</span>
+<span class="sd">    :return: Total points per team per game, separated by home/away.</span>
+<span class="sd">    :rtype: tuple[pd.DataFrame, pd.DataFrame]</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">for</span> <span class="n">team_type</span> <span class="ow">in</span> <span class="p">[</span><span class="s1">&#39;home&#39;</span><span class="p">,</span> <span class="s1">&#39;away&#39;</span><span class="p">]:</span>
+        <span class="n">opp_type</span> <span class="o">=</span> <span class="s1">&#39;away&#39;</span> <span class="k">if</span> <span class="n">team_type</span> <span class="o">==</span> <span class="s1">&#39;home&#39;</span> <span class="k">else</span> <span class="s1">&#39;home&#39;</span>
+        <span class="k">yield</span> <span class="p">(</span><span class="n">raw_plays</span>
+               <span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">team_type</span><span class="si">}</span><span class="s1">_team&#39;</span><span class="p">,</span> <span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">])</span>
+               <span class="p">[[</span><span class="sa">f</span><span class="s1">&#39;total_</span><span class="si">{</span><span class="n">team_type</span><span class="si">}</span><span class="s1">_score&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;total_</span><span class="si">{</span><span class="n">opp_type</span><span class="si">}</span><span class="s1">_score&#39;</span><span class="p">]]</span>
+               <span class="o">.</span><span class="n">last</span><span class="p">()</span>
+               <span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span><span class="sa">f</span><span class="s1">&#39;total_</span><span class="si">{</span><span class="n">team_type</span><span class="si">}</span><span class="s1">_score&#39;</span><span class="p">:</span> <span class="s1">&#39;points_for&#39;</span><span class="p">,</span>
+                                <span class="sa">f</span><span class="s1">&#39;total_</span><span class="si">{</span><span class="n">opp_type</span><span class="si">}</span><span class="s1">_score&#39;</span><span class="p">:</span> <span class="s1">&#39;points_against&#39;</span><span class="p">})</span>
+               <span class="o">.</span><span class="n">unstack</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">team_type</span><span class="si">}</span><span class="s1">_team&#39;</span><span class="p">)</span>
+               <span class="o">.</span><span class="n">rolling</span><span class="p">(</span><span class="mi">16</span><span class="p">,</span> <span class="n">min_periods</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+               <span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+               <span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">team_type</span><span class="si">}</span><span class="s1">_team&#39;</span><span class="p">,</span> <span class="n">future_stack</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+               <span class="o">.</span><span class="n">reorder_levels</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+               <span class="o">.</span><span class="n">sort_index</span><span class="p">())</span></div>
+
+
+
+<div class="viewcode-block" id="calculate_pythagorean_expectation">
+<a class="viewcode-back" href="../../../../api/src.data.features.game_stats.html#src.data.features.game_stats.calculate_pythagorean_expectation">[docs]</a>
+<span class="k">def</span> <span class="nf">calculate_pythagorean_expectation</span><span class="p">(</span><span class="n">scores</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="mf">2.77</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculate the Pythagorean expectation for a set of rolling scores.</span>
+
+<span class="sd">    Example input:</span>
+
+<span class="sd">    .. code-block:: none</span>
+
+<span class="sd">                               points_for  points_against</span>
+<span class="sd">        season home_team week                            </span>
+<span class="sd">        2022   ARI       1           21.0            44.0</span>
+<span class="sd">                         2           21.0            44.0</span>
+<span class="sd">                         3           33.0            64.0</span>
+<span class="sd">                         4           33.0            64.0</span>
+<span class="sd">                         5           50.0            84.0</span>
+<span class="sd">        ...                           ...             ...</span>
+<span class="sd">        2024   WAS       7          115.0           103.0</span>
+<span class="sd">                         8          133.0           118.0</span>
+<span class="sd">                         9          133.0           118.0</span>
+<span class="sd">                         10         160.0           146.0</span>
+<span class="sd">                         11         150.0           119.0</span>
+
+<span class="sd">    Example output:</span>
+
+<span class="sd">    .. code-block:: none</span>
+
+<span class="sd">        season  home_team  week</span>
+<span class="sd">        2022    ARI        1       0.114166</span>
+<span class="sd">                           2       0.114166</span>
+<span class="sd">                           3       0.137670</span>
+<span class="sd">                           4       0.137670</span>
+<span class="sd">                           5       0.192001</span>
+<span class="sd">                                     ...   </span>
+<span class="sd">        2024    WAS        7       0.575729</span>
+<span class="sd">                           8       0.582117</span>
+<span class="sd">                           9       0.582117</span>
+<span class="sd">                           10      0.563073</span>
+<span class="sd">                           11      0.655044</span>
+<span class="sd">    </span>
+<span class="sd">    :param pd.DataFrame scores: Rolling scores for a team.</span>
+<span class="sd">    :param float x: The exponent for the Pythagorean expectation.</span>
+<span class="sd">    :return: The Pythagorean expectations.</span>
+<span class="sd">    :rtype: pd.Series</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">points_for</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;points_for&#39;</span><span class="p">]</span>
+    <span class="n">points_against</span> <span class="o">=</span> <span class="n">scores</span><span class="p">[</span><span class="s1">&#39;points_against&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">points_for</span> <span class="o">**</span> <span class="n">x</span> <span class="o">/</span> <span class="p">(</span><span class="n">points_for</span> <span class="o">**</span> <span class="n">x</span> <span class="o">+</span> <span class="n">points_against</span> <span class="o">**</span> <span class="n">x</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="build_pythagorean_features">
+<a class="viewcode-back" href="../../../../api/src.data.features.game_stats.html#src.data.features.game_stats.build_pythagorean_features">[docs]</a>
+<span class="k">def</span> <span class="nf">build_pythagorean_features</span><span class="p">(</span><span class="n">raw_plays</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build Pythagorean expectation features for each season/team/week.</span>
+
+<span class="sd">    Example output:</span>
+
+<span class="sd">    .. code-block:: none</span>
+
+<span class="sd">                          pythag_exp_h  pythag_exp_a</span>
+<span class="sd">        season team week                            </span>
+<span class="sd">        2022   ARI  1         0.114166           NaN</span>
+<span class="sd">                    2         0.114166      0.655226</span>
+<span class="sd">                    3         0.137670      0.655226</span>
+<span class="sd">                    4         0.137670      0.721567</span>
+<span class="sd">                    5         0.192001      0.721567</span>
+<span class="sd">        ...                        ...           ...</span>
+<span class="sd">        2024   WAS  7         0.375633      0.382692</span>
+<span class="sd">                    8         0.397684      0.376958</span>
+<span class="sd">                    9         0.433543      0.404964</span>
+<span class="sd">                    10        0.439710      0.514129</span>
+<span class="sd">                    11        0.563073      0.487296</span>
+<span class="sd">    </span>
+<span class="sd">    :param pd.DataFrame raw_plays: The raw play-by-play data.</span>
+<span class="sd">    :return: The Pythagorean expectation features.</span>
+<span class="sd">    :rtype: pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">home_points</span><span class="p">,</span> <span class="n">away_points</span> <span class="o">=</span> <span class="n">extract_home_away_points_game</span><span class="p">(</span><span class="n">raw_plays</span><span class="p">)</span>
+    <span class="n">home_pythag</span> <span class="o">=</span> <span class="n">calculate_pythagorean_expectation</span><span class="p">(</span><span class="n">home_points</span><span class="p">)</span>
+    <span class="n">away_pythag</span> <span class="o">=</span> <span class="n">calculate_pythagorean_expectation</span><span class="p">(</span><span class="n">away_points</span><span class="p">)</span>
+    <span class="n">pythag_features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">home_pythag</span><span class="p">,</span> <span class="n">away_pythag</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">pythag_features</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;pythag_exp_h&#39;</span><span class="p">,</span> <span class="s1">&#39;pythag_exp_a&#39;</span><span class="p">]</span>
+    <span class="n">pythag_features</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;season&#39;</span><span class="p">,</span> <span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="s1">&#39;week&#39;</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">pythag_features</span></div>
+
+
+
+<div class="viewcode-block" id="build_game_features">
+<a class="viewcode-back" href="../../../../api/src.data.features.game_stats.html#src.data.features.game_stats.build_game_features">[docs]</a>
+<span class="k">def</span> <span class="nf">build_game_features</span><span class="p">(</span><span class="n">raw_plays</span><span class="p">,</span> <span class="n">normal_plays</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Build all points features (e.g. net points).</span>
+
+<span class="sd">    Output example:</span>
+
+<span class="sd">    .. code-block:: none</span>
+
+<span class="sd">                          adj_points_game_pos  adj_points_game_def  ...  pythag_exp_a</span>
+<span class="sd">        season team week                                            ...              </span>
+<span class="sd">        2022   ARI  1                     NaN                  NaN  ...           NaN</span>
+<span class="sd">                    2               -3.500000             0.285714  ...      0.655226</span>
+<span class="sd">                    3               -5.870968             0.000000  ...      0.655226</span>
+<span class="sd">                    4               -3.570552            -0.145985  ...      0.721567</span>
+<span class="sd">                    5               -3.033113            -0.090909  ...      0.721567</span>
+<span class="sd">        ...                               ...                  ...  ...           ...</span>
+<span class="sd">        2024   WAS  7                0.256961             0.334211  ...      0.382692</span>
+<span class="sd">                    8               -0.041163            -0.021308  ...      0.376958</span>
+<span class="sd">                    9               -0.025737            -0.057623  ...      0.404964</span>
+<span class="sd">                    10               0.003510             0.089762  ...      0.514129</span>
+<span class="sd">                    11              -0.227493             0.123421  ...      0.487296</span>
+<span class="sd">    </span>
+<span class="sd">    :param pd.DataFrame raw_plays: The raw play-by-play data.</span>
+<span class="sd">    :param pd.DataFrame normal_plays: The normal-game play-by-play data.</span>
+<span class="sd">    :return: The engineered features.</span>
+<span class="sd">    :rtype: pd.DataFrame</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">all_points</span> <span class="o">=</span> <span class="n">extract_points_game</span><span class="p">(</span><span class="n">raw_plays</span><span class="p">)</span>
+    <span class="n">adj_points</span> <span class="o">=</span> <span class="n">build_adjusted_features</span><span class="p">(</span><span class="n">all_points</span><span class="p">)</span>
+
+    <span class="n">normal_points</span> <span class="o">=</span> <span class="n">extract_normal_points_game</span><span class="p">(</span><span class="n">normal_plays</span><span class="p">)</span>
+    <span class="n">adj_normal_points</span> <span class="o">=</span> <span class="n">build_adjusted_features</span><span class="p">(</span><span class="n">normal_points</span><span class="p">)</span>
+
+    <span class="n">pythag_exp</span> <span class="o">=</span> <span class="n">build_pythagorean_features</span><span class="p">(</span><span class="n">raw_plays</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">adj_points</span><span class="p">,</span> <span class="n">adj_normal_points</span><span class="p">,</span> <span class="n">pythag_exp</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span></div>
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">src.data.build</span> <span class="kn">import</span> <span class="n">preprocess_plays</span><span class="p">,</span> <span class="n">reduce_to_normal_plays</span>
+    <span class="kn">from</span> <span class="nn">src.config.config</span> <span class="kn">import</span> <span class="n">PATHS</span>
+
+    <span class="n">raw_plays_path</span> <span class="o">=</span> <span class="n">PATHS</span><span class="p">[</span><span class="s1">&#39;raw_plays&#39;</span><span class="p">]</span>
+
+    <span class="n">seasons</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">2022</span><span class="p">,</span> <span class="mi">2025</span><span class="p">))</span>
+    <span class="n">raw_plays</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">pd</span><span class="o">.</span><span class="n">read_parquet</span><span class="p">(</span><span class="n">raw_plays_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;play_by_play_</span><span class="si">{</span><span class="n">season</span><span class="si">}</span><span class="s2">.parquet&quot;</span><span class="p">)</span>
+                           <span class="k">for</span> <span class="n">season</span> <span class="ow">in</span> <span class="n">seasons</span><span class="p">])</span>
+    <span class="n">pythag_features</span> <span class="o">=</span> <span class="n">build_pythagorean_features</span><span class="p">(</span><span class="n">raw_plays</span><span class="p">)</span>
+
+    <span class="n">processed_plays</span> <span class="o">=</span> <span class="n">preprocess_plays</span><span class="p">(</span><span class="n">raw_plays</span><span class="p">)</span>
+    <span class="n">normal_plays</span> <span class="o">=</span> <span class="n">reduce_to_normal_plays</span><span class="p">(</span><span class="n">processed_plays</span><span class="p">)</span>
+    <span class="n">points_features</span> <span class="o">=</span> <span class="n">build_game_features</span><span class="p">(</span><span class="n">processed_plays</span><span class="p">,</span> <span class="n">normal_plays</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">points_features</span><span class="p">)</span>
+
+</pre></div>
+        </article>
+      </div>
+      <footer>
+        
+        <div class="related-pages">
+          
+          
+        </div>
+        <div class="bottom-of-page">
+          <div class="left-details">
+            <div class="copyright">
+                Copyright &#169; 2023, Kel Varnsen
+            </div>
+            Made with <a href="https://www.sphinx-doc.org/">Sphinx</a> and <a class="muted-link" href="https://pradyunsg.me">@pradyunsg</a>'s
+            
+            <a href="https://github.com/pradyunsg/furo">Furo</a>
+            
+          </div>
+          <div class="right-details">
+            
+          </div>
+        </div>
+        
+      </footer>
+    </div>
+    <aside class="toc-drawer no-toc">
+      
+      
+      
+    </aside>
+  </div>
+</div><script src="../../../../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../../_static/scripts/furo.js?v=5fa4622c"></script>
+    </body>
+</html>

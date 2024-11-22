@@ -1,4 +1,10 @@
-"""Hyperparameter spaces."""
+"""Hyperparameter spaces. Each space is a list of namedtuples, each of which specifies a hyperparameter to be tuned.
+
+:param (namedtuple): Hyperparameter name, search space, minimum value, maximum value, type. 
+:BASELINE_PARAMS (dict): Baseline model hyperparameters. These will not be tuned.
+:LIGHTGBM_SPACE (list[namedtuple]): LightGBM hyperparameter space.
+:SVC_SPACE (list[namedtuple]): SVC hyperparameter space.
+"""
 
 from collections import namedtuple
 
@@ -6,16 +12,13 @@ from hyperopt import hp
 
 
 param = namedtuple('param', ['name', 'value', 'min', 'max', 'type'])
-"""*namedtuple*: Hyperparameter specification."""
+
 
 BASELINE_PARAMS = {'solver': 'saga',
                    'penalty': 'elasticnet',
                    'l1_ratio': 0.5,
                    'max_iter': 10000,
                    'C': 0.1}
-"""*dict*: Baseline model hyperparameters. These will not be tuned."""
-
-
 LIGHTGBM_SPACE = [
     param('num_leaves', hp.uniformint, 2, 500, int),
     param('max_depth', hp.uniformint, 2, 50, int),
@@ -33,13 +36,9 @@ LIGHTGBM_SPACE = [
     param('objective', 'binary', None, None, str),
     param('eval_metric', 'binary_logloss', None, None, str),
 ]
-"""*list[namedtuple]*: LightGBM hyperparameter space."""
-
-
 SVC_SPACE = [
     param('nu', hp.uniform, 0.01, 0.95, float),
     param('gamma', hp.loguniform, -6.0, 0.1, float),
     param('kernel', 'rbf', None, None, str),
     param('probability', True, None, None, bool),
 ]
-"""*list[namedtuple]*: SVC hyperparameter space."""

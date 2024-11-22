@@ -6,6 +6,8 @@ Welcome to the repo for SWIFT, a machine learning model designed to produce well
 
 Current status: trains a few models and tunes hyperparameters with the hyperopt library.
 
+Development for this repo has been somewhat haphazard. I've now removed a significant number of features in order to take a more systematic approach to feature engineering, starting with game-level data.
+
 ## Getting started
 Simply `bash run.sh` and you're off to the races!
 
@@ -30,18 +32,14 @@ A: That's not a question.
 
 A: Data leakage! These metrics are derived from all currently available NFL data and would give the model an unfair glimpse of the future.
 
-I do now adjust drive results based on the expected value of each drive's starting field position, but I have verified that the EV of starting field positions are stable over my entire dataset.
-
 ## Current engineered features
 - home/away rest
 - travel distances
-- pythagorean expectation
 - points per game
-- points per drive
-- series success rate
-- net yards per play 
+- adjusted points per game
+- home vs away pythagorean expectation
 
-Feature engineering makes adjustments for league averages and opponent strength. Most features are expressed in terms of median absolute deviations from the adjusted team means for that stat.
+Feature engineering sometimes makes adjustments for league averages and opponent strength. Adjusted features are expressed in terms of median absolute deviations from the adjusted team means for that stat.
 
 ## Training procedure
 SWIFT does everything possible to avoid data leakage. It should never get a glimpse into the future.
@@ -56,7 +54,6 @@ SWIFT does everything possible to avoid data leakage. It should never get a glim
 
 ## Future tasks
 - ~~Auto-generate API docs with Sphinx~~
-- ~~Create engineered features for drive efficiency~~
 - Complete documentation for all modules and functions
 - Account for quarterback injuries
 - Tidy up some bits of rushed code

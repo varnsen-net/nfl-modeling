@@ -7,9 +7,14 @@ API Reference
    src.config.config
    src.config.spaces
    src.data.ancillary.depth_charts
+   src.data.ancillary.expectations
    src.data.build
-   src.data.features.points
-   src.data.features.team_stats
+   src.data.features.drive_stats
+   src.data.features.game_stats
+   src.data.features.helpers
+   src.data.features.play_stats
+   src.data.features.qb_stats
+   src.data.features.series_stats
    src.data.features.travel
    src.data.predict.predict
    src.data.raw.games
@@ -19,7 +24,6 @@ API Reference
    src.model.estimators
    src.model.evaluate
    src.model.hyperoptimize
-   src.model.pipeline
    src.model.predict
    src.model.process
    src.model.train

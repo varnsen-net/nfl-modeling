@@ -33,10 +33,22 @@ def preprocess_plays(raw_plays):
     :return: Preprocessed play-by-play data.
     :rtype: pd.DataFrame
     """
-    return (raw_plays
-            .query('posteam != "" and posteam != "None"')
-            .query('half_seconds_remaining > 120')
-            .query('score_differential.abs() <= 16'))
+    mask = (
+        (raw_plays['posteam'].notna()) &
+        (raw_plays['posteam'] != "") & 
+        (raw_plays['season_type'] == "REG") & 
+        (raw_plays['location'] == "Home") 
+    )
+    return raw_plays[mask]
+
+
+def reduce_to_normal_plays(raw_plays):
+    """"""
+    mask = (
+        (raw_plays['half_seconds_remaining'] > 120) & 
+        ~((raw_plays['score_differential'].abs() > 16) & (raw_plays['qtr'] == 4))
+    )
+    return raw_plays[mask]
 
 
 def split_data(df, holdout_year_start):
@@ -111,38 +123,34 @@ if __name__ == '__main__':
     output_path = features_path / 'travel.csv'
     travel_features.to_csv(output_path)
 
-    game_features = pd.DataFrame()
-    drive_features = pd.DataFrame()
-    series_features = pd.DataFrame()
-    play_features = pd.DataFrame()
-    for season in list(range(2001, CURRENT_SEASON + 1)):
-        print(f"Building features for season {season}")
-        raw_plays = raw_plays_path / f"play_by_play_{season}.parquet"
-        raw_plays = pd.read_parquet(raw_plays)
+    print('Compiling play-by-play data...')
+    seasons = list(range(2001, CURRENT_SEASON + 1))
+    raw_plays = pd.concat([pd.read_parquet(raw_plays_path / f"play_by_play_{season}.parquet")
+                           for season in seasons])
 
-        print("Preprocessing...")
-        processed_plays = preprocess_plays(raw_plays)
+    print("Preprocessing play-by-play data...")
+    processed_plays = preprocess_plays(raw_plays)
+    normal_plays = reduce_to_normal_plays(processed_plays)
 
-        print("Building game features...")
-        features = build_game_features(processed_plays, season)
-        game_features = pd.concat([game_features, features])
+    print("Building game-level features...")
+    game_features = build_game_features(processed_plays, normal_plays)
+    output_path = features_path / 'game_features.csv'
+    game_features.to_csv(output_path)
 
-        print('Building drive features...')
-        features = build_drive_features(processed_plays, exp_value_drive, season)
-        drive_features = pd.concat([drive_features, features])
+    # print("Building drive-level features...")
+    # drive_features = build_drive_features(normal_plays, exp_value_drive)
+    # output_path = features_path / 'drive_features.csv'
+    # drive_features.to_csv(output_path)
 
-        print('Building series features...')
-        features = build_series_features(processed_plays, season)
-        series_features = pd.concat([series_features, features])
+    # print("Building series-level features...")
+    # series_features = build_series_features(normal_plays)
+    # output_path = features_path / 'series_features.csv'
+    # series_features.to_csv(output_path)
 
-        print('Building play features...')
-        features = build_play_features(processed_plays, season)
-        play_features = pd.concat([play_features, features])
-
-    game_features.to_csv(features_path / 'game_features.csv')
-    drive_features.to_csv(features_path / 'drive_features.csv')
-    series_features.to_csv(features_path / 'series_features.csv')
-    play_features.to_csv(features_path / 'play_features.csv')
+    # print("Building play-level features...")
+    # play_features = build_play_features(normal_plays)
+    # output_path = features_path / 'play_features.csv'
+    # play_features.to_csv(output_path)
 
     print('Building training and test data...')
     build_train_and_test_data(train_path, test_path, games_cols, raw_games_path,
