@@ -3,7 +3,7 @@
 import numpy as np
 import pandas as pd
 
-from src.data.features.helpers import build_adjusted_data_for_season
+from src.data.features.helpers import build_adjusted_features
 from src.data.ancillary.expectations import (fix_bad_yardlines,
                                              make_absolute_yardlines)
 
@@ -29,24 +29,28 @@ def extract_drive_results(raw_plays, exp_values):
     :rtype: pd.DataFrame
     """
     return (raw_plays
-            .groupby(['posteam', 'week', 'defteam', 'fixed_drive'])
+            .groupby(['season', 'posteam', 'week', 'defteam', 'fixed_drive'])
             .first()
             [['fixed_drive_result', 'absolute_yrdln', 'posteam_type']]
             .reset_index()
             .merge(exp_values, how='left', on=['absolute_yrdln', 'posteam_type'])
-            .set_index(['posteam', 'week', 'defteam', 'fixed_drive'])
+            .set_index(['season', 'posteam', 'week', 'defteam', 'fixed_drive'])
             .assign(fixed_drive_result=remap_drive_results,
                     adj_fixed_drive_result=calculate_value_over_exp)
             ['adj_fixed_drive_result']
-            .groupby(['posteam', 'week', 'defteam'])
+            .groupby(['posteam', 'season', 'week', 'defteam'])
             .agg(['sum', 'count']))
 
 
-def build_drive_features(raw_plays, exp_values, season):
+def format_col_names(col_names):
+    """"""
+    return ['points_drive', 'count']
+
+
+def build_drive_features(raw_plays, exp_values):
     """Build features based on drive-level data.
 
     :param pd.DataFrame raw_plays: Play-by-play data.
-    :param int season: Season year.
     :return: Drive-level features.
     :rtype: pd.DataFrame
     """
@@ -55,16 +59,10 @@ def build_drive_features(raw_plays, exp_values, season):
                  .query('yrdln.notnull()')
                  .assign(yrdln_fixed=fix_bad_yardlines,
                          absolute_yrdln=make_absolute_yardlines))
-
-    points = extract_drive_results(raw_plays, exp_values)
-    max_week = points.index.get_level_values('week').max()
-    week_nums = range(1, max_week + 1)
-
-    stat_name = 'points_drive'
-    features = build_adjusted_data_for_season(points, stat_name,
-                                              week_nums, 'mscores')
-    features['season'] = season
-    return features
+    raw_features = extract_drive_results(raw_plays, exp_values)
+    raw_features.columns = format_col_names(raw_features.columns)
+    adjusted_features = build_adjusted_features(raw_features)
+    return adjusted_features
 
 
 if __name__ == '__main__':
@@ -74,10 +72,10 @@ if __name__ == '__main__':
     raw_plays_path = PATHS['raw_plays']
     expected_values_path = PATHS['expected_values']
 
-    season = 2023
-    plays = pd.read_parquet(raw_plays_path / f"play_by_play_{season}.parquet")
-    plays = preprocess_plays(plays)
+    seasons = list(range(2021, 2025))
+    plays = pd.concat([pd.read_parquet(raw_plays_path / f"play_by_play_{season}.parquet")
+                           for season in seasons])
     exp_values = pd.read_csv(expected_values_path)
 
-    drive_features = build_drive_features(plays, exp_values, season)
+    drive_features = build_drive_features(plays, exp_values)
     print(drive_features)

@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-from src.data.features.helpers import build_adjusted_data_for_season
+from src.data.features.helpers import build_adjusted_features
 
 
 def extract_series_results(raw_plays):
@@ -13,35 +13,21 @@ def extract_series_results(raw_plays):
     :rtype: pd.DataFrame
     """
     return (raw_plays
-            .groupby(['posteam', 'week', 'defteam', 'series'])
+            .groupby(['posteam', 'season', 'week', 'defteam', 'series'])
             .first()
             ['series_success']
-            .groupby(['posteam', 'week', 'defteam'])
+            .groupby(['posteam', 'season', 'week', 'defteam'])
             .agg(['sum', 'count']))
 
 
-def build_series_features(raw_plays, season):
+def build_series_features(raw_plays):
     """Build features based on series-level data.
 
     :param pd.DataFrame raw_plays: Play-by-play data.
-    :param int season: Season.
     :return: Series-level features.
     :rtype: pd.DataFrame
     """
     series = extract_series_results(raw_plays)
-    max_week = series.index.get_level_values('week').max()
-    week_nums = range(1, max_week + 1)
-
-    stat_name = 'series_success'
-    season_features = build_adjusted_data_for_season(series, stat_name,
-                                                     week_nums, 'mscores')
-    season_features['season'] = season
-    return season_features
-
-
-
-if __name__ == '__main__':
-    from src.config.config import PATHS
-    features = build_series_features(PATHS['raw_plays'])
-    print(features)
-
+    series.columns = ['success_series', 'count']
+    adj_series = build_adjusted_features(series)
+    return adj_series
