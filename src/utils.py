@@ -1,12 +1,11 @@
 """Utility functions. These functions are used in mutliple places throughout the source code and cannot be coupled to any particular module."""
 
-import os
 import requests
-import argparse
 import datetime
 
 import numpy as np
 import pandas as pd
+import polars as pl
 
 
 def fix_game_times(games):
@@ -43,39 +42,6 @@ def get_kickoff_hours(gametimes):
     return hours
 
 
-def walk_features_dir(features_path):
-    """Yield every py file path in the features dir.
-    
-    :param str features_path: path to features directory
-    :return: feature file path
-    :rtype: str
-    """
-    for root, dirs, files in os.walk(features_path):
-        for file in files:
-            if file.endswith('.csv'):
-                file_path = os.path.join(root, file)
-                yield file_path
-
-
-def map_features_to_games(games, stats):
-    """Map a dataframe of stats with season/week/team columns to a dataframe
-    of games with season/week/away_team/home_team columns.
-    
-    :param pd.DataFrame games: Raw games dataframe.
-    :param pd.DataFrame stats: Dataframe of team stats with season/week/team cols.
-    :return: games dataframe with stats columns.
-    :rtype: pd.DataFrame
-    """
-    away_stats = stats.set_index(['season', 'week']).add_prefix('away_')
-    home_stats = stats.set_index(['season', 'week']).add_prefix('home_')
-    games = (games
-             .merge(away_stats, how='inner',
-                    on=['season', 'away_team', 'week'])
-             .merge(home_stats, how='inner',
-                    on=['season', 'home_team', 'week']))
-    return games
-
-
 def refresh_raw_data(url, save_path):
     """Fetches data from a URL and saves to disk.
 
@@ -104,7 +70,7 @@ def get_date_n_days_out(n):
     return formatted_date
 
 
-def shift_week_number(df, n):
+def shift_week_number(df):
     """Shifts the week number of a df with season/team/week columns.
     
     Aggregations are nearly always calculated up to the *end* of a week.
@@ -116,10 +82,10 @@ def shift_week_number(df, n):
     :return: Dataframe with shifted weeks.
     :rtype: pd.DataFrame
     """
-    df = (df
-          .set_index(['season', 'team', 'week'])
-          .groupby(['season', 'team'])
-          .shift(n)
-          .reset_index())
-    df = df.dropna()
-    return df
+    return (
+        df
+        .sort('team', 'season', 'week')
+        .with_columns(
+            pl.exclude('team', 'season', 'week').shift(1).over(["team", "season"])
+        )
+    )

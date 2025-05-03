@@ -1,9 +1,7 @@
 """Helper functions for building engineered features for team travel."""
 
-import json
 
-import pandas as pd
-import numpy as np
+import polars as pl
 
 
 def get_city_coordinates(teams, loc_replacements):
@@ -11,10 +9,10 @@ def get_city_coordinates(teams, loc_replacements):
     NFL team city in the Sharpe teams data.
 
     Mostly saving this just for reference. I only need to run it once.
-    
-    :param pd.DataFrame teams: df with team names and locations
-    :param dict loc_replacements: dict of location replacements
-    :return: city names, latitudes, and longitudes
+
+    :param pd.DataFrame teams: Team names and locations
+    :param dict loc_replacements: Location replacements
+    :return: City names, latitudes, and longitudes
     :rtype: pd.DataFrame
     """
     cities = teams['location'].unique()
@@ -33,95 +31,120 @@ def get_city_coordinates(teams, loc_replacements):
     return city_coords
 
 
-def calculate_distances(home_coords, away_coords):
-    """Calculates the distance between two arrays of lat/lon coordinate pairs.
-
-    :param home_coords: Home lat/lon coordinates.
-    :type home_coords: np.array of shape (n, 2)
-    :param away_coords: Away lat/lon coordinates.
-    :type away_coords: np.array of shape (n, 2)
-    :return: Distance between the two coordinates in km.
-    :rtype: np.array of shape (n, 1)
-    """
-    R = 6373.0
-    lat1 = np.radians(home_coords[:, 0])
-    lon1 = np.radians(home_coords[:, 1])
-    lat2 = np.radians(away_coords[:, 0])
-    lon2 = np.radians(away_coords[:, 1])
-    dlon = lon2 - lon1
-    dlat = lat2 - lat1
-    a = np.sin(dlat / 2)**2 + np.cos(lat1) * np.cos(lat2) * np.sin(dlon / 2)**2
-    c = 2 * np.arctan2(np.sqrt(a), np.sqrt(1 - a))
-    distance = R * c
-    return distance
-
-
 def attach_lats_lons(games, city_coords):
     """Merge the city coordinates onto the games dataframe.
     
-    :param games: Raw games data.
-    :type games: pd.DataFrame of shape (n_rows, n_cols)
-    :param city_coords: City coordinates data.
-    :type city_coords: pd.DataFrame of shape (n_teams, n_cols)
-    :return: Games dataframe with city coordinates attached.
-    :rtype: pd.DataFrame of shape (n_rows, n_cols)
+    :param pl.LazyFrame games: Raw games dataframe.
+    :param pl.DataFrame city_coords: City coordinates dataframe.
+    :return: Games dataframe with city coordinates.
+    :rtype: pl.LazyFrame
     """
-    games = (games
-             .merge(city_coords[['name', 'lat', 'lon']], 
-                    left_on='away_team', right_on='name', how='left')
-             .drop(columns=['name'])
-             .merge(city_coords[['name', 'lat', 'lon']],
-                    left_on='home_team', right_on='name', how='left',
-                    suffixes=['_away', '_home'])
-             .drop(columns=['name']))
-    return games
+    city_coords = city_coords.select('name', 'lat', 'lon')
+    return (
+        games
+        .join(city_coords, left_on='away_team', right_on='name', how='left')
+        .rename({'lat': 'lat_away', 'lon': 'lon_away'})
+        .join(city_coords, left_on='home_team', right_on='name', how='left')
+        .rename({'lat': 'lat_home', 'lon': 'lon_home'})
+    )
 
 
-def get_travel_distances(games):
-    """Calculate the distance traveled by the away team for each game.
+def add_travel_distances(games):
+    """Calculate the haversine distance traveled by the away team for each game.
     
-    :param games: Raw games data.
-    :type games: pd.DataFrame of shape (n_rows, n_cols)
-    :return: Dataframe with the travel distances for each game.
-    :rtype: pd.DataFrame of shape (n_rows, n_cols)
+    :param pl.LazyFrame games: Games dataframe with lat/lon columns.
+    :return: Games dataframe with travel distances.
+    :rtype: pl.LazyFrame
     """
-    travel_distances = games[['game_id']].set_index('game_id')
-    away_distances = calculate_distances(games[['lat_home', 'lon_home']].values,
-                                         games[['lat_away', 'lon_away']].values)
-    travel_distances['away_travel_distance'] = away_distances
-    travel_distances['home_travel_distance'] = 0
-    return travel_distances
+    return (
+        games
+        .with_columns(
+            lat_away_rad=(3.14159 / 180) * pl.col('lat_away'),
+            lon_away_rad=(3.14159 / 180) * pl.col('lon_away'),
+            lat_home_rad=(3.14159 / 180) * pl.col('lat_home'),
+            lon_home_rad=(3.14159 / 180) * pl.col('lon_home'),
+        )
+        .with_columns(
+            dlat=pl.col('lat_home_rad') - pl.col('lat_away_rad'),
+            dlon=pl.col('lon_home_rad') - pl.col('lon_away_rad'),
+        )
+        .with_columns(
+            a=((pl.col('dlat') / 2).sin().pow(2)
+                + pl.col('lat_away_rad').cos()
+                * pl.col('lat_home_rad').cos()
+                * (pl.col('dlon') / 2).sin().pow(2))
+        )
+        .with_columns(
+            c=2 * pl.arctan2(pl.col('a').sqrt(), (1 - pl.col('a')).sqrt())
+        )
+        .with_columns(
+            away_travel_distance=6373 * pl.col('c'),  # km
+            home_travel_distance=0,
+        )
+    )
 
 
-def get_coord_deltas(games):
+def add_coord_deltas(games):
     """Calculate the difference in longitude and latitude between the home and
     away teams.
 
-    :param games: Raw games data.
-    :type games: pd.DataFrame of shape (n_rows, n_cols)
-    :return: Dataframe with the away team longitude deltas.
-    :rtype: pd.DataFrame of shape (n_rows, n_cols)
+    :param pl.LazyFrame games: Games dataframe with lat/lon columns.
+    :return: Games dataframe with coordinate deltas.
+    :rtype: pl.LazyFrame
     """
-    travel_deltas = games[['game_id']].set_index('game_id')
-    away_lon_delta = games['lon_home'] - games['lon_away']
-    away_lat_delta = games['lat_home'] - games['lat_away']
-    travel_deltas['away_lon_delta'] = away_lon_delta.values
-    travel_deltas['away_lat_delta'] = away_lat_delta.values
-    travel_deltas['home_lon_delta'] = 0
-    travel_deltas['home_lat_delta'] = 0
-    return travel_deltas
+    return (
+        games
+        .with_columns(
+            away_lon_delta=pl.col('lon_home') - pl.col('lon_away'),
+            away_lat_delta=pl.col('lat_home') - pl.col('lat_away'),
+            home_lon_delta=0,
+            home_lat_delta=0,
+        )
+    )
+
+
+def round_travel_values(games):
+    """Round the travel distances and coordinate deltas to 0 or 1 decimal.
+
+    :param pl.LazyFrame games: Games dataframe with travel distances and deltas.
+    :return: Games dataframe with rounded values.
+    :rtype: pl.LazyFrame
+    """
+    return (
+        games
+        .with_columns(
+            away_travel_distance=pl.col('away_travel_distance').round(0),
+            home_travel_distance=pl.col('home_travel_distance').round(0),
+            away_lon_delta=pl.col('away_lon_delta').round(1),
+            away_lat_delta=pl.col('away_lat_delta').round(1),
+            home_lon_delta=pl.col('home_lon_delta').round(1),
+            home_lat_delta=pl.col('home_lat_delta').round(1),
+        )
+    )
 
 
 def build_travel_features(raw_games, city_coords):
     """Build engineered features for team travel.
 
-    :param pd.DataFrame raw_games: Raw games data.
-    :param pd.DataFrame city_coords: City coordinates data.
-    :return: Dataframe with the engineered travel features.
-    :rtype: pd.DataFrame of shape (n_rows, n_cols)
+    :param pl.LazyFrame raw_games: Raw games dataframe.
+    :param pl.DataFrame city_coords: City coordinates dataframe.
+    :return: Games dataframe with travel features.
+    :rtype: pl.LazyFrame
     """
     games = attach_lats_lons(raw_games, city_coords)
-    travel_distances = get_travel_distances(games)
-    lon_deltas = get_coord_deltas(games)
-    travel_features = pd.concat([travel_distances, lon_deltas], axis=1)
-    return travel_features
+    games = add_travel_distances(games)
+    games = add_coord_deltas(games)
+    games = round_travel_values(games)
+    return (
+        games
+        .select(
+            'game_id',
+            'away_travel_distance',
+            'home_travel_distance',
+            'away_lon_delta',
+            'away_lat_delta',
+            'home_lon_delta',
+            'home_lat_delta',
+        )
+        .sort('game_id')
+    )

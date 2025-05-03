@@ -26,7 +26,6 @@ PATHS = {
     'raw_plays': PROJ_ROOT / 'data' / 'raw' / 'plays',
     'features': PROJ_ROOT / 'data' / 'features',
     'train': PROJ_ROOT / 'data' / 'train',
-    'test': PROJ_ROOT / 'data' / 'test',
     'results': PROJ_ROOT / 'data' / 'results',
     'prediction': PROJ_ROOT / 'data' / 'prediction',
     'features_src': PROJ_ROOT / 'src' / 'data' / 'features',
@@ -40,11 +39,12 @@ RAW_DATA_URLS = {
 
 
 CURRENT_SEASON = 2024
-CURRENT_WEEK = 12
+CURRENT_WEEK = 99
 TRAINING = {
+    "min_year": 2001,
     "holdout_year_start": 2021,
-    "games_cols": ["game_id", "season", "week", "away_rest", "home_rest",
-                   "away_team", "home_team"]
+    "games_cols": ["game_id", "season", "week", "away_team", "home_team",
+                   "away_rest", "home_rest", "result"]
 }
 SCORING_METRIC = 'neg_brier_score'
 CV_TRAIN_SIZE = 10

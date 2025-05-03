@@ -1,111 +1,108 @@
-"""Build the full set of training and testing data from scratch.
-
-Receives a set of paths from setup.sh, then fetches raw data, builds features, and assembles training data. Then it splits holdout data by year and writes to disk.
-"""
+""""""
 
 import os
-import pathlib
 
-import numpy as np
-import pandas as pd
-
-from src.data.raw.games import refresh_games_data
-from src.data.raw.plays import refresh_plays_data
-from src.data.features.travel import build_travel_features
-from src.data.features.game_stats import build_game_features
-from src.data.features.drive_stats import build_drive_features
-from src.data.features.series_stats import build_series_features
-from src.data.features.play_stats import build_play_features
-from src.data.train.train import build_train
-from src.data.train.target import build_target
-
-from src.config.config import (TRAINING,
-                               CURRENT_SEASON,
-                               CURRENT_WEEK,
-                               RAW_DATA_URLS,
-                               PATHS)
+import polars as pl
 
 
-def preprocess_plays(raw_plays):
-    """Preprocess raw play-by-play data.
+pl.Config.set_tbl_formatting("ASCII_MARKDOWN")
 
-    :param pd.DataFrame raw_plays: Raw play-by-play data.
-    :return: Preprocessed play-by-play data.
-    :rtype: pd.DataFrame
+
+def clean_plays(plays):
+    """Do some basic cleaning of the plays dataframe.
+
+    :param pl.LazyFrame plays: The plays dataframe.
+    :return: A cleaned plays dataframe.
+    :rtype: pl.LazyFrame
     """
-    mask = (
-        (raw_plays['posteam'].notna()) &
-        (raw_plays['posteam'] != "") & 
-        (raw_plays['season_type'] == "REG") & 
-        (raw_plays['location'] == "Home") 
+    return plays.filter(
+        pl.col('posteam').is_not_null(),
+        pl.col('posteam') != "",
+        pl.col('season_type') == "REG",
+        pl.col('location') == "Home",
     )
-    return raw_plays[mask]
 
 
-def reduce_to_normal_plays(raw_plays):
-    """"""
-    mask = (
-        (raw_plays['half_seconds_remaining'] > 120) & 
-        ~((raw_plays['score_differential'].abs() > 16) & (raw_plays['qtr'] == 4))
-    )
-    return raw_plays[mask]
+def reduce_to_normal_plays(plays):
+    """Reduce the plays dataframe to only include normal plays.
 
+    Normal plays are defined as those where the score and clock do not have
+    a significant impact on playcalling.
 
-def split_data(df, holdout_year_start):
-    """Divide a full set of features into training and holdout data.
-
-    :param df: Full set of features data.
-    :type df: pd.DataFrame of shape (n_samples, n_features)
-    :param int holdout_year_start: Starting season of holdout data (inclusive).
-    :return: Training and holdout data
-    :rtype: (pd.DataFrame, pd.DataFrame) 
+    :param pl.LazyFrame plays: The plays dataframe.
+    :return: A reduced plays dataframe.
+    :rtype: pl.LazyFrame
     """
-    train = df.loc[df["season"] < holdout_year_start]
-    holdout = df.loc[df["season"] >= holdout_year_start]
-    return train, holdout
+    return plays.filter(
+        pl.col('half_seconds_remaining') > 120,
+        pl.col('score_differential').abs() < 16,
+    )
 
 
-def build_train_and_test_data(train_path, test_path, games_cols, raw_games_path,
-                              features_path, holdout_year_start):
-    """Build training and testing data from raw data and save to local paths.
+def reduce_raw_games(games, games_cols, min_year):
+    """Reduce the games dataframe using polars.
     
-    :param str train_path: Path to save training data.
-    :param str test_path: Path to save testing data.
-    :param list games_cols: Columns to keep from raw games data.
-    :param str raw_games_path: Path to raw games data.
-    :param str features_path: Path to features data.
-    :param int holdout_year_start: Starting season of holdout data (inclusive).
-    :return: None
-    :rtype: None
+    :param pl.LazyFrame games: The games dataframe.
+    :param list games_cols: The columns to keep in the games dataframe.
+    :param int min_year: The minimum year to keep in the games dataframe.
+    :return: A reduced games dataframe.
+    :rtype: pl.LazyFrame
     """
-    full_train = build_train(games_cols, raw_games_path, features_path)
-    full_target = build_target(raw_games_path, full_train)
-    train, train_holdout = split_data(full_train, holdout_year_start)
-    target = full_target.loc[full_target["game_id"].isin(train["game_id"])]
-    target_holdout = full_target.loc[full_target["game_id"].isin(train_holdout["game_id"])]
-    train.to_csv(f'{train_path}/train.csv', index=False)
-    target.to_csv(f'{train_path}/target.csv', index=False)
-    train_holdout.to_csv(f'{test_path}/test.csv', index=False)
-    target_holdout.to_csv(f'{test_path}/target.csv', index=False)
-    return
+    return (
+        games
+        .filter(
+            pl.col('week') > 4,
+            pl.col('season') >= min_year,
+            ~((pl.col('week') > 16) & (pl.col('season') < 2021)),
+            ~((pl.col('week') > 17) & (pl.col('season') >= 2021))
+        )
+        .drop(['game_type', 'location'])
+        .drop_nulls('result')
+        .select(games_cols)
+    )
+
+
+def rename_cols(col_name):
+    """Rename columns to specify home vs away team feature.
+
+    :param str col_name: The column name to rename.
+    :return: The renamed column name.
+    :rtype: str
+    """
+    if col_name.endswith(('_posteam', '_defteam')):
+        return col_name + '_away'
+    elif col_name.endswith('_right'):
+        return col_name.replace('_right', '_home')
+    else:
+        return col_name
 
 
 if __name__ == '__main__':
+    from src.data.raw.games import refresh_games_data
+    from src.data.raw.plays import refresh_plays_data
+    from src.data.features.travel import build_travel_features
+    from src.data.features.drive_stats import build_drive_stats_features
+    from src.data.features.game_stats import build_game_stats_features
+    from src.config.config import (TRAINING,
+                                   CURRENT_SEASON,
+                                   CURRENT_WEEK,
+                                   RAW_DATA_URLS,
+                                   PATHS)
+
     raw_games_path = PATHS['raw_games']
     raw_plays_path = PATHS['raw_plays']
     city_coords_path = PATHS['city_coordinates']
     expected_values = PATHS['expected_values']
     features_path = PATHS['features']
     train_path = PATHS['train']
-    test_path = PATHS['test']
-    games_cols = TRAINING['games_cols']
+    min_year = TRAINING['min_year']
     holdout_year_start = TRAINING['holdout_year_start']
+    games_cols = TRAINING['games_cols']
     games_url = RAW_DATA_URLS['games']
     plays_url = RAW_DATA_URLS['plays']
 
     os.makedirs(features_path, exist_ok=True)
     os.makedirs(train_path, exist_ok=True)
-    os.makedirs(test_path, exist_ok=True)
 
     print('Refreshing raw games data...')
     refresh_games_data(games_url, raw_games_path)
@@ -113,45 +110,63 @@ if __name__ == '__main__':
     print('Refreshing raw play-by-play data...')
     refresh_plays_data(CURRENT_SEASON, plays_url, raw_plays_path)
 
-    raw_games = pd.read_csv(raw_games_path)
-    city_coords = pd.read_csv(city_coords_path)
-    exp_value_drive = pd.read_csv(expected_values)
+    print('Loading and processing raw data...')
+    seasons = range(2001, CURRENT_SEASON + 1)
+    paths = [raw_plays_path / f'play_by_play_{season}.parquet' for season in seasons]
+    raw_plays = pl.concat([pl.scan_parquet(p) for p in paths],
+                          how='vertical_relaxed')
+    plays = clean_plays(raw_plays)
+    raw_games = pl.scan_csv(raw_games_path)
+    games = reduce_raw_games(raw_games, games_cols, min_year)
+    city_coords = pl.scan_csv(city_coords_path)
 
-    # TODO throw these calls into a dictionary or something
-    print('Building travel features...')
-    travel_features = build_travel_features(raw_games, city_coords)
-    output_path = features_path / 'travel.csv'
-    travel_features.to_csv(output_path)
+    print('Building features...')
+    features = (
+        games
+        .join(
+            build_travel_features(raw_games, city_coords),
+            on='game_id',
+            how='inner',
+        )
+        .join(
+            build_game_stats_features(plays),
+            left_on=['season', 'week', 'away_team'],
+            right_on=['season', 'week', 'team'],
+            how='inner',
+        )
+        .join(
+            build_game_stats_features(plays),
+            left_on=['season', 'week', 'home_team'],
+            right_on=['season', 'week', 'team'],
+            how='inner',
+        )
+        .join(
+            build_drive_stats_features(plays),
+            left_on=['season', 'week', 'away_team'],
+            right_on=['season', 'week', 'team'],
+            how='inner',
+        )
+        .join(
+            build_drive_stats_features(plays),
+            left_on=['season', 'week', 'home_team'],
+            right_on=['season', 'week', 'team'],
+            how='inner',
+        )
+        .rename(rename_cols)
+        .sort('game_id')
+    )
+    features.sink_csv(features_path / 'features.csv')
 
-    print('Compiling play-by-play data...')
-    seasons = list(range(2001, CURRENT_SEASON + 1))
-    raw_plays = pd.concat([pd.read_parquet(raw_plays_path / f"play_by_play_{season}.parquet")
-                           for season in seasons])
-
-    print("Preprocessing play-by-play data...")
-    processed_plays = preprocess_plays(raw_plays)
-    normal_plays = reduce_to_normal_plays(processed_plays)
-
-    print("Building game-level features...")
-    game_features = build_game_features(processed_plays, normal_plays)
-    output_path = features_path / 'game_features.csv'
-    game_features.to_csv(output_path)
-
-    # print("Building drive-level features...")
-    # drive_features = build_drive_features(normal_plays, exp_value_drive)
-    # output_path = features_path / 'drive_features.csv'
-    # drive_features.to_csv(output_path)
-
-    # print("Building series-level features...")
-    # series_features = build_series_features(normal_plays)
-    # output_path = features_path / 'series_features.csv'
-    # series_features.to_csv(output_path)
-
-    # print("Building play-level features...")
-    # play_features = build_play_features(normal_plays)
-    # output_path = features_path / 'play_features.csv'
-    # play_features.to_csv(output_path)
-
-    print('Building training and test data...')
-    build_train_and_test_data(train_path, test_path, games_cols, raw_games_path,
-                              features_path, holdout_year_start)
+    print('Building training and test sets...')
+    all_training_data = (
+        features
+        .with_columns(
+            pl.when(pl.col('result') > 0).then(1).otherwise(0).alias('target'),
+            pl.when(pl.col('season') >= holdout_year_start).then(1).otherwise(0).alias('holdout'),
+        )
+        .drop(['week', 'away_team', 'home_team', 'result'])
+    )
+    train = all_training_data.filter(pl.col('holdout') == 0).drop('holdout')
+    test = all_training_data.filter(pl.col('holdout') == 1).drop('holdout')
+    train.sink_csv(train_path / 'train.csv')
+    test.sink_csv(train_path / 'test.csv')

@@ -83,31 +83,25 @@ def evaluate_train_save(model_name, model, X_train, y_train, X_test, y_test,
 
 
 if __name__ == "__main__":
-    features_path = PATHS['features']
     train_path = PATHS['train']
-    test_path = PATHS['test']
     results_path = PATHS['results']
     save_path = make_save_path(results_path)
 
-    X_train = pd.read_csv(f"{train_path}/train.csv", index_col=0)
-    y_train = pd.read_csv(f"{train_path}/target.csv", index_col=0)
+    X_train = pd.read_csv(train_path / "train.csv", index_col=0)
+    y_train = X_train.pop('target')
     X_train, y_train = transform_home_away_structure(X_train, y_train)
-    X_train = preprocess(X_train, FEATURE_PRECISIONS)
-    y_train = y_train['target']
 
-    X_test = pd.read_csv(f"{test_path}/test.csv", index_col=0)
-    y_test = pd.read_csv(f"{test_path}/target.csv", index_col=0)
+    X_test = pd.read_csv(train_path / "test.csv", index_col=0)
+    y_test = X_test.pop('target')
     X_test, y_test = transform_home_away_structure(X_test, y_test)
-    X_test = preprocess(X_test, FEATURE_PRECISIONS)
-    y_test = y_test['target']
 
     cv = custom_cv(CV_TRAIN_SIZE, CV_TEST_SIZE, CV_SHIFT_SIZE)
 
     # evaluate baseline model
-    name = 'baseline'
-    baseline = build_baseline_pipeline(BASELINE_PARAMS)
-    evaluate_train_save(name, baseline, X_train, y_train, X_test, y_test,
-                        cv, save_path)
+    # name = 'baseline'
+    # baseline = build_baseline_pipeline(BASELINE_PARAMS)
+    # evaluate_train_save(name, baseline, X_train, y_train, X_test, y_test,
+                        # cv, save_path)
 
     # evaluate svc
     name = 'svc'

@@ -1,6 +1,6 @@
 alabaster==0.7.16
 Babel==2.14.0
-beautifulsoup4==4.12.3
+beautifulsoup4==4.13.4
 certifi==2024.8.30
 charset-normalizer==3.2.0
 cloudpickle==2.2.1
@@ -21,9 +21,9 @@ iniconfig==2.0.0
 Jinja2==3.1.4
 joblib==1.3.2
 kiwisolver==1.4.5
-lightgbm==4.5.0
+lightgbm==4.6.0
 MarkupSafe==2.1.3
-matplotlib==3.9.2
+matplotlib==3.10.1
 mlxtend==0.23.1
 networkx==3.1
 numpy==1.26.4
@@ -31,6 +31,7 @@ packaging==23.1
 pandas==2.2.3
 pillow==10.4.0
 pluggy==1.3.0
+polars==1.28.1
 py4j==0.10.9.7
 Pygments==2.18.0
 pyparsing==3.1.1
@@ -38,13 +39,14 @@ pytest==7.4.3
 python-dateutil==2.8.2
 pytz==2023.3.post1
 requests==2.32.3
-scikit-learn==1.5.2
-scipy==1.14.1
+roman-numerals-py==3.1.0
+scikit-learn==1.6.1
+scipy==1.15.2
 seaborn==0.13.2
 six==1.16.0
 snowballstemmer==2.2.0
 soupsieve==2.6
-Sphinx==8.1.3
+Sphinx==8.2.3
 sphinx-basic-ng==1.0.0b2
 sphinxcontrib-applehelp==1.0.7
 sphinxcontrib-devhelp==2.0.0
@@ -57,5 +59,6 @@ tdqm==0.0.1
 threadpoolctl==3.2.0
 tomli==2.0.1
 tqdm==4.66.5
+typing_extensions==4.13.2
 tzdata==2023.3
-urllib3==2.2.2
+urllib3==2.4.0
