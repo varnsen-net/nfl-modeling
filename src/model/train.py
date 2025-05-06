@@ -98,10 +98,10 @@ if __name__ == "__main__":
     cv = custom_cv(CV_TRAIN_SIZE, CV_TEST_SIZE, CV_SHIFT_SIZE)
 
     # evaluate baseline model
-    # name = 'baseline'
-    # baseline = build_baseline_pipeline(BASELINE_PARAMS)
-    # evaluate_train_save(name, baseline, X_train, y_train, X_test, y_test,
-                        # cv, save_path)
+    name = 'baseline'
+    baseline = build_baseline_pipeline(BASELINE_PARAMS)
+    evaluate_train_save(name, baseline, X_train, y_train, X_test, y_test,
+                        cv, save_path)
 
     # evaluate svc
     name = 'svc'

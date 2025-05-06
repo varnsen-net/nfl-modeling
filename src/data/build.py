@@ -62,19 +62,33 @@ def reduce_raw_games(games, games_cols, min_year):
     )
 
 
-def rename_cols(col_name):
-    """Rename columns to specify home vs away team feature.
+def rename_away_cols(col_name):
+    """Rename columns to specify away team feature.
+
+    pl.LazyFrame.rename doesn't accept kwargs, so we need separate functions
+    for home and away renaming.
 
     :param str col_name: The column name to rename.
     :return: The renamed column name.
     :rtype: str
     """
-    if col_name.endswith(('_posteam', '_defteam')):
-        return col_name + '_away'
-    elif col_name.endswith('_right'):
-        return col_name.replace('_right', '_home')
-    else:
+    if col_name in ['team', 'season', 'week']:
         return col_name
+    else:
+        return f'{col_name}_away'
+
+
+def rename_home_cols(col_name):
+    """Rename columns to specify home team feature.
+
+    :param str col_name: The column name to rename.
+    :return: The renamed column name.
+    :rtype: str
+    """
+    if col_name in ['team', 'season', 'week']:
+        return col_name
+    else:
+        return f'{col_name}_home'
 
 
 if __name__ == '__main__':
@@ -83,6 +97,7 @@ if __name__ == '__main__':
     from src.data.features.travel import build_travel_features
     from src.data.features.drive_stats import build_drive_stats_features
     from src.data.features.game_stats import build_game_stats_features
+    from src.data.features.pythag_exp import build_pythag_features
     from src.config.config import (TRAINING,
                                    CURRENT_SEASON,
                                    CURRENT_WEEK,
@@ -121,38 +136,54 @@ if __name__ == '__main__':
     city_coords = pl.scan_csv(city_coords_path)
 
     print('Building features...')
+    travel_features = build_travel_features(raw_games, city_coords)
+    game_stats_features = build_game_stats_features(plays)
+    drive_stats_features = build_drive_stats_features(plays)
+    pythag_features = build_pythag_features(plays)
+
     features = (
         games
         .join(
-            build_travel_features(raw_games, city_coords),
+            travel_features,
             on='game_id',
             how='inner',
         )
         .join(
-            build_game_stats_features(plays),
+            game_stats_features.rename(rename_away_cols),
             left_on=['season', 'week', 'away_team'],
             right_on=['season', 'week', 'team'],
             how='inner',
         )
         .join(
-            build_game_stats_features(plays),
+            game_stats_features.rename(rename_home_cols),
             left_on=['season', 'week', 'home_team'],
             right_on=['season', 'week', 'team'],
             how='inner',
         )
         .join(
-            build_drive_stats_features(plays),
+            drive_stats_features.rename(rename_away_cols),
             left_on=['season', 'week', 'away_team'],
             right_on=['season', 'week', 'team'],
             how='inner',
         )
         .join(
-            build_drive_stats_features(plays),
+            drive_stats_features.rename(rename_home_cols),
             left_on=['season', 'week', 'home_team'],
             right_on=['season', 'week', 'team'],
             how='inner',
         )
-        .rename(rename_cols)
+        .join(
+            pythag_features.rename(rename_away_cols),
+            left_on=['season', 'week', 'away_team'],
+            right_on=['season', 'week', 'team'],
+            how='inner',
+        )
+        .join(
+            pythag_features.rename(rename_home_cols),
+            left_on=['season', 'week', 'home_team'],
+            right_on=['season', 'week', 'team'],
+            how='inner',
+        )
         .sort('game_id')
     )
     features.sink_csv(features_path / 'features.csv')

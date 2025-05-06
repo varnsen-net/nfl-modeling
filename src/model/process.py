@@ -71,15 +71,15 @@ def transform_home_away_structure(X, y):
     home_obj_idxs = X[::2].index
     home_obj_games = X.loc[home_obj_idxs]
     home_obj_games.columns = (home_obj_games.columns
-                              .str.replace("^home", "obj", regex=True)
-                              .str.replace("^away", "adv", regex=True))
+                              .str.replace("home", "obj", regex=True)
+                              .str.replace("away", "adv", regex=True))
     home_obj_games['obj_team_is_home'] = 1
     home_obj_y = y.loc[home_obj_idxs]
 
     away_obj_games = X.drop(home_obj_idxs)
     away_obj_games.columns = (away_obj_games.columns
-                              .str.replace("^away", "obj", regex=True)
-                              .str.replace("^home", "adv", regex=True))
+                              .str.replace("away", "obj", regex=True)
+                              .str.replace("home", "adv", regex=True))
     away_obj_games['obj_team_is_home'] = 0
     away_obj_y = y.drop(home_obj_idxs)
     away_obj_y = 1 - away_obj_y

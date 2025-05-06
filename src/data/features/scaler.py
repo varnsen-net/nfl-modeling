@@ -209,7 +209,6 @@ def calculate_avg_adj_metric(rolled_data, opp_agged_data, league_means,
             pl.col('count').sum().alias('count_total'),
         )
         .with_columns((pl.col('adj_score_total') / pl.col('count_total')).alias('avg_adj_score'))
-        # .sort(side, 'season', 'week')
         .select(
             pl.col(side).alias('team'),
             'season', 'week',

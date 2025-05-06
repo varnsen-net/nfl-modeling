@@ -8,6 +8,8 @@ Current status: trains a few models and tunes hyperparameters with the hyperopt 
 
 Development for this repo has been somewhat haphazard. I've now removed a significant number of features in order to take a more systematic approach to feature engineering, starting with game-level data.
 
+I've also rewritten all of the data functions using polars, so it no longer takes 5 minutes to build all of the features. Yay.
+
 ## Getting started
 Simply `bash run.sh` and you're off to the races!
 
@@ -35,9 +37,8 @@ A: Data leakage! These metrics are derived from all currently available NFL data
 ## Current engineered features
 - home/away rest
 - travel distances
-- points per game
 - adjusted points per game
-- home vs away pythagorean expectation
+- adjusted points per drive
 
 Feature engineering sometimes makes adjustments for league averages and opponent strength. Adjusted features are expressed in terms of median absolute deviations from the adjusted team means for that stat.
 
