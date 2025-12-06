@@ -155,5 +155,5 @@ typing-extensions==4.15.0
     #   sqlalchemy
 tzdata==2025.2
     # via pandas
-urllib3==2.5.0
+urllib3==2.6.0
     # via requests
