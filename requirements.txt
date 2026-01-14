@@ -22,7 +22,7 @@ cycler==0.12.1
     # via matplotlib
 docutils==0.21.2
     # via sphinx
-fonttools==4.59.2
+fonttools==4.61.0
     # via matplotlib
 furo==2025.7.19
     # via nfl-modeling (pyproject.toml)
